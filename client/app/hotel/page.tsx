@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/footer";
 import axios from "axios";
@@ -8,7 +8,6 @@ import apiClient from "@/lib/api";
 import SuccessPopup from "@/components/SuccessPopup";
 import { Language, getDirection, getLanguageFromSearchParams } from "@/lib/language";
 import { useParams, useSearchParams } from 'next/navigation';
-
 
 interface HotelBookingData {
   country: string;
@@ -26,12 +25,31 @@ interface HotelBookingData {
   remarks: string;
 }
 
-const Page = () => {
+// Loading fallback for Suspense
+function HotelPageLoading() {
+  return (
+    <div className="bg-white min-h-screen flex items-center justify-center">
+      <div className="text-xl text-black">Loading...</div>
+    </div>
+  );
+}
+
+// Main export with Suspense wrapper
+export default function Page() {
+  return (
+    <Suspense fallback={<HotelPageLoading />}>
+      <HotelBookingContent />
+    </Suspense>
+  );
+}
+
+// Inner component that uses useSearchParams
+function HotelBookingContent() {
   const [step, setStep] = useState<1 | 2>(1);
   const [error, setError] = useState("");
   const [showPopup, setShowPopup] = useState(false);
-    const [lang, setLang] = useState<Language>("en");
-    const searchParams = useSearchParams();
+  const [lang, setLang] = useState<Language>("en");
+  const searchParams = useSearchParams();
   const [formData, setFormData] = useState<HotelBookingData>({
     country: "",
     city: "",
@@ -47,8 +65,6 @@ const Page = () => {
     userPhone: "",
     remarks: "",
   });
-
-  
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -79,11 +95,10 @@ const Page = () => {
     }));
   };
 
-      /* language */
-      useEffect(() => {
-          setLang(getLanguageFromSearchParams(searchParams));
-      }, [searchParams]);
-  
+  /* language */
+  useEffect(() => {
+    setLang(getLanguageFromSearchParams(searchParams));
+  }, [searchParams]);
 
   const handleNextStep = (e: React.FormEvent) => {
     e.preventDefault();
@@ -114,16 +129,16 @@ const Page = () => {
   return (
     <div className="bg-white min-h-screen">
       <Navbar />
-<SuccessPopup
-  isOpen={showPopup}
-  onClose={() => setShowPopup(false)}
-  title={lang === "en" ? "Booking Successful!" : "تم الحجز بنجاح!"}
-  message={
-    lang === "en"
-      ? "Our team will contact you shortly."
-      : "سيتواصل معك فريقنا قريبًا."
-  }
-/>
+      <SuccessPopup
+        isOpen={showPopup}
+        onClose={() => setShowPopup(false)}
+        title={lang === "en" ? "Booking Successful!" : "تم الحجز بنجاح!"}
+        message={
+          lang === "en"
+            ? "Our team will contact you shortly."
+            : "سيتواصل معك فريقنا قريبًا."
+        }
+      />
       <div className="max-w-2xl mx-auto p-6 min-h-screen">
         <h1 className="mb-8 text-center text-3xl font-bold">Hotel Booking</h1>
 
@@ -384,6 +399,4 @@ const Page = () => {
       <Footer />
     </div>
   );
-};
-
-export default Page;
+}

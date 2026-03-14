@@ -135,16 +135,16 @@ const ProgramPage = () => {
             <Suspense fallback={<div></div>}>
                 <Navbar />
             </Suspense>
-        <SuccessPopup
-  isOpen={showPopup}
-  onClose={() => setShowPopup(false)}
-  title={lang === "en" ? "Booking Successful!" : "تم الحجز بنجاح!"}
-  message={
-    lang === "en"
-      ? "Our team will contact you shortly."
-      : "سيتواصل معك فريقنا قريبًا."
-  }
-/>
+            <SuccessPopup
+                isOpen={showPopup}
+                onClose={() => setShowPopup(false)}
+                title={lang === "en" ? "Booking Successful!" : "تم الحجز بنجاح!"}
+                message={
+                    lang === "en"
+                        ? "Our team will contact you shortly."
+                        : "سيتواصل معك فريقنا قريبًا."
+                }
+            />
             <main className="flex-1 pt-24 pb-12 px-4 sm:px-6 lg:px-8">
                 {/* Header */}
                 <header className="max-w-6xl mx-auto mb-10">
@@ -351,7 +351,7 @@ const ProgramPage = () => {
                                             ? "Send us your details and our team will contact you shortly to confirm your booking."
                                             : "أرسل لنا بياناتك وسيتواصل معك فريقنا قريبًا لتأكيد الحجز."}
                                     </p>
-                                  <form className="w-full max-w-md mt-1" onSubmit={handleSubmit}>
+                                    <form className="w-full max-w-md mt-1" onSubmit={handleSubmit}>
                                         <div className="mb-4">
                                             <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="name">
                                                 {lang === "en" ? "Name" : "الاسم"}

@@ -100,7 +100,7 @@ export default function  Hero() {
         >
           {/* Main Heading - Responsive Typography */}
           <motion.h1
-            variants={itemVariants}
+            // variants={itemVariants}
             className={`font-bold mb-6 sm:mb-8 leading-tight ${
               isRTL ? "font-arabic" : ""
             } ${
@@ -116,7 +116,7 @@ export default function  Hero() {
 
           {/* Paragraph - Responsive Typography */}
           <motion.p
-            variants={itemVariants}
+            // variants={itemVariants}
             className={`mx-auto mb-8 sm:mb-12 leading-relaxed font-normal ${
               isRTL ? "font-arabic" : ""
             } ${
@@ -134,7 +134,9 @@ export default function  Hero() {
           </motion.p>
 
           {/* Optional CTA Button */}
-          <motion.div variants={itemVariants}>
+          <motion.div 
+          // variants={itemVariants}
+          >
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}

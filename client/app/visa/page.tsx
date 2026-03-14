@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import axios from "axios";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/footer";
@@ -52,18 +52,35 @@ const INITIAL_STEP_TWO_FORM: VisaStepTwoForm = {
 
 const countLetters = (value: string) => (value.match(/\p{L}/gu) ?? []).length;
 
-
 interface Country {
-  _id: string
-  nameEn: string
-  nameAr: string
-  country: string
-  images: string[]
-  inhomepage: boolean
+  _id: string;
+  nameEn: string;
+  nameAr: string;
+  country: string;
+  images: string[];
+  inhomepage: boolean;
 }
 
+// Loading fallback for Suspense
+function VisaPageLoading() {
+  return (
+    <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="text-xl text-black">Loading...</div>
+    </div>
+  );
+}
 
+// Main export with Suspense wrapper
 export default function VisaPage() {
+  return (
+    <Suspense fallback={<VisaPageLoading />}>
+      <VisaPageContent />
+    </Suspense>
+  );
+}
+
+// Inner component that uses useSearchParams
+function VisaPageContent() {
   const [lang, setLang] = useState<Language>("en");
   const [mounted, setMounted] = useState(false);
   const [currentStep, setCurrentStep] = useState<VisaStep>(1);
@@ -77,8 +94,8 @@ export default function VisaPage() {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [applicationId, setApplicationId] = useState<string | null>(null);
   const searchParams = useSearchParams();
-  const [countries, setCountries] = useState<Country[]>([])
-  const [loadingCountries, setLoadingCountries] = useState(true)
+  const [countries, setCountries] = useState<Country[]>([]);
+  const [loadingCountries, setLoadingCountries] = useState(true);
 
   useEffect(() => {
     setMounted(true);
@@ -92,30 +109,28 @@ export default function VisaPage() {
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        setLoadingCountries(true)
+        setLoadingCountries(true);
 
-        const res = await api.countries.getInVisa()
+        const res = await api.countries.getInVisa();
 
         // لو الـ API بترجع { countries: [...] }
-        const data = res.data.countries || res.data
+        const data = res.data.countries || res.data;
 
         if (Array.isArray(data)) {
-          setCountries(data)
+          setCountries(data);
         } else {
-          setCountries([])
+          setCountries([]);
         }
-
       } catch (err) {
-        console.error("Error fetching countries", err)
-        setCountries([])
+        console.error("Error fetching countries", err);
+        setCountries([]);
       } finally {
-        setLoadingCountries(false)
+        setLoadingCountries(false);
       }
-    }
+    };
 
-    fetchCountries()
-  }, [])
-
+    fetchCountries();
+  }, []);
 
   if (!mounted) return null;
 
@@ -137,7 +152,6 @@ export default function VisaPage() {
     setPopupOpen(false);
     resetWizardState();
   };
-
 
   const handleStepOneNext = () => {
     const errors: StepOneErrors = {};
@@ -172,10 +186,7 @@ export default function VisaPage() {
   const handleStepTwoNext = () => {
     const errors: StepTwoErrors = {};
 
-    if (
-      stepTwoForm.hasTraveledAbroad === "yes" &&
-      !stepTwoForm.visitedCountries.trim()
-    ) {
+    if (stepTwoForm.hasTraveledAbroad === "yes" && !stepTwoForm.visitedCountries.trim()) {
       errors.visitedCountries = "Please enter countries you have visited.";
     }
 
@@ -201,7 +212,7 @@ export default function VisaPage() {
         destination: stepOneForm.destination,
         otherCountries: stepOneForm.otherCountries,
         hasTraveledAbroad: stepTwoForm.hasTraveledAbroad === "yes",
-        visitedCountries: stepTwoForm.visitedCountries
+        visitedCountries: stepTwoForm.visitedCountries,
       };
       // const response = await api.visa.apply(payload);
       console.log("Submitting visa application with payload:", payload);
@@ -215,9 +226,7 @@ export default function VisaPage() {
     } catch (error: any) {
       console.error("Submission error:", error);
       setSubmitError(
-        error.response?.data?.error ||
-        error.message ||
-        "An error occurred while submitting your application."
+        error.response?.data?.error || error.message || "An error occurred while submitting your application."
       );
     } finally {
       setSubmitting(false);
@@ -243,9 +252,7 @@ export default function VisaPage() {
         {/* Same layout as Egypt page: section + max-w-7xl + title + grid */}
         <div className="py-20 px-4 sm:px-6 lg:px-8 pt-32">
           <div className="max-w-7xl mx-auto">
-            <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">
-              Where your journey begins
-            </h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Where your journey begins</h2>
 
             {/* Same grid and card size as Egypt categories */}
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8 py-4">
@@ -325,19 +332,11 @@ export default function VisaPage() {
                   )}
                 </div>
                 <p className="text-xl sm:text-2xl font-semibold text-center flex-1">
-                  {currentStep === 1
-                    ? "Visa Registration"
-                    : currentStep === 2
-                      ? "Travel History"
-                      : "Thank You!"}
+                  {currentStep === 1 ? "Visa Registration" : currentStep === 2 ? "Travel History" : "Thank You!"}
                 </p>
                 <div className="flex items-center gap-3 sm:gap-4">
                   <p className="text-sm sm:text-lg font-medium">
-                    {currentStep === 1
-                      ? "Step 1 of 3"
-                      : currentStep === 2
-                        ? "Step 2 of 3"
-                        : "Step 3 of 3"}
+                    {currentStep === 1 ? "Step 1 of 3" : currentStep === 2 ? "Step 2 of 3" : "Step 3 of 3"}
                   </p>
                   <button
                     type="button"
@@ -363,14 +362,13 @@ export default function VisaPage() {
                             setStepOneForm((prev) => ({ ...prev, name: e.target.value }));
                             setStepOneErrors((prev) => ({ ...prev, name: undefined }));
                           }}
-                          className={`w-full h-10 px-3 rounded-sm border text-gray-900 placeholder:text-gray-400 bg-white caret-gray-900 focus:outline-none focus:ring-2 ${stepOneErrors.name
-                            ? "border-red-400 focus:ring-red-300 focus:border-red-400"
-                            : "border-gray-300 focus:ring-blue-400 focus:border-blue-400"
-                            }`}
+                          className={`w-full h-10 px-3 rounded-sm border text-gray-900 placeholder:text-gray-400 bg-white caret-gray-900 focus:outline-none focus:ring-2 ${
+                            stepOneErrors.name
+                              ? "border-red-400 focus:ring-red-300 focus:border-red-400"
+                              : "border-gray-300 focus:ring-blue-400 focus:border-blue-400"
+                          }`}
                         />
-                        {stepOneErrors.name && (
-                          <p className="mt-1 text-sm text-red-600">{stepOneErrors.name}</p>
-                        )}
+                        {stepOneErrors.name && <p className="mt-1 text-sm text-red-600">{stepOneErrors.name}</p>}
                       </div>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-[90px_1fr] sm:items-center gap-1.5 sm:gap-3">
@@ -386,14 +384,13 @@ export default function VisaPage() {
                             setStepOneForm((prev) => ({ ...prev, phone: digitsOnly }));
                             setStepOneErrors((prev) => ({ ...prev, phone: undefined }));
                           }}
-                          className={`w-full h-10 px-3 rounded-sm border text-gray-900 placeholder:text-gray-400 bg-white caret-gray-900 focus:outline-none focus:ring-2 ${stepOneErrors.phone
-                            ? "border-red-400 focus:ring-red-300 focus:border-red-400"
-                            : "border-gray-300 focus:ring-blue-400 focus:border-blue-400"
-                            }`}
+                          className={`w-full h-10 px-3 rounded-sm border text-gray-900 placeholder:text-gray-400 bg-white caret-gray-900 focus:outline-none focus:ring-2 ${
+                            stepOneErrors.phone
+                              ? "border-red-400 focus:ring-red-300 focus:border-red-400"
+                              : "border-gray-300 focus:ring-blue-400 focus:border-blue-400"
+                          }`}
                         />
-                        {stepOneErrors.phone && (
-                          <p className="mt-1 text-sm text-red-600">{stepOneErrors.phone}</p>
-                        )}
+                        {stepOneErrors.phone && <p className="mt-1 text-sm text-red-600">{stepOneErrors.phone}</p>}
                       </div>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-[90px_1fr] sm:items-center gap-1.5 sm:gap-3">
@@ -406,14 +403,13 @@ export default function VisaPage() {
                             setStepOneForm((prev) => ({ ...prev, email: e.target.value }));
                             setStepOneErrors((prev) => ({ ...prev, email: undefined }));
                           }}
-                          className={`w-full h-10 px-3 rounded-sm border text-gray-900 placeholder:text-gray-400 bg-white caret-gray-900 focus:outline-none focus:ring-2 ${stepOneErrors.email
-                            ? "border-red-400 focus:ring-red-300 focus:border-red-400"
-                            : "border-gray-300 focus:ring-blue-400 focus:border-blue-400"
-                            }`}
+                          className={`w-full h-10 px-3 rounded-sm border text-gray-900 placeholder:text-gray-400 bg-white caret-gray-900 focus:outline-none focus:ring-2 ${
+                            stepOneErrors.email
+                              ? "border-red-400 focus:ring-red-300 focus:border-red-400"
+                              : "border-gray-300 focus:ring-blue-400 focus:border-blue-400"
+                          }`}
                         />
-                        {stepOneErrors.email && (
-                          <p className="mt-1 text-sm text-red-600">{stepOneErrors.email}</p>
-                        )}
+                        {stepOneErrors.email && <p className="mt-1 text-sm text-red-600">{stepOneErrors.email}</p>}
                       </div>
                     </div>
                   </div>
@@ -421,9 +417,7 @@ export default function VisaPage() {
                   <hr className="border-gray-200" />
 
                   <div>
-                    <h3 className="text-xl sm:text-2xl font-semibold text-blue-800 mb-3">
-                      Destination:
-                    </h3>
+                    <h3 className="text-xl sm:text-2xl font-semibold text-blue-800 mb-3">Destination:</h3>
                     <div className="max-h-52 overflow-y-auto pr-1">
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-2 gap-x-4">
                         {countries.map((country) => (
@@ -440,7 +434,7 @@ export default function VisaPage() {
                                 setStepOneForm((prev) => ({
                                   ...prev,
                                   destination: e.target.value,
-                                  otherCountry: ""
+                                  otherCountry: "",
                                 }))
                               }
                               className="mt-0.5 h-4 w-4 accent-blue-600"
@@ -449,7 +443,6 @@ export default function VisaPage() {
                           </label>
                         ))}
                       </div>
-
                     </div>
                     {stepOneErrors.destination && (
                       <p className="mt-2 text-sm text-red-600">{stepOneErrors.destination}</p>
@@ -461,9 +454,7 @@ export default function VisaPage() {
                     <input
                       type="text"
                       value={stepOneForm.otherCountries}
-                      onChange={(e) =>
-                        setStepOneForm((prev) => ({ ...prev, otherCountries: e.target.value }))
-                      }
+                      onChange={(e) => setStepOneForm((prev) => ({ ...prev, otherCountries: e.target.value }))}
                       placeholder="Enter other destinations"
                       className="w-full h-10 px-3 rounded-sm border border-gray-300 text-gray-900 placeholder:text-gray-400 bg-white caret-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
                     />
@@ -482,9 +473,7 @@ export default function VisaPage() {
               ) : currentStep === 2 ? (
                 <div className="px-4 py-5 sm:px-6 sm:py-6 space-y-5">
                   <div className="space-y-4">
-                    <p className="text-2xl sm:text-[32px] text-gray-800">
-                      Have you ever traveled abroad?
-                    </p>
+                    <p className="text-2xl sm:text-[32px] text-gray-800">Have you ever traveled abroad?</p>
                     <div className="flex items-center gap-8 sm:gap-12">
                       <label className="inline-flex items-center gap-2.5 text-2xl text-gray-800 cursor-pointer">
                         <input
@@ -524,12 +513,7 @@ export default function VisaPage() {
                   {stepTwoForm.hasTraveledAbroad === "yes" && (
                     <div className="space-y-3">
                       <label className="inline-flex items-center gap-2 text-xl text-gray-800">
-                        <input
-                          type="checkbox"
-                          checked
-                          readOnly
-                          className="h-5 w-5 accent-blue-600 pointer-events-none"
-                        />
+                        <input type="checkbox" checked readOnly className="h-5 w-5 accent-blue-600 pointer-events-none" />
                         <span>Countries you have visited:</span>
                       </label>
                       <input
@@ -542,10 +526,11 @@ export default function VisaPage() {
                           }));
                           setStepTwoErrors((prev) => ({ ...prev, visitedCountries: undefined }));
                         }}
-                        className={`w-full h-11 px-3 rounded-sm border text-gray-900 placeholder:text-gray-400 bg-white caret-gray-900 focus:outline-none focus:ring-2 ${stepTwoErrors.visitedCountries
-                          ? "border-red-400 focus:ring-red-300 focus:border-red-400"
-                          : "border-gray-300 focus:ring-blue-400 focus:border-blue-400"
-                          }`}
+                        className={`w-full h-11 px-3 rounded-sm border text-gray-900 placeholder:text-gray-400 bg-white caret-gray-900 focus:outline-none focus:ring-2 ${
+                          stepTwoErrors.visitedCountries
+                            ? "border-red-400 focus:ring-red-300 focus:border-red-400"
+                            : "border-gray-300 focus:ring-blue-400 focus:border-blue-400"
+                        }`}
                       />
                       {stepTwoErrors.visitedCountries && (
                         <p className="text-sm text-red-600">{stepTwoErrors.visitedCountries}</p>
@@ -597,12 +582,8 @@ export default function VisaPage() {
                       </div>
 
                       <div className="mt-8 text-center space-y-4">
-                        <p className="text-3xl sm:text-4xl font-semibold text-blue-900">
-                          Thank you for registering!
-                        </p>
-                        <p className="text-xl sm:text-2xl text-gray-700">
-                          Our visa team will contact you shortly.
-                        </p>
+                        <p className="text-3xl sm:text-4xl font-semibold text-blue-900">Thank you for registering!</p>
+                        <p className="text-xl sm:text-2xl text-gray-700">Our visa team will contact you shortly.</p>
                         <p className="text-sm text-gray-600 bg-blue-50 p-3 rounded-lg">
                           <strong>Application ID:</strong> {applicationId}
                         </p>
@@ -628,14 +609,11 @@ export default function VisaPage() {
                     </button>
                   </div>
                 </div>
-                )}
-              </motion.div>
+              )}
+            </motion.div>
           </>
         )}
       </AnimatePresence>
     </>
   );
 }
-
-
-

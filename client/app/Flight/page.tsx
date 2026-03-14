@@ -3,16 +3,33 @@
 import Footer from "@/components/footer";
 import Navbar from "@/components/Navbar";
 import axios from "axios";
-import { setFips } from "crypto";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import AirportDropdown from "@/components/SearchableDropdown"
 import apiClient from "@/lib/api";
 import SuccessPopup from "@/components/SuccessPopup";
 import { Language, getDirection, getLanguageFromSearchParams } from "@/lib/language";
 import { useParams, useSearchParams } from 'next/navigation';
 
-export default function FlightSearch() {
+// Loading fallback for Suspense
+function FlightSearchLoading() {
+    return (
+        <div className="flex items-center justify-center min-h-screen">
+            <div className="text-xl text-black">Loading...</div>
+        </div>
+    );
+}
 
+// Main component wrapper that provides Suspense boundary
+export default function FlightSearchPage() {
+    return (
+        <Suspense fallback={<FlightSearchLoading />}>
+            <FlightSearch />
+        </Suspense>
+    );
+}
+
+// Inner component that uses useSearchParams
+function FlightSearch() {
     const [tripType, setTripType] = useState("round");
     const [userInfoForm, setUserInfoForm] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -21,9 +38,7 @@ export default function FlightSearch() {
 
     const [fromCountries, setFromCountriess] = useState<any[]>([]);
     const [lang, setLang] = useState<Language>("en");
-        const searchParams = useSearchParams();
-    const [toCountries, setToCountries] = useState([]);
-    const [fromCountry, setFromCountry] = useState("");
+    const searchParams = useSearchParams();
     const [formData, setFormData] = useState({
         userEmail: "",
         userName: "",
@@ -42,21 +57,13 @@ export default function FlightSearch() {
         ],
     });
 
-
-        /* language */
-        useEffect(() => {
-            setLang(getLanguageFromSearchParams(searchParams));
-        }, [searchParams]);
-
-
-    // useEffect(() => {
-    //     setMounted(true);
-    //     setLang(getLanguageFromSearchParams(searchParams));
-    // }, [searchParams]);
+    /* language */
+    useEffect(() => {
+        setLang(getLanguageFromSearchParams(searchParams));
+    }, [searchParams]);
 
     useEffect(() => {
         fetchFromCountries();
-        // fetchToCountries();
     }, []);
 
     const fetchFromCountries = async () => {
@@ -70,7 +77,6 @@ export default function FlightSearch() {
         } finally {
             setLoading(false);
         }
-
     }
 
     const handelValidation = () => {
@@ -107,7 +113,6 @@ export default function FlightSearch() {
         return true;
     }
 
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!handelValidation()) return;
@@ -117,7 +122,6 @@ export default function FlightSearch() {
 
         try {
             const res = await apiClient.post("/flights", formData);
-            // axios puts the response body on `data` and throws on non-2xx statuses
             const data = res.data;
 
             setShowPopup(true);
@@ -169,28 +173,16 @@ export default function FlightSearch() {
                 onChange={(iata) =>
                     setFormData({ ...formData, to: iata })
                 }
-                placeholder="From Airport"
+                placeholder="To Airport"
             />
-
-            {/* <input
-                type="text"
-                placeholder="To"
-                value={formData.to}
-                onChange={(e) =>
-                    setFormData({ ...formData, to: e.target.value })
-                }
-                className="input  bg-white text-black p-2  border-2 border-black rounded-2xl"
-            /> */}
-
             <input
                 type="date"
                 value={formData.date}
                 onChange={(e) =>
                     setFormData({ ...formData, date: e.target.value })
                 }
-                className="input  bg-white text-black p-2 border-2 border-black rounded-2xl"
+                className="input bg-white text-black p-2 border-2 border-black rounded-2xl"
             />
-
             <input
                 type="date"
                 value={formData.returnDate}
@@ -199,7 +191,6 @@ export default function FlightSearch() {
                 }
                 className="input bg-white text-black p-2 border-2 border-black rounded-2xl"
             />
-
             <input
                 type="number"
                 min="1"
@@ -213,7 +204,6 @@ export default function FlightSearch() {
                 placeholder="Adults"
                 className="input bg-white text-black p-2 border-2 border-black rounded-2xl"
             />
-
             <input
                 type="number"
                 min="0"
@@ -232,13 +222,12 @@ export default function FlightSearch() {
                 onChange={(e) =>
                     setFormData({ ...formData, cabinClass: e.target.value })
                 }
-                className="input bg-white text-black p-2 w-full  border-2 border-black rounded-2xl"
+                className="input bg-white text-black p-2 w-full border-2 border-black rounded-2xl"
             >
                 <option value="economy">Economy</option>
                 <option value="business">Business</option>
                 <option value="first">First</option>
             </select>
-            {/* <CabinClass /> */}
         </div>
     );
 
@@ -254,7 +243,6 @@ export default function FlightSearch() {
                 }
                 className="input bg-white text-black p-2 border-2 border-black rounded-2xl"
             />
-
             <input
                 type="text"
                 placeholder="Going To"
@@ -264,7 +252,6 @@ export default function FlightSearch() {
                 }
                 className="input bg-white text-black p-2 border-2 border-black rounded-2xl"
             />
-
             <input
                 type="date"
                 value={formData.date}
@@ -273,9 +260,6 @@ export default function FlightSearch() {
                 }
                 className="input bg-white text-black p-2 border-2 border-black rounded-2xl"
             />
-
-
-
             <input
                 type="number"
                 min="1"
@@ -289,7 +273,6 @@ export default function FlightSearch() {
                 placeholder="Adults"
                 className="input bg-white text-black p-2 border-2 border-black rounded-2xl"
             />
-
             <input
                 type="number"
                 min="0"
@@ -308,18 +291,17 @@ export default function FlightSearch() {
                 onChange={(e) =>
                     setFormData({ ...formData, cabinClass: e.target.value })
                 }
-                className="input bg-white text-black p-2 w-full  border-2 border-black rounded-2xl"
+                className="input bg-white text-black p-2 w-full border-2 border-black rounded-2xl"
             >
                 <option value="economy">Economy</option>
                 <option value="business">Business</option>
                 <option value="first">First</option>
-            </select>            {/* <CabinClass /> */}
+            </select>
         </div>
     );
 
     // ================= MULTI CITY =================
     const MultiCityForm = () => {
-
         const updateCity = (index: number, field: 'from' | 'to' | 'date', value: string) => {
             const updated = [...formData.multiCities];
             updated[index] = { ...updated[index], [field]: value };
@@ -337,8 +319,9 @@ export default function FlightSearch() {
                 });
             }
         };
+        
         const deleteCity = () => {
-            if (formData.multiCities.length < 5) {
+            if (formData.multiCities.length > 2) {
                 setFormData({
                     ...formData,
                     multiCities: formData.multiCities.slice(0, -1)
@@ -359,7 +342,6 @@ export default function FlightSearch() {
                             }
                             className="input bg-white text-black p-2 border-2 border-black rounded-2xl"
                         />
-
                         <input
                             type="text"
                             placeholder="To"
@@ -369,7 +351,6 @@ export default function FlightSearch() {
                             }
                             className="input bg-white text-black p-2 border-2 border-black rounded-2xl"
                         />
-
                         <input
                             type="date"
                             value={city.date}
@@ -382,7 +363,6 @@ export default function FlightSearch() {
                 ))}
 
                 <div className="flex flex-row">
-
                     {formData.multiCities.length < 5 && (
                         <button
                             type="button"
@@ -396,14 +376,13 @@ export default function FlightSearch() {
                         <button
                             type="button"
                             onClick={deleteCity}
-                            className=" font-semibold bg-white text-red-600 p-2"
+                            className="font-semibold bg-white text-red-600 p-2"
                         >
-                            + Delete Flight
+                            - Delete Flight
                         </button>
                     )}
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-
                     <input
                         type="number"
                         min="1"
@@ -417,7 +396,6 @@ export default function FlightSearch() {
                         placeholder="Adults"
                         className="input bg-white text-black p-2 border-2 border-black rounded-2xl"
                     />
-
                     <input
                         type="number"
                         min="0"
@@ -436,71 +414,19 @@ export default function FlightSearch() {
                         onChange={(e) =>
                             setFormData({ ...formData, cabinClass: e.target.value })
                         }
-                        className="input bg-white text-black p-2 w-full  border-2 border-black rounded-2xl"
+                        className="input bg-white text-black p-2 w-full border-2 border-black rounded-2xl"
                     >
                         <option value="economy">Economy</option>
                         <option value="business">Business</option>
                         <option value="first">First</option>
                     </select>
                 </div>
-
-                {/* <CabinClass /> */}
             </div>
         );
     };
 
-    // ================= PASSENGERS =================
-    // const PassengerSection = () => (
-    //     <>
-    //         <input
-    //             type="number"
-    //             min="1"
-    //             value={formData.numOfAdults}
-    //             onChange={(e) =>
-    //                 setFormData({
-    //                     ...formData,
-    //                     numOfAdults: parseInt(e.target.value, 10) || 0,
-    //                 })
-    //             }
-    //             placeholder="Adults"
-    //             className="input bg-white text-black p-2 border-2 border-black rounded-2xl"
-    //         />
-
-    //         <input
-    //             type="number"
-    //             min="0"
-    //             value={formData.numOfChildren}
-    //             onChange={(e) =>
-    //                 setFormData({
-    //                     ...formData,
-    //                     numOfChildren: parseInt(e.target.value, 10) || 0,
-    //                 })
-    //             }
-    //             placeholder="Children"
-    //             className="input bg-white text-black p-2 border-2 border-black rounded-2xl"
-    //         />
-    //         <select
-    //             value={formData.cabinClass}
-    //             onChange={(e) =>
-    //                 setFormData({ ...formData, cabinClass: e.target.value })
-    //             }
-    //             className="input bg-white text-black p-2 w-full  border-2 border-black rounded-2xl"
-    //         >
-    //             <option value="economy">Economy</option>
-    //             <option value="business">Business</option>
-    //             <option value="first">First</option>
-    //         </select>
-    //     </>
-    // );
-
-    // ================= CABIN =================
-    // const CabinClass = () => (
-
-    // );
-
-    // ================= RENDER =================
     return (
-        <div >
+        <div>
             <Navbar />
             <SuccessPopup
                 isOpen={showPopup}
@@ -513,9 +439,7 @@ export default function FlightSearch() {
                 }
             />
             <div className="flex items-center justify-center min-h-screen">
-
                 <div className="bg-white p-8 rounded-2xl shadow-xl mx-12 max-w-6xl w-full">
-
                     <h1 className="text-2xl text-black m-2">
                         Flight Services
                     </h1>
@@ -525,48 +449,43 @@ export default function FlightSearch() {
                     <div className="line bg-black w-full border-b-2 border-black"></div>
 
                     <div className="flex gap-4 my-6">
-                        <button onClick={() => { setTripType("round"), setFormData({ ...formData, tripType: "round" }) }}
+                        <button onClick={() => { setTripType("round"); setFormData({ ...formData, tripType: "round" }) }}
                             className={tripType === "round" ? "btn-active text-blue-700 border-b-2 border-blue-700" : "btn text-black border-b-2 border-black"}>
                             Round Trip
                         </button>
 
-                        <button onClick={() => { setTripType("oneway"), setFormData({ ...formData, tripType: "oneway" }) }}
+                        <button onClick={() => { setTripType("oneway"); setFormData({ ...formData, tripType: "oneway" }) }}
                             className={tripType === "oneway" ? "btn-active text-blue-700 border-b-2 border-blue-700" : "btn text-black border-b-2 border-black"}>
                             One Way
                         </button>
 
-                        <button onClick={() => { setTripType("multi"), setFormData({ ...formData, tripType: "multi" }) }}
+                        <button onClick={() => { setTripType("multi"); setFormData({ ...formData, tripType: "multi" }) }}
                             className={tripType === "multi" ? "btn-active text-blue-700 border-b-2 border-blue-700" : "btn text-black border-b-2 border-black"}>
                             Multi City
                         </button>
                     </div>
 
-                    {
-                        error && <p className="text-red-500">{error}</p>
-                    }
+                    {error && <p className="text-red-500">{error}</p>}
 
-                    <form className="" onSubmit={handleSubmit} >
+                    <form className="" onSubmit={handleSubmit}>
                         {tripType === "round" && <RoundTripForm />}
                         {tripType === "oneway" && <OneWayForm />}
                         {tripType === "multi" && <MultiCityForm />}
 
-                        {
-                            userInfoForm && (
-                                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
-                                    <input type="text" placeholder="Name"
-                                        onChange={(e) => setFormData({ ...formData, userName: e.target.value })} className="input bg-white text-black p-2 border-2 border-black rounded-2xl" />
-                                    <input type="text" placeholder="Email"
-                                        onChange={(e) => setFormData({ ...formData, userEmail: e.target.value })} className="input bg-white text-black p-2 border-2 border-black rounded-2xl" />
-                                    <input type="text" placeholder="Phone"
-                                        onChange={(e) => setFormData({ ...formData, userNumber: e.target.value })} className="input bg-white text-black p-2 border-2 border-black rounded-2xl" />
-                                </div>
-                            )
-                        }
+                        {userInfoForm && (
+                            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
+                                <input type="text" placeholder="Name"
+                                    onChange={(e) => setFormData({ ...formData, userName: e.target.value })} className="input bg-white text-black p-2 border-2 border-black rounded-2xl" />
+                                <input type="text" placeholder="Email"
+                                    onChange={(e) => setFormData({ ...formData, userEmail: e.target.value })} className="input bg-white text-black p-2 border-2 border-black rounded-2xl" />
+                                <input type="text" placeholder="Phone"
+                                    onChange={(e) => setFormData({ ...formData, userNumber: e.target.value })} className="input bg-white text-black p-2 border-2 border-black rounded-2xl" />
+                            </div>
+                        )}
 
                         {!userInfoForm ? <div
-                            // type="button"
                             onClick={() => setUserInfoForm(true)}
-                            className="mt-6 w-full bg-blue-600 text-white py-3 rounded-xl text-center">
+                            className="mt-6 w-full bg-blue-600 text-white py-3 rounded-xl text-center cursor-pointer">
                             Next
                         </div> : <button
                             type="submit"
