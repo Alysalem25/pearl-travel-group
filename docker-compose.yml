@@ -32,6 +32,7 @@ services:
     environment:
       PORT: 5000
       NODE_ENV: ${NODE_ENV:-production}
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-/api} 
       MONGO_URI: mongodb://${MONGO_USERNAME:-admin}:${MONGO_PASSWORD:-password}@mongodb:27017/${MONGO_DATABASE:-pearl_travel}?authSource=admin
       # Add your other environment variables here
       # JWT_SECRET: ${JWT_SECRET}
