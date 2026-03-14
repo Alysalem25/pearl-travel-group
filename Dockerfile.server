@@ -2,11 +2,14 @@ FROM node:20
 
 WORKDIR /app
 
-COPY package*.json ./
+# نسخ package.json و package-lock.json من مجلد server
+COPY server/package*.json ./
 
+# تثبيت الاعتمادات
 RUN npm install
 
-COPY . .
+# نسخ باقي كود السيرفر
+COPY server .
 
 EXPOSE 5000
 
