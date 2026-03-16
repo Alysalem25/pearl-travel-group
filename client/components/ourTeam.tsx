@@ -65,7 +65,7 @@ const OurTeam = () => {
                                 <div className="relative h-64 w-full overflow-hidden">
                                     <img
                                         src={member.images
-                                            ? `http://localhost:5000${member.images[0]}`
+                                            ? `${process.env.NEXT_PUBLIC_API_URL}${member.images[0]}`
                                             : '/default-profile.png'} alt={member.name}
                                         className="w-full h-full object-cover"
                                     />

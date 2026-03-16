@@ -37,8 +37,8 @@ app.use(express.json({ limit: "10mb" }));
 
 // CORS Configuration - Restrict to frontend origin
 app.use(cors({
-  origin:  "http://localhost:3000",
-  credentials: true,
+  origin: ["http://147.93.126.15"],
+      credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
