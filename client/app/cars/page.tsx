@@ -73,8 +73,13 @@ const Page = () => {
   const handleFinalSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Final Trip Data:", formData);
-    apiClient.post(`/carTrip`, formData)
-    setShowPopup(true);
+    try {
+      await apiClient.post(`/carTrip`, formData)
+      setShowPopup(true);
+
+    } catch (e) {
+      console.log(e)
+    }
   };
 
   return (

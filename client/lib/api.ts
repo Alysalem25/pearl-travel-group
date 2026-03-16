@@ -23,17 +23,9 @@ type CategoryPayload = {
   isActive: boolean
 }
 
-// // Create axios instance with base URL
-// const apiClient: AxiosInstance = axios.create({
-//   baseURL: "http://147.93.126.15/5000", // الآن /api
-//   timeout: 10000,
-//   headers: {
-//     "Content-Type": "application/json"
-//   }
-// });
-
+// Create axios instance with base URL
 const apiClient: AxiosInstance = axios.create({
-  baseURL: "/api",
+  baseURL: "http://localhost:5000/api",
   timeout: 10000,
   headers: {
     "Content-Type": "application/json"

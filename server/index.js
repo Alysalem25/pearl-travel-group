@@ -18,7 +18,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const helmet = require("helmet");
 const cors = require("cors");
-const path = require("path");
+const path = require("path"); 
 require("dotenv").config();
 // app.use("/auth", authRoutes);
 
@@ -37,7 +37,7 @@ app.use(express.json({ limit: "10mb" }));
 
 // CORS Configuration - Restrict to frontend origin
 app.use(cors({
-  origin: ["http://147.93.126.15"],
+  origin:  "http://localhost:3000",
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"]
