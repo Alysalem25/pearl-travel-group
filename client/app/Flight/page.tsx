@@ -503,6 +503,7 @@
 //     );
 // }
 // FlightSearch.tsx - Updated with formal white/red design
+
 'use client'
 
 import Footer from "@/components/footer";
