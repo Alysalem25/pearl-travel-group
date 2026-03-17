@@ -284,9 +284,10 @@
 
 // export default Page;
 
-'use client'
 
-import React, { useState } from "react";
+'use client';
+
+import React, { useState, Suspense } from "react";
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/footer'
 import { Language, getDirection, getLanguageFromSearchParams } from "@/lib/language";
@@ -355,8 +356,7 @@ const translations = {
     successMessage: "Our team will contact you shortly.",
     errors: {
       selectCar: "Please select a car type",
-      fillFields: "Please fill in all required fields",
-      invalidEmail: "Please enter a valid email"
+      fillFields: "Please fill in all required fields"
     },
     trust: {
       secure: "Secure Booking",
@@ -391,8 +391,7 @@ const translations = {
     successMessage: "سيتواصل معك فريقنا قريبًا.",
     errors: {
       selectCar: "الرجاء اختيار نوع السيارة",
-      fillFields: "الرجاء ملء جميع الحقول المطلوبة",
-      invalidEmail: "الرجاء إدخال بريد إلكتروني صحيح"
+      fillFields: "الرجاء ملء جميع الحقول المطلوبة"
     },
     trust: {
       secure: "حجز آمن",
@@ -402,7 +401,29 @@ const translations = {
   }
 };
 
-const Page = () => {
+// Loading fallback
+function CarPageLoading() {
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="flex flex-col items-center gap-4">
+        <Car className="w-16 h-16 text-red-600" />
+        <div className="text-xl text-gray-600 font-medium">Loading...</div>
+      </div>
+    </div>
+  );
+}
+
+// Main export with Suspense wrapper
+export default function Page() {
+  return (
+    <Suspense fallback={<CarPageLoading />}>
+      <CarRentalContent />
+    </Suspense>
+  );
+}
+
+// Inner component that uses useSearchParams
+function CarRentalContent() {
   const searchParams = useSearchParams();
   const lang = getLanguageFromSearchParams(searchParams);
   const t = translations[lang];
@@ -695,7 +716,7 @@ const Page = () => {
                   </div>
 
                   <div className="relative">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1-2 w-5 h-5 text-red-600" />
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600" />
                     <input
                       type="email"
                       name="userEmail"
@@ -817,6 +838,4 @@ const Page = () => {
       <Footer />
     </div>
   );
-};
-
-export default Page;
+}
