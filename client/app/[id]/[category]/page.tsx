@@ -111,7 +111,7 @@ const Page = () => {
                 style={{
                   backgroundImage: `
                   linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)),
-                  url(http://localhost:5000${program.images[0]})
+                  url(http://147.93.126.15${program.images[0]})
                   `
                 }}
               >

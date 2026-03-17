@@ -179,15 +179,15 @@ svg {
 
 @media (max-width: 768px) {
   .button_img1, .button_img2 {
-    width: 200px;
-    height: 220px;
+       width: 300px;
+    height: 248px;
   }
 }
 
 @media (max-width: 480px) {
   .button_img1, .button_img2 {
-    width:200px;
-    height: 180px;
+    width: 300px;
+    height: 248px;
     border-radius: 20px;
   }
 }

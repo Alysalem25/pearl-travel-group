@@ -797,7 +797,7 @@ function ProgramsPageContent() {
             status: p.status,
         })
         setImages([])
-        setPreviewImages((p.images || []).map((img) => `http://localhost:5000${img}`))
+        setPreviewImages((p.images || []).map((img) => `http://147.93.126.15${img}`))
         setDays(
             p.days?.length
                 ? p.days.map((d, idx) => ({ ...d, dayNumber: idx + 1 }))

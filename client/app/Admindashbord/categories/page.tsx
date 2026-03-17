@@ -170,7 +170,7 @@ const CategoriesPageContent = () => {
 
         // show existing images from server
         setImages([])
-        setPreviewImages((c.images || []).map(img => `http://localhost:5000/uploads/categories/${img}`))
+        setPreviewImages((c.images || []).map(img => `http://147.93.126.15/uploads/categories/${img}`))
 
         setShowForm(true)
     }

@@ -133,21 +133,7 @@ export default function  Hero() {
             {t.paragraph}
           </motion.p>
 
-          {/* Optional CTA Button */}
-          <motion.div 
-          // variants={itemVariants}
-          >
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className={`px-8 py-4 bg-[var(--mainColor)] hover:bg-red-700 text-white rounded-lg font-semibold transition-colors duration-200 shadow-lg ${
-                // Responsive button text
-                "text-sm sm:text-base md:text-lg"
-              }`}
-            >
-              {lang === "en" ? "Explore Now" : "استكشف الآن"}
-            </motion.button>
-          </motion.div>
+        
         </motion.div>
       </div>
 

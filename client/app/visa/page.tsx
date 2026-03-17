@@ -267,7 +267,7 @@ function VisaPageContent() {
                   <div
                     className="bg-gradient-to-br rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 p-12 text-white h-64 flex flex-col items-center justify-center relative overflow-hidden"
                     style={{
-                      backgroundImage: `url('http://localhost:5000${country.images[0]}')`,
+                      backgroundImage: `url('http://147.93.126.15${country.images[0]}')`,
                       backgroundSize: "cover",
                       backgroundPosition: "center",
                     }}
