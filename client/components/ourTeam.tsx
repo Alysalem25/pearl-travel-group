@@ -26,7 +26,7 @@ const OurTeam = () => {
 
     if (isLoading) {
         return (
-            <section className="py-20 bg-gray-950 text-center text-white">
+            <section className="py-20  text-center text-white">
                 <p className="text-xl">Loading team members...</p>
             </section>
         )
@@ -34,7 +34,7 @@ const OurTeam = () => {
 
     if (isError) {
         return (
-            <section className="py-20 bg-gray-950 text-center text-red-500">
+            <section className="py-20 text-center text-red-500">
                 <p>Failed to load team members.</p>
             </section>
         )
@@ -55,43 +55,88 @@ const OurTeam = () => {
                 {/* Team Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
 
-                    {members.map((member: TeamMember) => {
-                        return (
-                            <div
-                                key={member._id}
-                                className="bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition duration-300"
-                            >
-                                {/* Image */}
-                                <div className="relative h-64 w-full overflow-hidden">
-                                    <img
-                                        src={member.images
-                                            ? `${process.env.NEXT_PUBLIC_API_URL}${member.images[0]}`
-                                            : '/default-profile.png'} alt={member.name}
-                                        className="w-full h-full object-cover"
-                                    />
-                                    <div className="absolute inset-0 bg-black/40"></div>
-                                </div>
-
-                                {/* Info */}
-                                <div className="p-6 text-center">
-                                    <h3 className="text-2xl font-semibold mb-2">
-                                        {member.name}
-                                    </h3>
-
-                                    <p className="text-red-500 font-medium mb-2">
+                    <div className="flex flex-row flex-wrap justify-center gap-12 p-12 bg-gray-50">
+                        {members.map((member: TeamMember) => {
+                            return (
+                                <div className="group flex flex-col items-center text-center cursor-pointer" key={member._id}
+                                >
+                                    <div className="relative w-72 h-72 mb-4">
+                                        <img
+                                            src={member.images
+                                                ? `${process.env.NEXT_PUBLIC_API_URL}${member.images[0]}`
+                                                : '/default-profile.png'} alt={member.name}
+                                            className="w-full h-full object-cover m-2"
+                                        />
+                                        <div className="absolute inset-0 rounded-full bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
+                                    </div>
+                                    <h3 className="text-xl font-semibold text-gray-800 transform transition-all duration-300 group-hover:-translate-y-1 group-hover:text-blue-600">{member.name}</h3>
+                                    <p className="text-sm text-gray-500 mt-1  transform translate-y-2 transition-all duration-300 ">
                                         {member.roleInTeam}
                                     </p>
-
-                                    {/* {member.number && (
-                                        <p className="text-gray-400 text-sm">
-                                            📞 {member.number}
-                                        </p>
-                                    )} */}
-
                                 </div>
-                            </div>
-                        )
-                    })}
+                            )
+                        })}
+                        {members.map((member: TeamMember) => {
+                            return (
+                                <div className="group flex flex-col items-center text-center cursor-pointer" key={member._id}
+                                >
+                                    <div className="relative w-72 h-72 mb-4">
+                                        <img
+                                            src={member.images
+                                                ? `/api${member.images[0]}`
+                                                : '/default-profile.png'} alt={member.name}
+                                            className="w-full h-full object-cover m-2"
+                                        />
+                                        <div className="absolute inset-0 rounded-full bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
+                                    </div>
+                                    <h3 className="text-xl font-semibold text-gray-800 transform transition-all duration-300 group-hover:-translate-y-1 group-hover:text-blue-600">{member.name}</h3>
+                                    <p className="text-sm text-gray-500 mt-1  transform translate-y-2 transition-all duration-300 ">
+                                        {member.roleInTeam}
+                                    </p>
+                                </div>
+                            )
+                        })}
+                        {members.map((member: TeamMember) => {
+                            return (
+                                <div className="group flex flex-col items-center text-center cursor-pointer" key={member._id}
+                                >
+                                    <div className="relative w-72 h-72 mb-4">
+                                        <img
+                                            src={member.images
+                                                ? `http://147.93.126.15${member.images[0]}`
+                                                : '/default-profile.png'} alt={member.name}
+                                            className="w-full h-full object-cover m-2"
+                                        />
+                                        <div className="absolute inset-0 rounded-full bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
+                                    </div>
+                                    <h3 className="text-xl font-semibold text-gray-800 transform transition-all duration-300 group-hover:-translate-y-1 group-hover:text-blue-600">{member.name}</h3>
+                                    <p className="text-sm text-gray-500 mt-1  transform translate-y-2 transition-all duration-300 ">
+                                        {member.roleInTeam}
+                                    </p>
+                                </div>
+                            )
+                        })}
+                        {members.map((member: TeamMember) => {
+                            return (
+                                <div className="group flex flex-col items-center text-center cursor-pointer" key={member._id}
+                                >
+                                    <div className="relative w-72 h-72 mb-4">
+                                        <img
+                                            src={member.images
+                                                ? `http://147.93.126.15/${member.images[0]}`
+                                                : '/default-profile.png'} alt={member.name}
+                                            className="w-full h-full object-cover m-2"
+                                        />
+                                        <div className="absolute inset-0 rounded-full bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
+                                    </div>
+                                    <h3 className="text-xl font-semibold text-gray-800 transform transition-all duration-300 group-hover:-translate-y-1 group-hover:text-blue-600">{member.name}</h3>
+                                    <p className="text-sm text-gray-500 mt-1  transform translate-y-2 transition-all duration-300 ">
+                                        {member.roleInTeam}
+                                    </p>
+                                </div>
+                            )
+                        })}
+                    </div>
 
                 </div>
 
