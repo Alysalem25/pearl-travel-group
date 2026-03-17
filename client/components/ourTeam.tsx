@@ -65,7 +65,7 @@ const OurTeam = () => {
                                             src={member.images
                                                 ? `http://147.93.126.15${member.images[0]}`
                                                 : '/default-profile.png'} alt={member.name}
-                                            className="w-full h-full object-cover m-2"
+                                            className="w-full h-full object-cover m-2 rounded-full"
                                         />
                                         <div className="absolute inset-0 rounded-full bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
                                     </div>
