@@ -319,7 +319,7 @@
 //                 });
 //             }
 //         };
-        
+
 //         const deleteCity = () => {
 //             if (formData.multiCities.length > 2) {
 //                 setFormData({
@@ -503,7 +503,6 @@
 //     );
 // }
 // FlightSearch.tsx - Updated with formal white/red design
-
 'use client'
 
 import Footer from "@/components/footer";
@@ -515,22 +514,22 @@ import apiClient from "@/lib/api";
 import SuccessPopup from "@/components/SuccessPopup";
 import { Language, getDirection, getLanguageFromSearchParams } from "@/lib/language";
 import { useParams, useSearchParams } from 'next/navigation';
-import { 
-  Plane, 
-  Calendar, 
-  Users, 
-  ArrowRightLeft, 
-  ArrowRight, 
-  MapPin, 
-  Sparkles,
-  Loader2,
-  Plus,
-  Trash2,
-  Armchair,
-  Mail,
-  User,
-  Phone,
-  Globe
+import {
+    Plane,
+    Calendar,
+    Users,
+    ArrowRightLeft,
+    ArrowRight,
+    MapPin,
+    Sparkles,
+    Loader2,
+    Plus,
+    Trash2,
+    Armchair,
+    Mail,
+    User,
+    Phone, Baby,
+    Globe
 } from 'lucide-react';
 
 // Loading fallback for Suspense
@@ -706,7 +705,7 @@ function FlightSearch() {
                     placeholder="From Airport"
                 />
             </div>
-            
+
             <div className="relative">
                 <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600" />
                 <AirportDropdown
@@ -719,45 +718,60 @@ function FlightSearch() {
 
             <div className="relative">
                 <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600 z-10" />
+                <span className="absolute left-10 top-1/2 -translate-y-1/2">
+                    Going
+                </span>
                 <input
                     type="date"
                     value={formData.date}
                     onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                    className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
+                    className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-24 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
                 />
             </div>
 
             <div className="relative">
                 <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600 z-10" />
-                <input
-                    type="date"
-                    value={formData.returnDate}
-                    onChange={(e) => setFormData({ ...formData, returnDate: e.target.value })}
-                    className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
-                />
+                <span className="absolute left-10 top-1/2 -translate-y-1/2">
+                    Return
+                </span>
+                <label>
+                    <input
+                        type="date"
+                        value={formData.returnDate}
+                        onChange={(e) => setFormData({ ...formData, returnDate: e.target.value })}
+                        placeholder="to date"
+                        className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-24  pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
+                    />
+                </label>
             </div>
 
             <div className="relative">
                 <Users className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600 z-10" />
+                <span className="absolute left-10 top-1/2 -translate-y-1/2">
+                    Adults
+                </span>
                 <input
                     type="number"
                     min="1"
                     value={formData.numOfAdults}
                     onChange={(e) => setFormData({ ...formData, numOfAdults: parseInt(e.target.value, 10) || 0 })}
                     placeholder="Adults"
-                    className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
+                    className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-24 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
                 />
             </div>
 
             <div className="relative">
-                <Users className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600 z-10" />
+                <Baby className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600 z-10" />
+                <span className="absolute left-10 top-1/2 -translate-y-1/2">
+                    Children
+                </span>
                 <input
                     type="number"
                     min="0"
                     value={formData.numOfChildren}
                     onChange={(e) => setFormData({ ...formData, numOfChildren: parseInt(e.target.value, 10) || 0 })}
                     placeholder="Children"
-                    className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
+                    className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-26 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
                 />
             </div>
 
@@ -783,57 +797,64 @@ function FlightSearch() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="relative">
                 <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600" />
-                <input
-                    type="text"
-                    placeholder="Leaving From"
+                <AirportDropdown
+                    airports={fromCountries}
                     value={formData.from}
-                    onChange={(e) => setFormData({ ...formData, from: e.target.value })}
-                    className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
+                    onChange={(iata) => setFormData({ ...formData, from: iata })}
+                    placeholder="From Airport"
                 />
             </div>
 
             <div className="relative">
                 <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600" />
-                <input
-                    type="text"
-                    placeholder="Going To"
+                <AirportDropdown
+                    airports={fromCountries}
                     value={formData.to}
-                    onChange={(e) => setFormData({ ...formData, to: e.target.value })}
-                    className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
+                    onChange={(iata) => setFormData({ ...formData, to: iata })}
+                    placeholder="To Airport"
                 />
             </div>
 
             <div className="relative">
                 <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600 z-10" />
+                <span className="absolute left-10 top-1/2 -translate-y-1/2">
+                    Going
+                </span>
                 <input
                     type="date"
                     value={formData.date}
                     onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                    className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
+                    className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-24 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
                 />
             </div>
 
             <div className="relative">
                 <Users className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600 z-10" />
+                <span className="absolute left-10 top-1/2 -translate-y-1/2">
+                    Adults
+                </span>
                 <input
                     type="number"
                     min="1"
                     value={formData.numOfAdults}
                     onChange={(e) => setFormData({ ...formData, numOfAdults: parseInt(e.target.value, 10) || 0 })}
                     placeholder="Adults"
-                    className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
+                    className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-24 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
                 />
             </div>
 
             <div className="relative">
-                <Users className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600 z-10" />
+                <Baby className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600 z-10" />
+                <span className="absolute left-10 top-1/2 -translate-y-1/2">
+                    Children
+                </span>
                 <input
                     type="number"
                     min="0"
                     value={formData.numOfChildren}
                     onChange={(e) => setFormData({ ...formData, numOfChildren: parseInt(e.target.value, 10) || 0 })}
                     placeholder="Children"
-                    className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
+                    className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-26 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
                 />
             </div>
 
@@ -870,7 +891,7 @@ function FlightSearch() {
                 });
             }
         };
-        
+
         const deleteCity = () => {
             if (formData.multiCities.length > 2) {
                 setFormData({
@@ -883,34 +904,34 @@ function FlightSearch() {
         return (
             <div className="space-y-4">
                 {formData.multiCities.map((city, index) => (
-                    <div 
+                    <div
                         key={index}
                         className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-white border-2 border-gray-100 rounded-xl relative"
                     >
                         <div className="absolute top-0 left-0 w-1 h-full bg-red-500" />
-                        
+
+                        {/* From Airport - FIXED: use city.from instead of formData.from */}
                         <div className="relative">
-                            <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600" />
-                            <input
-                                type="text"
-                                placeholder="From"
+                            <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600 z-10 pointer-events-none" />
+                            <AirportDropdown
+                                airports={fromCountries}
                                 value={city.from}
-                                onChange={(e) => updateCity(index, "from", e.target.value)}
-                                className="w-full bg-gray-50 border border-gray-200 text-gray-800 pl-12 pr-4 py-3 rounded-lg focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
+                                onChange={(iata) => updateCity(index, "from", iata)}
+                                placeholder="From Airport"
                             />
                         </div>
-                        
+
+                        {/* To Airport - FIXED: use city.to instead of formData.to */}
                         <div className="relative">
-                            <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600" />
-                            <input
-                                type="text"
-                                placeholder="To"
+                            <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600 z-10 pointer-events-none" />
+                            <AirportDropdown
+                                airports={fromCountries}
                                 value={city.to}
-                                onChange={(e) => updateCity(index, "to", e.target.value)}
-                                className="w-full bg-gray-50 border border-gray-200 text-gray-800 pl-12 pr-4 py-3 rounded-lg focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
+                                onChange={(iata) => updateCity(index, "to", iata)}
+                                placeholder="To Airport"
                             />
                         </div>
-                        
+
                         <div className="relative">
                             <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600 z-10" />
                             <input
@@ -933,7 +954,7 @@ function FlightSearch() {
                         <Plus className="w-4 h-4" />
                         Add Flight
                     </button>
-                    
+
                     <button
                         type="button"
                         onClick={deleteCity}
@@ -948,25 +969,31 @@ function FlightSearch() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t-2 border-gray-100">
                     <div className="relative">
                         <Users className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600 z-10" />
+                        <span className="absolute left-10 top-1/2 -translate-y-1/2">
+                            Adults
+                        </span>
                         <input
                             type="number"
                             min="1"
                             value={formData.numOfAdults}
                             onChange={(e) => setFormData({ ...formData, numOfAdults: parseInt(e.target.value, 10) || 0 })}
                             placeholder="Adults"
-                            className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
+                            className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-24 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
                         />
                     </div>
 
                     <div className="relative">
-                        <Users className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600 z-10" />
+                        <Baby className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600 z-10" />
+                        <span className="absolute left-10 top-1/2 -translate-y-1/2">
+                            Children
+                        </span>
                         <input
                             type="number"
                             min="0"
                             value={formData.numOfChildren}
                             onChange={(e) => setFormData({ ...formData, numOfChildren: parseInt(e.target.value, 10) || 0 })}
                             placeholder="Children"
-                            className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
+                            className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-26 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
                         />
                     </div>
 
@@ -992,7 +1019,7 @@ function FlightSearch() {
     return (
         <div className="min-h-screen bg-gray-50 text-gray-800">
             <Navbar />
-            
+
             <SuccessPopup
                 isOpen={showPopup}
                 onClose={() => setShowPopup(false)}
@@ -1008,7 +1035,7 @@ function FlightSearch() {
                             <Sparkles className="w-4 h-4" />
                             <span>Premium Travel Experience</span>
                         </div>
-                        
+
                         <h1 className="text-5xl md:text-6xl font-bold text-gray-800 mb-4">
                             Flight Services
                         </h1>
@@ -1019,7 +1046,7 @@ function FlightSearch() {
 
                     {/* Main Form Card */}
                     <div className="relative bg-white border-2 border-gray-200 rounded-3xl p-8 shadow-xl shadow-gray-200 overflow-hidden">
-                        
+
                         {/* Trip Type Tabs */}
                         <div className="relative flex flex-wrap gap-2 mb-8 p-1 bg-gray-100 rounded-2xl">
                             {tripTypes.map((type) => {
@@ -1029,11 +1056,10 @@ function FlightSearch() {
                                     <button
                                         key={type.id}
                                         onClick={() => { setTripType(type.id); setFormData({ ...formData, tripType: type.id }) }}
-                                        className={`relative flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-medium transition-all duration-200 ${
-                                            isActive 
-                                                ? 'bg-red-600 text-white shadow-lg' 
-                                                : 'text-gray-600 hover:text-red-600 hover:bg-red-50'
-                                        }`}
+                                        className={`relative flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-medium transition-all duration-200 ${isActive
+                                            ? 'bg-red-600 text-white shadow-lg'
+                                            : 'text-gray-600 hover:text-red-600 hover:bg-red-50'
+                                            }`}
                                     >
                                         <span className="relative z-10 flex items-center gap-2">
                                             <Icon className="w-4 h-4" />
@@ -1067,30 +1093,30 @@ function FlightSearch() {
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                         <div className="relative">
                                             <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600" />
-                                            <input 
-                                                type="text" 
+                                            <input
+                                                type="text"
                                                 placeholder="Full Name"
                                                 value={formData.userName}
                                                 onChange={(e) => setFormData({ ...formData, userName: e.target.value })}
                                                 className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
                                             />
                                         </div>
-                                        
+
                                         <div className="relative">
                                             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600" />
-                                            <input 
-                                                type="email" 
+                                            <input
+                                                type="email"
                                                 placeholder="Email Address"
                                                 value={formData.userEmail}
                                                 onChange={(e) => setFormData({ ...formData, userEmail: e.target.value })}
                                                 className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
                                             />
                                         </div>
-                                        
+
                                         <div className="relative">
                                             <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600" />
-                                            <input 
-                                                type="tel" 
+                                            <input
+                                                type="tel"
                                                 placeholder="Phone Number"
                                                 value={formData.userNumber}
                                                 onChange={(e) => setFormData({ ...formData, userNumber: e.target.value })}
@@ -1123,7 +1149,7 @@ function FlightSearch() {
                                         >
                                             Back
                                         </button>
-                                        
+
                                         <button
                                             type="submit"
                                             disabled={loading}

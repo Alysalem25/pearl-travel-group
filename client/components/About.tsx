@@ -90,7 +90,7 @@
 //       dir={direction}
 //     >
 //       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-  
+
 //           <motion.h1
 //             className={`font-bold mb-6 sm:mb-8 leading-tight ${
 //               isRTL ? "font-arabic" : ""
@@ -182,6 +182,164 @@
 
 
 
+// "use client";
+
+// import { useEffect, useState } from "react";
+// import { useSearchParams } from "next/navigation";
+// import { motion } from "framer-motion";
+// import { Language, getDirection, getLanguageFromSearchParams } from "@/lib/language";
+
+// export default function About() {
+//   const [lang, setLang] = useState<Language>("en");
+//   const [mounted, setMounted] = useState(false);
+//   const searchParams = useSearchParams();
+
+//   useEffect(() => {
+//     setMounted(true);
+//     setLang(getLanguageFromSearchParams(searchParams));
+
+//     const handleLanguageChange = (e: CustomEvent<{ lang: Language }>) => {
+//       setLang(e.detail.lang);
+//     };
+
+//     window.addEventListener("languagechange", handleLanguageChange as EventListener);
+//     return () =>
+//       window.removeEventListener("languagechange", handleLanguageChange as EventListener);
+//   }, [searchParams]);
+
+//   if (!mounted) return null;
+
+//   const isRTL = lang === "ar";
+//   const direction = getDirection(lang);
+
+//   const data = {
+//     en: {
+//       title: "About Us",
+//       paragraph:
+//         "It is our great pleasure to extend our services to our business partners. Established in 1985, Pearl Travel is a fully accredited IATA travel agency based in Alexandria. Being in business for 40 years makes us one of Egypt's leading travel agencies with proven financial record, representing most international airlines. Moreover, we are one of few “Category A” IATA agents in Egypt. Our large clientele varies from Governmental bodies to private sector. Also, our large variety of service includes:",
+//       points: [
+//         "Domestic and international air reservations and ticketing.",
+//         "Hotel reservations world-wide.",
+//         "Conference and incentive tours.",
+//         "Incoming&Outgoing customized tours.",
+//         "Arranging domestic and international holiday packages.",
+//         "Meet and greet at the Airport and visa processing.",
+//         "Limousine and car hire service.",
+//         "Educational packages and youth summer camps.",
+//       ]
+//     },
+//     ar: {
+//       title: "معلومات عنا",
+//       paragraph: "يسرنا أن نقدم خدماتنا لشركائنا في العمل. تأسست شركة بيرل للسفر في عام 1985، وهي وكالة سفر معتمدة بالكامل من IATA وتقع في الإسكندرية. كوننا في مجال الأعمال لمدة 40 عامًا يجعلنا واحدة من وكالات السفر الرائدة في مصر بسجل مالي مثبت، نمثل معظم شركات الطيران الدولية. علاوة على ذلك، نحن من بين القلائل الذين يحملون تصنيف 'الفئة أ' من IATA في مصر. تتنوع قاعدة عملائنا الكبيرة بين الهيئات الحكومية والقطاع الخاص. كما تشمل خدماتنا المتنوعة ما يلي:",
+//       points: [
+//         "الحجز والتأشيرات الجوية المحلية والدولية.",
+//         "الحجز في الفنادق حول العالم.",
+//         "جولات المؤتمرات والمكافآت.",
+//         "جولات مخصصة للواردين والناشرين.",
+//         "تنظيم حزم العطل المحلية والدولية.",
+//         "القاء القبض على المطار ومعالجة التأشيرات.",
+//         "خدمة ليموزين وتأجير السيارات.",
+//         "حزم تعليمية ومخيمات صيفية للشباب."
+//       ]
+//     },
+//   }
+
+//   /* ================= Animations ================= */
+//   const container = {
+//     hidden: { opacity: 0 },
+//     show: {
+//       opacity: 1,
+//       transition: { staggerChildren: 0.15 },
+//     },
+//   };
+
+//   const item = {
+//     hidden: { opacity: 0, y: 30 },
+//     show: { opacity: 1, y: 0, transition: { duration: 0.8 } },
+//   };
+
+//   return (
+//     <section
+//       dir={direction}
+//       className="relative py-20 bg-gradient-to-b from-gray-50 to-white"
+//     >
+//       <motion.div
+//         variants={container}
+//         initial="hidden"
+//         whileInView="show"
+//         viewport={{ once: true }}
+//         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+//       >
+//         {/* Title */}
+//         <motion.h1
+//           variants={item}
+//           className={`font-bold mb-8 text-center text-[var(--mainColor)] text-2xl ${isRTL ? "font-arabic" : ""
+//             } text-4xl sm:text-5xl md:text-6xl`}
+//         >
+//           {data[lang].title}
+//         </motion.h1>
+//         <motion.p variants={item} className="text-start align-middle sm:text-2xl mb-16 max-w-full text-xl
+//          text-[var(--secondColor)]">
+//           {data[lang].paragraph}
+//         </motion.p>
+
+
+//         {/* Content */}
+//         <div
+//           className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center ${isRTL ? "lg:flex-row-reverse" : ""
+//             }`}
+//         >
+//           {/* Text */}
+//           <motion.div
+//             variants={item}
+//             className="space-y-6 text-[var(--secondColor)] text-2xl">
+
+//             <ol type="1" className="list-decimal list-inside space-y-2">
+//               {data[lang].points.map((point, i) => (
+//                 <li className="text-xl sm:text-2xl" key={i}>{point}</li>
+//               ))}
+//             </ol>
+//           </motion.div>
+
+//           {/* Images */}
+//           <motion.div
+//             variants={item}
+//             className="grid grid-cols-2 gap-6"
+//           >
+//             <img
+//               src="WhatsApp Image 2026-02-22 at 4.49.51 PM.jpeg"
+//               alt="..."
+//               className="col-span-2 rounded-2xl object-cover w-full h-auto shadow-lg"
+//             />
+//             <img
+//               src="WhatsApp Image 2026-02-22 at 4.47.40 PM.jpeg"
+//               alt=""
+//               className="rounded-3xl object-cover w-full shadow-lg"
+//             />
+//             <img
+//               src="WhatsApp Image 2026-02-22 at 4.47.25 PM.jpeg"
+//               alt=""
+//               className="rounded-3xl object-cover w-full shadow-xl"
+//             />
+//           </motion.div>
+//         </div>
+//       </motion.div>
+//     </section>
+//   );
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -214,10 +372,10 @@ export default function About() {
 
   const data = {
     en: {
-      title : "About Us",
+      title: "About Us",
       paragraph:
         "It is our great pleasure to extend our services to our business partners. Established in 1985, Pearl Travel is a fully accredited IATA travel agency based in Alexandria. Being in business for 40 years makes us one of Egypt's leading travel agencies with proven financial record, representing most international airlines. Moreover, we are one of few “Category A” IATA agents in Egypt. Our large clientele varies from Governmental bodies to private sector. Also, our large variety of service includes:",
-        points: [
+      points: [
         "Domestic and international air reservations and ticketing.",
         "Hotel reservations world-wide.",
         "Conference and incentive tours.",
@@ -229,7 +387,7 @@ export default function About() {
       ]
     },
     ar: {
-      title : "معلومات عنا",
+      title: "معلومات عنا",
       paragraph: "يسرنا أن نقدم خدماتنا لشركائنا في العمل. تأسست شركة بيرل للسفر في عام 1985، وهي وكالة سفر معتمدة بالكامل من IATA وتقع في الإسكندرية. كوننا في مجال الأعمال لمدة 40 عامًا يجعلنا واحدة من وكالات السفر الرائدة في مصر بسجل مالي مثبت، نمثل معظم شركات الطيران الدولية. علاوة على ذلك، نحن من بين القلائل الذين يحملون تصنيف 'الفئة أ' من IATA في مصر. تتنوع قاعدة عملائنا الكبيرة بين الهيئات الحكومية والقطاع الخاص. كما تشمل خدماتنا المتنوعة ما يلي:",
       points: [
         "الحجز والتأشيرات الجوية المحلية والدولية.",
@@ -237,7 +395,7 @@ export default function About() {
         "جولات المؤتمرات والمكافآت.",
         "جولات مخصصة للواردين والناشرين.",
         "تنظيم حزم العطل المحلية والدولية.",
-        "القاء القبض على المطار ومعالجة التأشيرات.",
+        "الاستقبال والترحيب في المطار وإجراءات الحصول على التأشيرة.",
         "خدمة ليموزين وتأجير السيارات.",
         "حزم تعليمية ومخيمات صيفية للشباب."
       ]
@@ -273,28 +431,27 @@ export default function About() {
         {/* Title */}
         <motion.h1
           variants={item}
-          className={`font-bold mb-8 text-center text-[var(--mainColor)] text-2xl ${
-            isRTL ? "font-arabic" : ""
-          } text-4xl sm:text-5xl md:text-6xl`}
+          className={`font-bold mb-8 text-center text-[var(--mainColor)] text-2xl ${isRTL ? "font-arabic" : ""
+            } text-4xl sm:text-5xl md:text-6xl`}
         >
           {data[lang].title}
         </motion.h1>
-        <motion.p variants={item} className="text-start align-middle sm:text-2xl mb-16 max-w-full text-xl
-         text-[var(--secondColor)]">
-         {data[lang].paragraph}
-        </motion.p>
+
 
 
         {/* Content */}
         <div
-          className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center ${
-            isRTL ? "lg:flex-row-reverse" : ""
-          }`}
+          className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center ${isRTL ? "lg:flex-row-reverse" : ""
+            }`}
         >
           {/* Text */}
           <motion.div
-           variants={item} 
-           className="space-y-6 text-[var(--secondColor)] text-2xl">
+            variants={item}
+            className="space-y-6 text-[var(--secondColor)] text-2xl">
+            <motion.p variants={item} className="text-start align-middle sm:text-2xl mb-8 max-w-full text-xl
+         text-[var(--secondColor)]">
+              {data[lang].paragraph}
+            </motion.p>
 
             <ol type="1" className="list-decimal list-inside space-y-2">
               {data[lang].points.map((point, i) => (
@@ -309,19 +466,19 @@ export default function About() {
             className="grid grid-cols-2 gap-6"
           >
             <img
-              src="/about2.jpeg"
-              alt=""
-              className="col-span-2 rounded-2xl object-cover w-full h-64 shadow-lg"
+              src="WhatsApp Image 2026-02-22 at 4.49.51 PM.jpeg"
+              alt="..."
+              className="col-span-2 rounded-2xl object-cover w-full h-auto shadow-lg"
             />
             <img
-              src="/about1.jpeg"
+              src="WhatsApp Image 2026-02-22 at 4.47.40 PM.jpeg"
               alt=""
-              className="rounded-3xl object-cover h-52 w-full shadow-lg"
+              className="rounded-3xl object-cover w-full shadow-lg"
             />
             <img
-              src="/about3.jpeg"
+              src="WhatsApp Image 2026-02-22 at 4.47.25 PM.jpeg"
               alt=""
-              className="rounded-3xl object-cover  w-full shadow-xl"
+              className="rounded-3xl object-cover w-full shadow-xl"
             />
           </motion.div>
         </div>

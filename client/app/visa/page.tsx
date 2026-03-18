@@ -622,12 +622,12 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/footer";
 import { Language } from "@/data/translations";
 import { getDirection, getLanguageFromSearchParams } from "@/lib/language";
-import { 
-  X, 
-  ArrowLeft, 
+import {
+  X,
+  ArrowLeft,
   ArrowRight,
-  Mail, 
-  Check, 
+  Mail,
+  Check,
   AlertCircle,
   Globe,
   User,
@@ -725,6 +725,7 @@ const translations = {
       nameLength: "Name must be at least 3 letters",
       phoneRequired: "Phone is required",
       phoneLength: "Phone must be at least 11 digits",
+      emailRequired:"Email is required",
       destinationRequired: "Please select one destination",
       visitedRequired: "Please enter countries you have visited"
     },
@@ -769,6 +770,7 @@ const translations = {
       phoneRequired: "رقم الهاتف مطلوب",
       phoneLength: "يجب أن يكون رقم الهاتف ١١ رقماً على الأقل",
       destinationRequired: "الرجاء اختيار وجهة واحدة",
+      emailRequired:"الايميل مطلوب",
       visitedRequired: "الرجاء إدخال الدول التي زرتها"
     },
     trust: {
@@ -881,6 +883,7 @@ function VisaPageContent() {
     const errors: StepOneErrors = {};
     const normalizedName = stepOneForm.name.trim();
     const normalizedPhone = stepOneForm.phone.trim();
+    const normalizedEmail = stepOneForm.email.trim();
 
     if (!normalizedName) {
       errors.name = t.errors.nameRequired;
@@ -893,6 +896,12 @@ function VisaPageContent() {
     } else if (normalizedPhone.length < 11) {
       errors.phone = t.errors.phoneLength;
     }
+
+    if (!normalizedEmail) {
+      errors.email = t.errors.emailRequired;
+    }
+
+
 
     if (!stepOneForm.destination) {
       errors.destination = t.errors.destinationRequired;
@@ -977,7 +986,7 @@ function VisaPageContent() {
               <Sparkles className="w-4 h-4" />
               <span>{isRTL ? "خدمة متميزة" : "Premium Service"}</span>
             </div>
-            
+
             <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
               {t.title}
             </h1>
@@ -993,7 +1002,7 @@ function VisaPageContent() {
                 key={country._id}
                 className="group relative h-64 rounded-2xl overflow-hidden shadow-lg cursor-pointer"
               >
-                <div 
+                <div
                   className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
                   style={{
                     backgroundImage: `url('http://147.93.126.15${country.images[0]}')`,
@@ -1093,9 +1102,8 @@ function VisaPageContent() {
                         setStepOneErrors((prev) => ({ ...prev, name: undefined }));
                       }}
                       placeholder={t.name}
-                      className={`w-full bg-white border-2 text-gray-800 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400 ${
-                        stepOneErrors.name ? "border-red-400" : "border-gray-200 focus:border-red-500"
-                      }`}
+                      className={`w-full bg-white border-2 text-gray-800 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400 ${stepOneErrors.name ? "border-red-400" : "border-gray-200 focus:border-red-500"
+                        }`}
                     />
                     {stepOneErrors.name && (
                       <p className="mt-1 text-sm text-red-600">{stepOneErrors.name}</p>
@@ -1115,9 +1123,8 @@ function VisaPageContent() {
                         setStepOneErrors((prev) => ({ ...prev, phone: undefined }));
                       }}
                       placeholder={t.phone}
-                      className={`w-full bg-white border-2 text-gray-800 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400 ${
-                        stepOneErrors.phone ? "border-red-400" : "border-gray-200 focus:border-red-500"
-                      }`}
+                      className={`w-full bg-white border-2 text-gray-800 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400 ${stepOneErrors.phone ? "border-red-400" : "border-gray-200 focus:border-red-500"
+                        }`}
                     />
                     {stepOneErrors.phone && (
                       <p className="mt-1 text-sm text-red-600">{stepOneErrors.phone}</p>
@@ -1136,6 +1143,9 @@ function VisaPageContent() {
                       placeholder={t.email}
                       className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
                     />
+                        {stepOneErrors.email && (
+                      <p className="mt-1 text-sm text-red-600">{stepOneErrors.email}</p>
+                    )}
                   </div>
                 </div>
 
@@ -1152,11 +1162,10 @@ function VisaPageContent() {
                       {countries.map((country) => (
                         <label
                           key={country._id}
-                          className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${
-                            stepOneForm.destination === country.nameEn
+                          className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${stepOneForm.destination === country.nameEn
                               ? "border-red-500 bg-red-50"
                               : "border-gray-200 hover:border-red-200"
-                          }`}
+                            }`}
                         >
                           <input
                             type="radio"
@@ -1262,9 +1271,8 @@ function VisaPageContent() {
                         setStepTwoErrors((prev) => ({ ...prev, visitedCountries: undefined }));
                       }}
                       placeholder={t.visitedCountriesPlaceholder}
-                      className={`w-full bg-white border-2 text-gray-800 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400 ${
-                        stepTwoErrors.visitedCountries ? "border-red-400" : "border-gray-200 focus:border-red-500"
-                      }`}
+                      className={`w-full bg-white border-2 text-gray-800 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400 ${stepTwoErrors.visitedCountries ? "border-red-400" : "border-gray-200 focus:border-red-500"
+                        }`}
                     />
                     {stepTwoErrors.visitedCountries && (
                       <p className="mt-1 text-sm text-red-600">{stepTwoErrors.visitedCountries}</p>

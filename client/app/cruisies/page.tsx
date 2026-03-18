@@ -151,9 +151,20 @@ function CruisiesContent() {
                 {/* Same layout as Egypt page: section + max-w-7xl + title + grid */}
                 <div className="py-20 px-4 sm:px-6 lg:px-8 pt-32">
                     <div className="max-w-7xl mx-auto">
-                        <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">
+                        <h2 className="text-3xl font-bold text-red-700 mb-12 text-center">
                             Where your journey begins
                         </h2>
+                        <motion.p
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.1 }}
+                            className="text-xl font-bold text-blue-950 mb-12 text-center">Discover the world in comfort and style with our exceptional cruise experiences.
+
+                            From the elegance of MSC Cruises and the ultra-luxury of Silversea Cruises to the vibrant voyages of Norwegian Cruise Line, we offer carefully selected cruises to suit every travel style.
+
+                            Sail the turquoise waters of the Caribbean or explore history along the majestic Nile River — all seamlessly arranged by our expert team.
+<br />
+                            Your journey begins at sea.</motion.p>
                         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8 py-4 ">
                             {cruisies.map((cruise, index) => (
                                 <motion.div
@@ -173,12 +184,12 @@ function CruisiesContent() {
                                     } /> */}
                                     <div className="absolute bg-red-500 p-2 rounded-lg"
                                         style={
-                                        {
-                                            top: "-20px",
-                                            left: "20px",
-                                            // transform: "translate(-50%, -50%)",
+                                            {
+                                                top: "-20px",
+                                                left: "20px",
+                                                // transform: "translate(-50%, -50%)",
+                                            }
                                         }
-                                    }
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" height="45px" viewBox="0 -960 960 960" width="45px" fill="#e3e3e3"><path d="M152-80h-32v-80h32q48 0 91.5-10.5T341-204q38 19 66.5 31.5T480-160q44 0 72.5-12.5T619-204q53 23 97.5 33.5T809-160h31v80h-31q-49 0-95.5-9T622-116q-40 19-73 27t-69 8q-36 0-68.5-8T339-116q-45 18-91.5 27T152-80Zm223-200-45-40q-27 27-60.5 46T198-247l-85-273q-5-17 3-31t25-19l59-16v-134q0-33 23.5-56.5T280-800h100v-80h200v80h100q33 0 56.5 23.5T760-720v134l59 16q17 5 25 19t3 31l-85 273q-38-8-71.5-27T630-320l-45 40q-45 40-105 40t-105-40Zm107-40q31 0 55-20.5t44-43.5l46-53 41 42q11 11 22.5 20.5T713-355l46-149-279-73-278 73 46 149q11-10 22.5-19.5T293-395l41-42 46 53q20 24 45 44t57 20ZM280-607l200-53 200 53v-113H280v113Zm201 158Z" /></svg>
                                     </div>
@@ -187,7 +198,7 @@ function CruisiesContent() {
                                         <p className="item_description text-black">{cruise.descriptionER}</p>
                                     </div>
                                     <Link href={`/cruisies/${cruise.nameEN}`}>
-                                        <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                                        <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 mt-4 rounded">
                                             Read More
                                         </button>
                                     </Link>

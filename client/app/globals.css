@@ -141,12 +141,12 @@ svg {
 }
 
 .button_img1 {
-  background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0, 0, 0, 0.627)), url("/OIP.webp");
+  background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url("/egypt1.jpg");
 }
 
 .button_img2 {
   /* Replace with your Albania image path */
-  background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url("/Marsa\ allam.jpg");
+  background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0, 0, 0, 0.627)), url("/albania.jpg");
 }
 
 .button_img1:hover, .button_img2:hover {
@@ -192,9 +192,9 @@ svg {
   }
 }
 
-.button_img1 {
+/* .button_img1 {
   background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0, 0, 0, 0.627)), url("/OIP.webp");
-}
+} */
 
 .dashboard_button_img1:hover {
   cursor: pointer;

@@ -117,31 +117,31 @@
 //           <div className="hidden md:flex items-center gap-6 lg:gap-8">
 //             <Link
 //               href={`/?lang=${lang}`}
-//               className="text-gray-700 dark:text-gray-300 hover:text-[var(--mainColor)] transition-colors duration-200 font-medium"
+//               className="text-black hover:text-[var(--mainColor)] transition-colors duration-200 font-medium"
 //             >
 //               {t.navbar.home}
 //             </Link>
 //             <Link
 //               href={`/visa?lang=${lang}`}
-//               className="text-gray-700 dark:text-gray-300 hover:text-[var(--mainColor)] transition-colors duration-200 font-medium"
+//               className="text-black hover:text-[var(--mainColor)] transition-colors duration-200 font-medium"
 //             >
 //               {t.navbar.visa}
 //             </Link>
 //             <Link
 //               href={`/cars?lang=${lang}`}
-//               className="text-gray-700 dark:text-gray-300 hover:text-[var(--mainColor)] transition-colors duration-200 font-medium"
+//               className="text-black hover:text-[var(--mainColor)] transition-colors duration-200 font-medium"
 //             >
 //               {t.navbar.cars}
 //             </Link>
 //             <Link
 //               href={`/hotel?lang=${lang}`}
-//               className="text-gray-700 dark:text-gray-300 hover:text-[var(--mainColor)] transition-colors duration-200 font-medium"
+//               className="text-black hover:text-[var(--mainColor)] transition-colors duration-200 font-medium"
 //             >
 //               {t.navbar.hotel}
 //             </Link>
 //             <Link
 //               href={`/cruisies?lang=${lang}`}
-//               className="text-gray-700 dark:text-gray-300 hover:text-[var(--mainColor)] transition-colors duration-200 font-medium"
+//               className="text-black hover:text-[var(--mainColor)] transition-colors duration-200 font-medium"
 //             >
 //               {t.navbar.cruisies}
 //             </Link>
@@ -191,7 +191,7 @@
 
 //             <Link
 //               href={`/Flight?lang=${lang}`}
-//               className="text-gray-700 dark:text-gray-300 hover:text-[var(--mainColor)] transition-colors duration-200 font-medium"
+//               className="text-black hover:text-[var(--mainColor)] transition-colors duration-200 font-medium"
 //             >
 //               {t.navbar.flight}
 //             </Link>
@@ -518,12 +518,12 @@ function NavbarContent() {
   return (
     <nav
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${scrolled
-        ? "bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-md"
+        ? "bg-white/95  backdrop-blur-xl shadow-md"
         : " bg-transparent backdrop-blur-xl shadow-md"
         } ${isRTL ? "font-arabic" : ""}`}
       dir={direction}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-full mx-auto px-8 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link
@@ -535,6 +535,9 @@ function NavbarContent() {
               alt="Logo"
               className="h-10 w-10 object-contain"
             />
+            <span className="text-blue-950 font-bold">
+              Pearl Travel Group
+            </span>
           </Link>
 
           {/* Desktop Menu */}
@@ -542,7 +545,7 @@ function NavbarContent() {
             <Link
               href={`/?lang=${lang}`}
               className={`transition-colors duration-200 font-medium ${scrolled
-                ? "text-gray-700 dark:text-gray-300 hover:text-[var(--mainColor)]"
+                ? "text-black hover:text-[var(--mainColor)]"
                 : "text-black hover:text-red-700"
                 }`}
             >
@@ -551,7 +554,7 @@ function NavbarContent() {
             <Link
               href={`/visa?lang=${lang}`}
               className={`transition-colors duration-200 font-medium ${scrolled
-                ? "text-gray-700 dark:text-gray-300 hover:text-[var(--mainColor)]"
+                ? "text-black hover:text-[var(--mainColor)]"
                 : "text-black hover:text-red-700"
                 }`}
             >
@@ -560,7 +563,7 @@ function NavbarContent() {
             <Link
               href={`/cars?lang=${lang}`}
               className={`transition-colors duration-200 font-medium ${scrolled
-                ? "text-gray-700 dark:text-gray-300 hover:text-[var(--mainColor)]"
+                ? "text-black hover:text-[var(--mainColor)]"
                 : "text-black hover:text-red-700"
                 }`}
             >
@@ -569,7 +572,7 @@ function NavbarContent() {
             <Link
               href={`/hotel?lang=${lang}`}
               className={`transition-colors duration-200 font-medium ${scrolled
-                ? "text-gray-700 dark:text-gray-300 hover:text-[var(--mainColor)]"
+                ? "text-black hover:text-[var(--mainColor)]"
                 : "text-black hover:text-red-700"
                 }`}
             >
@@ -578,7 +581,7 @@ function NavbarContent() {
             <Link
               href={`/cruisies?lang=${lang}`}
               className={`transition-colors duration-200 font-medium ${scrolled
-                ? "text-gray-700 dark:text-gray-300 hover:text-[var(--mainColor)]"
+                ? "text-black hover:text-[var(--mainColor)]"
                 : "text-black hover:text-red-700"
                 }`}
             >
@@ -590,7 +593,7 @@ function NavbarContent() {
               <button
                 onClick={() => setDestinationsDropdown(!destinationsDropdown)}
                 className={`flex items-center gap-1 transition-colors duration-200 font-medium ${scrolled
-                  ? "text-gray-700 dark:text-gray-300 hover:text-[var(--mainColor)]"
+                  ? "text-black hover:text-[var(--mainColor)]"
                   : "text-black hover:text-red-700"
                   }`}
               >
@@ -634,7 +637,7 @@ function NavbarContent() {
             <Link
               href={`/Flight?lang=${lang}`}
               className={`transition-colors duration-200 font-medium ${scrolled
-                ? "text-gray-700 dark:text-gray-300 hover:text-[var(--mainColor)]"
+                ? "text-black hover:text-[var(--mainColor)]"
                 : "text-black hover:text-red-700"
                 }`}
             >
@@ -660,7 +663,7 @@ function NavbarContent() {
 
                 }`}>
                 <div className="text-right">
-                  <p className={`text-sm font-semibold ${scrolled ? "text-gray-700 dark:text-gray-300" : "text-black"
+                  <p className={`text-sm font-semibold ${scrolled ? "text-black" : "text-black"
                     }`}>
                     {user?.name}
                   </p>
@@ -683,10 +686,9 @@ function NavbarContent() {
             ) : (
               <Link
                 href={`/login?lang=${lang}`}
-                className={`ml-4 px-4 py-2 rounded-lg transition-colors duration-200 font-medium shadow-md ${scrolled
-                  ? "bg-blue-600 hover:bg-blue-700 text-white"
-                  : "bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm border border-white/30"
-                  }`}
+                className={`ml-4 px-4 py-2 rounded-lg transition-colors duration-200 font-medium shadow-md
+                   bg-blue-600 hover:bg-blue-700 text-white"
+                 `}
               >
                 Login
               </Link>
@@ -696,7 +698,7 @@ function NavbarContent() {
           {/* Mobile Menu Button */}
           <button
             className={`md:hidden p-2 transition-colors duration-200 ${scrolled
-              ? "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+              ? "text-black hover:text-blue-600 dark:hover:text-blue-400"
               : "text-white hover:text-white/80"
               }`}
             onClick={() => setOpen(!open)}
@@ -722,7 +724,7 @@ function NavbarContent() {
                   href={`/?lang=${lang}`}
                   onClick={() => setOpen(false)}
                   className={`block py-2 transition-colors duration-200 font-medium ${scrolled
-                    ? "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+                    ? "text-white hover:text-blue-600 dark:hover:text-blue-400"
                     : "text-white hover:text-white/80"
                     }`}
                 >
@@ -732,7 +734,7 @@ function NavbarContent() {
                   href={`/visa?lang=${lang}`}
                   onClick={() => setOpen(false)}
                   className={`block py-2 transition-colors duration-200 font-medium ${scrolled
-                    ? "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+                    ? "text-white hover:text-blue-600 dark:hover:text-blue-400"
                     : "text-white hover:text-white/80"
                     }`}
                 >
@@ -742,7 +744,7 @@ function NavbarContent() {
                   href={`/cars?lang=${lang}`}
                   onClick={() => setOpen(false)}
                   className={`block py-2 transition-colors duration-200 font-medium ${scrolled
-                    ? "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+                    ? "text-white hover:text-blue-600 dark:hover:text-blue-400"
                     : "text-white hover:text-white/80"
                     }`}
                 >
@@ -752,7 +754,7 @@ function NavbarContent() {
                   href={`/hotel?lang=${lang}`}
                   onClick={() => setOpen(false)}
                   className={`block py-2 transition-colors duration-200 font-medium ${scrolled
-                    ? "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+                    ? "text-white hover:text-blue-600 dark:hover:text-blue-400"
                     : "text-white hover:text-white/80"
                     }`}
                 >
@@ -765,7 +767,7 @@ function NavbarContent() {
                   href={`/cruisies?lang=${lang}`}
                   onClick={() => setOpen(false)}
                   className={`block py-2 transition-colors duration-200 font-medium ${scrolled
-                    ? "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+                    ? "text-white hover:text-blue-600 dark:hover:text-blue-400"
                     : "text-white hover:text-white/80"
                     }`}
                 >
@@ -775,7 +777,7 @@ function NavbarContent() {
                 {/* Mobile Dropdown */}
                 <details className="group">
                   <summary className={`cursor-pointer py-2 transition-colors duration-200 font-medium list-none ${scrolled
-                    ? "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+                    ? "text-white hover:text-blue-600 dark:hover:text-blue-400"
                     : "text-white hover:text-white/80"
                     }`}>
                     <div className="flex items-center justify-between">
@@ -811,7 +813,7 @@ function NavbarContent() {
                   href={`/Flight?lang=${lang}`}
                   onClick={() => setOpen(false)}
                   className={`block py-2 transition-colors duration-200 font-medium ${scrolled
-                    ? "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+                    ? "text-white hover:text-blue-600 dark:hover:text-blue-400"
                     : "text-white hover:text-white/80"
                     }`}
                 >
@@ -825,7 +827,7 @@ function NavbarContent() {
                   <div className={`flex items-center gap-2 mb-2 ${scrolled ? "text-gray-600 dark:text-gray-400" : "text-white/70"
                     }`}>
                     <Globe size={18} />
-                    <span className={`text-sm font-semibold ${scrolled ? "text-gray-700 dark:text-gray-300" : "text-white"
+                    <span className={`text-sm font-semibold ${scrolled ? "text-black" : "text-white"
                       }`}>
                       {lang === "en" ? "Language" : "اللغة"}
                     </span>
@@ -862,7 +864,7 @@ function NavbarContent() {
                     }`}>
                     <div className={`px-4 py-2 rounded-lg ${scrolled ? "bg-gray-100 dark:bg-gray-800" : "bg-white/10"
                       }`}>
-                      <p className={`text-sm font-semibold ${scrolled ? "text-gray-700 dark:text-gray-300" : "text-white"
+                      <p className={`text-sm font-semibold ${scrolled ? "text-black" : "text-white"
                         }`}>
                         {user?.name}
                       </p>
@@ -887,10 +889,7 @@ function NavbarContent() {
                   <Link
                     href={`/login?lang=${lang}`}
                     onClick={() => setOpen(false)}
-                    className={`block w-full text-center py-2 px-4 mt-4 rounded-lg transition-colors duration-200 font-medium ${scrolled
-                      ? "bg-blue-600 hover:bg-blue-700 text-white"
-                      : "bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm border border-white/30"
-                      }`}
+                    className={`block w-full text-center py-2 px-4 mt-4 rounded-lg transition-colors duration-200 font-medium bg-blue-600 hover:bg-blue-700 text-white`}
                   >
                     Login
                   </Link>

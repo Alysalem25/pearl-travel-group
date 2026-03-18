@@ -414,10 +414,10 @@ import apiClient from "@/lib/api";
 import SuccessPopup from "@/components/SuccessPopup";
 import { Language, getDirection, getLanguageFromSearchParams } from "@/lib/language";
 import { useSearchParams } from 'next/navigation';
-import { 
-  MapPin, 
-  Calendar, 
-  Users, 
+import {
+  MapPin,
+  Calendar,
+  Users,
   Baby,
   ArrowRight,
   ArrowLeft,
@@ -551,7 +551,7 @@ function HotelBookingContent() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
-  
+
   const [formData, setFormData] = useState<HotelBookingData>({
     country: "",
     city: "",
@@ -647,7 +647,7 @@ function HotelBookingContent() {
   return (
     <div dir={getDirection(lang)} className="min-h-screen bg-gray-50">
       <Navbar />
-      
+
       <SuccessPopup
         isOpen={showPopup}
         onClose={() => setShowPopup(false)}
@@ -663,7 +663,7 @@ function HotelBookingContent() {
               <Sparkles className="w-4 h-4" />
               <span>{isRTL ? "إقامة فاخرة" : "Luxury Stay"}</span>
             </div>
-            
+
             <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
               {t.title}
             </h1>
@@ -674,7 +674,7 @@ function HotelBookingContent() {
 
           {/* Main Form Card */}
           <div className="relative bg-white border-2 border-gray-200 rounded-3xl p-8 shadow-xl shadow-gray-200 overflow-hidden">
-            
+
             {/* Step Indicator */}
             <div className="flex items-center justify-center mb-8">
               <div className="flex items-center gap-4">
@@ -748,24 +748,30 @@ function HotelBookingContent() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="relative">
                     <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600" />
+                        <span className="absolute left-10 top-1/2 -translate-y-1/2 text-black">
+                      Check-in date
+                    </span>
                     <input
                       type="date"
                       name="fromDate"
                       value={formData.fromDate}
                       onChange={handleChange}
-                      className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all"
+                      className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-42 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all"
                       required
                     />
                   </div>
 
                   <div className="relative">
                     <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600" />
+                    <span className="absolute left-10 top-1/2 -translate-y-1/2 text-black">
+                      Check-out date
+                    </span>
                     <input
                       type="date"
                       name="toDate"
                       value={formData.toDate}
                       onChange={handleChange}
-                      className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all"
+                      className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-42 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all"
                       required
                     />
                   </div>
@@ -773,8 +779,11 @@ function HotelBookingContent() {
 
                 {/* Guests Inputs */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="relative">
+                  <div className="relative text-black">
                     <Users className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600" />
+                    <span className="absolute left-10 top-1/2 -translate-y-1/2">
+                      Adults
+                    </span>
                     <input
                       type="number"
                       name="adults"
@@ -782,24 +791,31 @@ function HotelBookingContent() {
                       value={formData.adults}
                       onChange={handleChange}
                       placeholder={t.adults}
-                      className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
+                      className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-24 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
                     />
                   </div>
 
-                  <div className="relative">
+                  <div className="relative text-black">
                     <Users className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600" />
+                    <span className="absolute left-10 top-1/2 -translate-y-1/2">
+                      Children (2-14)
+                    </span>
                     <input
                       type="number"
                       min={0}
+                      max={12}
                       value={formData.children}
                       onChange={(e) => handleChildrenChange(parseInt(e.target.value) || 0)}
                       placeholder={t.children}
-                      className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
+                      className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-42 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
                     />
                   </div>
 
-                  <div className="relative">
+                  <div className="relative text-black">
                     <Baby className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600" />
+                    <span className="absolute left-10 top-1/2 -translate-y-1/2">
+                      Infants
+                    </span>
                     <input
                       type="number"
                       name="infants"
@@ -807,7 +823,7 @@ function HotelBookingContent() {
                       value={formData.infants}
                       onChange={handleChange}
                       placeholder={t.infants}
-                      className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
+                      className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-24 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
                     />
                   </div>
                 </div>
@@ -821,7 +837,8 @@ function HotelBookingContent() {
                     </h3>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                       {formData.childrenAges.map((age, index) => (
-                        <div key={index} className="relative">
+                        <div key={index} className="relative text-black">
+                          Child {index + 1}
                           <Baby className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-red-600" />
                           <input
                             type="number"
@@ -923,7 +940,7 @@ function HotelBookingContent() {
                     {isRTL ? <ArrowRight className="w-5 h-5 inline ml-2" /> : <ArrowLeft className="w-5 h-5 inline mr-2" />}
                     {t.back}
                   </button>
-                  
+
                   <button
                     type="submit"
                     disabled={loading}

@@ -131,7 +131,7 @@ function FooterContent() {
               </div>
               <div className="flex items-center gap-3">
                 <Mail size={18} className="text-[var(--mainColor)]" />
-                <span className="text-gray-300 text-sm">pearltravel1@gmail.com</span>
+                <span className="text-gray-300 text-sm">info@pearltravelgroup.com</span>
               </div>
               <a
                 href="https://maps.app.goo.gl/GNxH8HD3JioTAJB2A"
