@@ -18,15 +18,21 @@
 
 // module.exports = uploadCategory;
 
-
-
-const multer = require("multer");
+const fs = require("fs");
 const path = require("path");
+const multer = require("multer");
 const crypto = require("crypto");
+
+const uploadPath = path.join(__dirname, "../uploads/categories");
+
+// ensure folder exists
+if (!fs.existsSync(uploadPath)) {
+  fs.mkdirSync(uploadPath, { recursive: true });
+}
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "/root/uploads/categories");
+    cb(null, uploadPath);
   },
   filename: (req, file, cb) => {
     const ext = path.extname(file.originalname);
@@ -45,10 +51,8 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-const uploadCategory = multer({
+module.exports = multer({
   storage,
   fileFilter,
   limits: { fileSize: 10 * 1024 * 1024 },
 });
-
-module.exports = uploadCategory;
