@@ -41,7 +41,7 @@ services:
       mongodb:
         condition: service_healthy
     volumes:
-      - /root/uploads:/app/server/uploads 
+      - /root/uploads:/app/server/uploads
     networks:
       - pearl_travel_network
     healthcheck:
