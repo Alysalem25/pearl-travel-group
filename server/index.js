@@ -18,7 +18,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const helmet = require("helmet");
 const cors = require("cors");
-const path = require("path"); 
+const path = require("path");
 require("dotenv").config();
 // app.use("/auth", authRoutes);
 
@@ -38,7 +38,7 @@ app.use(express.json({ limit: "10mb" }));
 // CORS Configuration - Restrict to frontend origin
 app.use(cors({
   origin: ["http://147.93.126.15"],
-      credentials: true,
+  credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
@@ -48,7 +48,7 @@ app.use(cors({
 // 
 app.use(
   "/uploads",
-  express.static(path.join(__dirname, "uploads"), {
+  express.static("/app/uploads", {
     setHeaders: (res) => {
       res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
     },
