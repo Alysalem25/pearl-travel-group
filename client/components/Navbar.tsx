@@ -716,7 +716,7 @@ function NavbarContent() {
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.2 }}
-              className={`md:hidden backdrop-blur-xl shadow-lg rounded-lg mt-2 mb-4 overflow-hidden ${scrolled ? "bg-white/95 dark:bg-gray-900/95" : "bg-black/80"
+              className={`md:hidden backdrop-blur-xl shadow-lg rounded-lg mt-2 mb-4 overflow-hidden ${scrolled ? "bg-gray-900/95" : "bg-black/80"
                 }`}
             >
               <div className="px-4 py-4 space-y-3">
@@ -788,7 +788,8 @@ function NavbarContent() {
                       />
                     </div>
                   </summary>
-                  <div className={`pl-4 mt-2 space-y-2 rtl:pl-0 rtl:pr-4 ${scrolled ? "text-gray-600 dark:text-gray-400" : "text-white/80"
+                  <div className={`pl-4 mt-2 space-y-2 rtl:pl-0 rtl:pr-4 ${scrolled ? 
+                   "text-gray-600 dark:text-gray-400" : "text-white/80"
                     }`}>
                     <Link
                       href={`/egypt?lang=${lang}`}
