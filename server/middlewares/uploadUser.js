@@ -64,7 +64,7 @@ const path = require("path");
 const multer = require("multer");
 const crypto = require("crypto");
 
-const uploadPath = path.join(__dirname, "../uploads/users");
+const uploadPath = path.join(__dirname, "/uploads/users");
 
 // ensure folder exists
 if (!fs.existsSync(uploadPath)) {
