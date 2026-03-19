@@ -167,7 +167,10 @@ export const api = {
     // categories/country/${countryName}
     // get categories by country name
     getCategoryByCountry: (countryName: string) =>
-      apiClient.get(`categories/country/${countryName}`)
+      apiClient.get(`categories/country/${countryName}`),
+
+    deleteImage: (categoryId: string, imageName: string) =>
+      apiClient.delete(`/categories/${categoryId}/images/${imageName}`),
   },
 
   /**
@@ -199,8 +202,8 @@ export const api = {
   // },
 
   // countries endpoints
-  
-    programs: {
+
+  programs: {
     getAll: () => apiClient.get("/programs"),
 
     getOne: (id: string) => apiClient.get(`/programs/${id}`),
@@ -213,15 +216,15 @@ export const api = {
     getProgamsByCategory: (categoryId: string) =>
       apiClient.get(`/programs/category/${categoryId}`),
 
-      deleteImage: (programId: string, imageName: string) =>
-    apiClient.delete(`/programs/${programId}/images/${imageName}`),
+    deleteImage: (programId: string, imageName: string) =>
+      apiClient.delete(`/programs/${programId}/images/${imageName}`),
 
     // FIXED: Support FormData for image uploads on update
     update: (id: string, data: FormData | any) => {
       const isFormData = data instanceof FormData;
       return apiClient.put(`/programs/${id}`, data, {
-        headers: isFormData 
-          ? { "Content-Type": "multipart/form-data" } 
+        headers: isFormData
+          ? { "Content-Type": "multipart/form-data" }
           : undefined
       });
     },
@@ -234,8 +237,8 @@ export const api = {
         headers: { "Content-Type": "multipart/form-data" }
       })
   },
-  
-  
+
+
   countries: {
     getAll: () => apiClient.get("/countries"),
     getInVisa: () => apiClient.get("/countries/inVisa"),
@@ -318,8 +321,8 @@ export const api = {
    * Stats endpoint
    */
   getStats: () => apiClient.get("/stats"),
- 
- 
+
+
   users: {
     // Existing methods...
     getSummary: (id: string, start?: string, end?: string) =>
@@ -327,18 +330,18 @@ export const api = {
         params: { ...(start ? { start } : {}), ...(end ? { end } : {}) }
       }),
     getOne: (id: string) => apiClient.get(`/users/${id}`),
-    
+
     // New Profile methods
     getProfile: (id: string) => apiClient.get(`/auth/profile/${id}`),
-    
+
     updateProfile: (id: string, data: FormData) =>
       apiClient.put(`/auth/profile/${id}`, data, {
         headers: { "Content-Type": "multipart/form-data" }
       }),
-    
+
     deleteImage: (id: string, imageName: string) =>
       apiClient.delete(`/auth/profile/${id}/images/${imageName}`),
-    
+
     changePassword: (id: string, data: { currentPassword: string; newPassword: string }) =>
       apiClient.put(`/auth/profile/${id}/password`, data)
   }

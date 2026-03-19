@@ -36,7 +36,7 @@ const CategoriesPageContent = () => {
     const [showForm, setShowForm] = useState(false)
     const [editingCategory, setEditingCategory] = useState<Category | null>(null)
     const [images, setImages] = useState<File[]>([])
-    const [previewImages, setPreviewImages] = useState<string[]>([])
+    // const [previewImages, setPreviewImages] = useState<string[]>([])
     const [error, setError] = useState<string | null>(null)
     const [formData, setFormData] = useState({
         nameEn: '',
@@ -46,6 +46,13 @@ const CategoriesPageContent = () => {
         images: '',
         isActive: true
     })
+    type PreviewImage = {
+        url: string
+        name?: string
+        isNew: boolean
+    }
+
+    const [previewImages, setPreviewImages] = useState<PreviewImage[]>([])
 
     const queryClient = useQueryClient()
 
@@ -89,10 +96,35 @@ const CategoriesPageContent = () => {
     //         alert(error.response?.data?.error || 'Error')
     // })
 
-    
+
     const deleteMutation = useMutation({
         mutationFn: (id: string) => api.categories.delete(id),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ['categories'] })
+    })
+
+    const deleteImageMutation = useMutation({
+        mutationFn: ({ categoryId, imageName }: { categoryId: string, imageName: string }) =>
+            api.categories.deleteImage(categoryId, imageName),
+
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['categories'] })
+
+            if (editingCategory) {
+                api.categories.getOne(editingCategory._id).then(res => {
+                    const updated = res.data
+
+                    const serverImages = (updated.images || []).map((img: string) => ({
+                        url: img.startsWith('http')
+                            ? img
+                            : `http://147.93.126.15${img}`,
+                        name: img.split('/').pop(),
+                        isNew: false
+                    }))
+
+                    setPreviewImages(serverImages)
+                })
+            }
+        }
     })
 
 
@@ -157,8 +189,28 @@ const CategoriesPageContent = () => {
         setShowForm(false)
     }
 
+    // const startEdit = (c: Category) => {
+    //     setEditingCategory(c)
+    //     setFormData({
+    //         nameEn: c.nameEn,
+    //         nameAr: c.nameAr,
+    //         type: c.type,
+    //         country: c.country,
+    //         images: '',
+    //         isActive: c.isActive
+    //     })
+
+    //     // show existing images from server
+    //     setImages([])
+    //     setPreviewImages((c.images || []).map(img => `http://147.93.126.15/${img}`))
+
+    //     setShowForm(true)
+    // }
+
+
     const startEdit = (c: Category) => {
         setEditingCategory(c)
+
         setFormData({
             nameEn: c.nameEn,
             nameAr: c.nameAr,
@@ -168,26 +220,77 @@ const CategoriesPageContent = () => {
             isActive: c.isActive
         })
 
-        // show existing images from server
         setImages([])
-        setPreviewImages((c.images || []).map(img => `http://147.93.126.15/${img}`))
+
+        const serverImages = (c.images || []).map(img => ({
+            url: img.startsWith('http')
+                ? img
+                : `http://147.93.126.15${img}`,
+            name: img.split('/').pop(),
+            isNew: false
+        }))
+
+        setPreviewImages(serverImages)
 
         setShowForm(true)
     }
+
+
+    // const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     if (!e.target.files) return
+
+    //     const file = e.target.files[0]
+    //     if (!file) return
+
+    //     setImages([file])
+    //     setPreviewImages([URL.createObjectURL(file)])
+    // }
+
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files) return
 
         const file = e.target.files[0]
-        if (!file) return
 
         setImages([file])
-        setPreviewImages([URL.createObjectURL(file)])
+
+        setPreviewImages(prev => [
+            ...prev,
+            {
+                url: URL.createObjectURL(file),
+                isNew: true
+            }
+        ])
     }
 
+    // const removePreviewImage = (index: number) => {
+    //     setImages((prev) => prev.filter((_, i) => i !== index))
+    //     setPreviewImages((prev) => prev.filter((_, i) => i !== index))
+    // }
     const removePreviewImage = (index: number) => {
-        setImages((prev) => prev.filter((_, i) => i !== index))
-        setPreviewImages((prev) => prev.filter((_, i) => i !== index))
+        const image = previewImages[index]
+
+        // 🟡 NEW
+        if (image.isNew) {
+            setImages([])
+            setPreviewImages(prev => prev.filter((_, i) => i !== index))
+        }
+        // 🔵 EXISTING
+        else {
+            if (!editingCategory || !image.name) return
+
+            if (confirm('Delete this image permanently?')) {
+                deleteImageMutation.mutate({
+                    categoryId: editingCategory._id,
+                    imageName: image.name
+                })
+            }
+        }
     }
+
+
+
+
+
     // ================= UI =================
     return (
         <div className="min-h-screen flex bg-white text-black">
@@ -263,7 +366,7 @@ const CategoriesPageContent = () => {
                             {/* images */}
                             <input type="file" accept="image/*" onChange={handleImageChange} />
 
-                            {previewImages.length > 0 && (
+                            {/* {previewImages.length > 0 && (
                                 <div className="grid grid-cols-3 gap-3">
                                     {previewImages.map((src, i) => (
                                         <div key={i} className="relative">
@@ -278,7 +381,40 @@ const CategoriesPageContent = () => {
                                         </div>
                                     ))}
                                 </div>
+                            )} */}
+
+                            {previewImages.length > 0 && (
+                                <div className="grid grid-cols-3 gap-3">
+                                    {previewImages.map((img, i) => (
+                                        <div key={i} className="relative">
+                                            <img src={img.url} className="rounded h-32 object-cover" />
+
+                                            <button
+                                                type="button"
+                                                onClick={() => removePreviewImage(i)}
+                                                className="absolute top-1 right-1 bg-red-600 px-2 text-xs rounded"
+                                            >
+                                                ✕
+                                            </button>
+
+                                            {!img.isNew && (
+                                                <span className="absolute bottom-1 left-1 bg-blue-600 text-white text-xs px-2 rounded">
+                                                    Saved
+                                                </span>
+                                            )}
+
+                                            {img.isNew && (
+                                                <span className="absolute bottom-1 left-1 bg-yellow-600 text-white text-xs px-2 rounded">
+                                                    New
+                                                </span>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
                             )}
+
+
+
                             <div className="flex items-center gap-4">
                                 <label className="flex items-center gap-2">
                                     <input type="radio" checked={formData.isActive === true} onChange={() => setFormData({ ...formData, isActive: true })} /> Active
