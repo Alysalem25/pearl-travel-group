@@ -1142,18 +1142,21 @@ function ProgramsPageContent() {
             api.programs.deleteImage(programId, imageName),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['programs'] });
-            // Refresh current editing program data
+
             if (editingProgram) {
                 api.programs.getOne(editingProgram._id).then(res => {
                     const updatedProgram = res.data;
                     const rawImages = updatedProgram.images || [];
-                    setExistingImages(rawImages.map((img: string) =>
-                        img.replace('/uploads/programs/', '')
-                    ));
-                    const serverImages = rawImages.map((img: string) =>
-                        img.startsWith('http') ? img : `http://147.93.126.15${img}`
-                    );
-                    setPreviewImages(serverImages);
+
+                    const serverImages = rawImages.map((img: string) => ({
+                        url: img.startsWith('http')
+                            ? img
+                            : `http://147.93.126.15${img}`,
+                        name: img.split('/').pop(), // ✅ مهم
+                        isNew: false
+                    }));
+
+                    setPreviewImages(serverImages); // ✅ FIX
                 });
             }
         },
