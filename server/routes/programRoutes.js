@@ -477,7 +477,7 @@ router.post(
       } = req.body;
 
       // Extract uploaded image filenames
-      const images = (req.files || []).map(f => f.filename);
+      const images = (req.files || []).map(f => "/uploads/programs/" + f.filename);
 
       const program = new Program({
         titleEn,
@@ -547,7 +547,7 @@ router.put(
       
       // Add new uploaded images
       if (req.files && req.files.length > 0) {
-        const newImages = req.files.map(f => f.filename);
+        const newImages = req.files.map(f => "/uploads/programs/" + f.filename);
         images = [...images, ...newImages];
       }
 
@@ -660,7 +660,7 @@ router.delete("/:id/images/:imageName", authMiddleware, authorize("admin"), asyn
 
     const fs = require('fs');
     const path = require('path');
-    const imagePath = path.join(__dirname, '../uploads/programs', imageName);
+    const imagePath = path.join('/app/uploads/programs', path.basename(imageName));
     
     if (fs.existsSync(imagePath)) {
       fs.unlinkSync(imagePath);

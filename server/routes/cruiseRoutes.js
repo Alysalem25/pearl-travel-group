@@ -61,7 +61,7 @@ router.post(
       } = req.body;
 
       // files uploaded by multer
-      const images = (req.files || []).map(f => f.filename);
+      const images = (req.files || []).map(f => "/uploads/Cruisies/" + f.filename);
 
       const cruise = new Cruisies({
         titleEn,
@@ -167,7 +167,7 @@ router.post(
         return res.status(404).json({ error: "Cruise not found" });
       }
 
-      const images = (req.files || []).map(f => f.filename);
+      const images = (req.files || []).map(f => "/uploads/Cruisies/" + f.filename);
       cruise.images.push(...images);
 
       await cruise.save();

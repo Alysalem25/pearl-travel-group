@@ -115,7 +115,7 @@ router.post(
         isActive
       } = req.body;
 
-      const images = (req.files || []).map(f => f.filename);
+      const images = (req.files || []).map(f => "/uploads/categories/" + f.filename);
 
       const category = new Category({
         nameEn,
@@ -213,7 +213,7 @@ router.post(
         return res.status(404).json({ error: "Category not found" });
       }
 
-      const images = (req.files || []).map(f => f.filename);
+      const images = (req.files || []).map(f => "/uploads/categories/" + f.filename);
       category.images.push(...images);
 
       await category.save();

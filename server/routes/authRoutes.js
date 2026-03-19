@@ -42,7 +42,7 @@ router.post(
         });
       }
 
-      const images = (req.files || []).map(f => f.filename);
+      const images = (req.files || []).map(f => "/uploads/users/" + f.filename);
       const user = new User({
         name,
         email,
@@ -286,7 +286,7 @@ router.put(
 
       // Handle new images if uploaded
       if (req.files && req.files.length > 0) {
-        const newImages = req.files.map(f => f.filename);
+        const newImages = req.files.map(f => "/uploads/users/" + f.filename);
         // Add to existing images or create new array
         const user = await User.findById(req.params.id);
         updateData.images = [...(user.images || []), ...newImages];
@@ -342,10 +342,19 @@ router.delete("/profile/:id/images/:imageName", authMiddleware, async (req, res,
     }
 
     // Remove image from array
-    user.images = user.images.filter(img => img !== req.params.imageName);
+    user.images = user.images.filter(img => {
+      return img !== req.params.imageName && img !== `/uploads/users/${req.params.imageName}`;
+    });
     await user.save();
 
-    // TODO: Optionally delete file from filesystem here
+    // Optionally delete file from filesystem here
+    const fs = require('fs');
+    const path = require('path');
+    const imagePath = path.join("/app/uploads/users", path.basename(req.params.imageName));
+    
+    if (fs.existsSync(imagePath)) {
+      fs.unlinkSync(imagePath);
+    }
 
     res.json({
       message: "Image deleted successfully",

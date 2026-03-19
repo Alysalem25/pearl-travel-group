@@ -107,7 +107,7 @@ router.post(
         inToCountry
       } = req.body;
 
-      const images = (req.files || []).map(f => f.filename);
+      const images = (req.files || []).map(f => "/uploads/countries/" + f.filename);
 
       const country = new Country({
         nameEn,
@@ -203,7 +203,7 @@ router.post(
         return res.status(404).json({ error: "country not found" });
       }
 
-      const images = (req.files || []).map(f => f.filename);
+      const images = (req.files || []).map(f => "/uploads/countries/" + f.filename);
       country.images.push(...images);
 
       await country.save();
@@ -288,7 +288,7 @@ router.post(
         return res.status(404).json({ error: "contry not found" });
       }
 
-      const images = (req.files || []).map(f => f.filename);
+      const images = (req.files || []).map(f => "/uploads/countries/" + f.filename);
       contry.images.push(...images);
 
       await contry.save();
