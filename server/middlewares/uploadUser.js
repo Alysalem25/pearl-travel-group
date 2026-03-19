@@ -106,7 +106,7 @@ const path = require("path");
 const multer = require("multer");
 const crypto = require("crypto");
 
-const UPLOADS_BASE = "/app/uploads";
+const UPLOADS_BASE = "/uploads/users";
 const uploadPath = path.join(UPLOADS_BASE, "users");
 
 // Ensure directory exists
