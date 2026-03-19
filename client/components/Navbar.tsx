@@ -674,12 +674,12 @@ function NavbarContent() {
                 </div>
 
                 {isAdmin() && (
-                  <div>
+                  <div className="flex flex-row">
 
                     <Link
                       href={`/profile/${user?.id}`}  // Use actual user ID instead of hardcoded
                       onClick={() => setOpen(false)}
-                      className="flex items-center justify-center gap-2 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 font-medium"
+                      className="flex items-center justify-center gap-2 m-2 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 font-medium"
                     >
                       <User className="w-4 h-4" />  
                       Profile
@@ -687,7 +687,7 @@ function NavbarContent() {
                     <Link
                       href={`/Admindashbord?lang=${lang}`}
                       onClick={() => setOpen(false)}
-                      className="flex items-center justify-center gap-2 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 font-medium"
+                      className="flex items-center justify-center gap-2 m-2 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 font-medium"
                     >
                       <BarChart3 size={16} />
                       Dashboard
