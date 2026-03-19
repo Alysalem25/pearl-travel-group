@@ -99,61 +99,60 @@ export default function ProfilePage() {
 
   const [passwordErrors, setPasswordErrors] = useState<Partial<PasswordForm>>({})
 
-  // Fetch user profile
-  const { data: profileData, isLoading, error } = useQuery({
-    queryKey: ['userProfile', userId],
-    queryFn: async () => {
-      const response = await api.users.getProfile(userId)
-      return response.data.user as UserProfile
-    },
-    enabled: !!userId && !authLoading && isAuthenticated && canView
-  })
+// Fetch user profile - FIXED
+const { data: profileData, isLoading, error } = useQuery({
+  queryKey: ['userProfile', userId],
+  queryFn: async () => {
+    const response = await api.auth.getProfile(userId) // ✅ CHANGED from api.users.getProfile
+    return response.data.user as UserProfile
+  },
+  enabled: !!userId && !authLoading && isAuthenticated && canView
+})
 
-  // Update profile mutation
-  const updateMutation = useMutation({
-    mutationFn: async (data: FormData) => {
-      return api.users.updateProfile(userId, data)
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['userProfile', userId] })
-      queryClient.invalidateQueries({ queryKey: ['users'] })
-      setIsEditing(false)
-      setPreviewImages([])
-      setNewImageFiles([])
-      alert('Profile updated successfully!')
-    },
-    onError: (err: any) => {
-      alert(err.response?.data?.error || 'Failed to update profile')
-    }
-  })
+// Update profile mutation - FIXED
+const updateMutation = useMutation({
+  mutationFn: async (data: FormData) => {
+    return api.auth.updateProfile(userId, data) // ✅ CHANGED from api.users.updateProfile
+  },
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ['userProfile', userId] })
+    queryClient.invalidateQueries({ queryKey: ['users'] })
+    setIsEditing(false)
+    setPreviewImages([])
+    setNewImageFiles([])
+    alert('Profile updated successfully!')
+  },
+  onError: (err: any) => {
+    alert(err.response?.data?.error || 'Failed to update profile')
+  }
+})
 
-  // Delete image mutation
-  const deleteImageMutation = useMutation({
-    mutationFn: async (imageName: string) => {
-      return api.users.deleteImage(userId, imageName)
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['userProfile', userId] })
-    },
-    onError: (err: any) => {
-      alert(err.response?.data?.error || 'Failed to delete image')
-    }
-  })
+// Delete image mutation - FIXED
+const deleteImageMutation = useMutation({
+  mutationFn: async (imageName: string) => {
+    return api.auth.deleteImage(userId, imageName) // ✅ CHANGED from api.users.deleteImage
+  },
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ['userProfile', userId] })
+  },
+  onError: (err: any) => {
+    alert(err.response?.data?.error || 'Failed to delete image')
+  }
+})
 
-  // Change password mutation
-  const changePasswordMutation = useMutation({
-    mutationFn: async (data: { currentPassword: string; newPassword: string }) => {
-      return api.users.changePassword(userId, data)
-    },
-    onSuccess: () => {
-      setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' })
-      alert('Password changed successfully!')
-    },
-    onError: (err: any) => {
-      alert(err.response?.data?.error || 'Failed to change password')
-    }
-  })
-
+// Change password mutation - FIXED
+const changePasswordMutation = useMutation({
+  mutationFn: async (data: { currentPassword: string; newPassword: string }) => {
+    return api.auth.changePassword(userId, data) // ✅ CHANGED from api.users.changePassword
+  },
+  onSuccess: () => {
+    setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' })
+    alert('Password changed successfully!')
+  },
+  onError: (err: any) => {
+    alert(err.response?.data?.error || 'Failed to change password')
+  }
+})
   // Initialize form data when profile loads
   useEffect(() => {
     if (profileData) {
