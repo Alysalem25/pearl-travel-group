@@ -5,7 +5,6 @@ import { useParams, useRouter } from 'next/navigation'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/lib/api'
 import { useAuth } from '@/context/AuthContext'
-import { ProtectedRoute } from '@/components/ProtectedRoute'
 import { 
   User, 
   Mail, 
@@ -20,9 +19,11 @@ import {
   CheckCircle2,
   AlertCircle,
   Loader2,
-  Users
+  Users,
+  ArrowLeft,
+  LogOut
 } from 'lucide-react'
-import Image from 'next/image'
+import Link from 'next/link'
 
 interface UserProfile {
   _id: string
@@ -44,23 +45,37 @@ interface PasswordForm {
 }
 
 export default function ProfilePage() {
-  return (
-    <ProtectedRoute>
-      <ProfilePageContent />
-    </ProtectedRoute>
-  )
-}
-
-const ProfilePageContent = () => {
   const params = useParams()
   const router = useRouter()
-  const { user: currentUser } = useAuth()
+  const { user: currentUser, isAuthenticated, loading: authLoading, logout } = useAuth()
   const queryClient = useQueryClient()
   const fileInputRef = useRef<HTMLInputElement>(null)
   
   const userId = params.id as string
+  
+  // Redirect if not authenticated
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) {
+      router.push('/login')
+    }
+  }, [authLoading, isAuthenticated, router])
+
+  // Check if user can view this profile
   const isOwnProfile = currentUser?.id === userId
   const isAdmin = currentUser?.role === 'admin'
+  const canView = isOwnProfile || isAdmin
+
+  // Redirect if not authorized to view this profile
+  useEffect(() => {
+    if (!authLoading && isAuthenticated && !canView) {
+      // If trying to view someone else's profile but not admin, redirect to own profile
+      if (currentUser?.id) {
+        router.push(`/profile/${currentUser.id}`)
+      } else {
+        router.push('/')
+      }
+    }
+  }, [authLoading, isAuthenticated, canView, currentUser, router, userId])
 
   // Local state
   const [isEditing, setIsEditing] = useState(false)
@@ -91,7 +106,7 @@ const ProfilePageContent = () => {
       const response = await api.users.getProfile(userId)
       return response.data.user as UserProfile
     },
-    enabled: !!userId
+    enabled: !!userId && !authLoading && isAuthenticated && canView
   })
 
   // Update profile mutation
@@ -157,7 +172,6 @@ const ProfilePageContent = () => {
     const files = Array.from(e.target.files || [])
     if (files.length === 0) return
 
-    // Limit total images to 5
     const totalImages = (profileData?.images?.length || 0) + newImageFiles.length + files.length
     if (totalImages > 5) {
       alert('Maximum 5 images allowed')
@@ -169,7 +183,6 @@ const ProfilePageContent = () => {
     setNewImageFiles(prev => [...prev, ...files])
   }
 
-  // Remove preview image (before upload)
   const removePreviewImage = (index: number) => {
     setPreviewImages(prev => prev.filter((_, i) => i !== index))
     setNewImageFiles(prev => prev.filter((_, i) => i !== index))
@@ -186,7 +199,6 @@ const ProfilePageContent = () => {
     submitData.append('inTeam', String(formData.inTeam))
     submitData.append('roleInTeam', formData.roleInTeam)
 
-    // Append new images
     newImageFiles.forEach(file => {
       submitData.append('images', file)
     })
@@ -224,7 +236,6 @@ const ProfilePageContent = () => {
   const handleDeleteImage = async (imageUrl: string) => {
     if (!confirm('Are you sure you want to delete this image?')) return
     
-    // Extract filename from URL
     const imageName = imageUrl.split('/').pop()
     if (imageName) {
       await deleteImageMutation.mutateAsync(imageName)
@@ -247,6 +258,25 @@ const ProfilePageContent = () => {
     }
   }
 
+  // Handle logout
+  const handleLogout = () => {
+    logout()
+    router.push('/')
+  }
+
+  // Show loading while checking auth
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="flex items-center gap-2 text-gray-600">
+          <Loader2 className="w-6 h-6 animate-spin" />
+          <span>Loading...</span>
+        </div>
+      </div>
+    )
+  }
+
+  // Show loading while fetching profile
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -266,23 +296,32 @@ const ProfilePageContent = () => {
           <h2 className="text-xl font-semibold text-gray-900 mb-2">Error loading profile</h2>
           <p className="text-gray-600">{(error as any)?.response?.data?.error || 'Something went wrong'}</p>
           <button 
-            onClick={() => router.back()}
+            onClick={() => router.push('/')}
             className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           >
-            Go Back
+            Go Home
           </button>
         </div>
       </div>
     )
   }
 
-  if (!profileData) return null
+  if (!profileData || !canView) return null
 
   const canEdit = isOwnProfile || isAdmin
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
+        {/* Back Button */}
+        <button
+          onClick={() => router.back()}
+          className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6 transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          Back
+        </button>
+
         {/* Header */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden mb-6">
           <div className="bg-gradient-to-r from-blue-600 to-blue-700 h-32"></div>
@@ -323,15 +362,26 @@ const ProfilePageContent = () => {
               </div>
 
               {/* Actions */}
-              {canEdit && !isEditing && (
-                <button
-                  onClick={() => setIsEditing(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  <Edit3 className="w-4 h-4" />
-                  Edit Profile
-                </button>
-              )}
+              <div className="flex gap-2">
+                {canEdit && !isEditing && (
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    <Edit3 className="w-4 h-4" />
+                    Edit Profile
+                  </button>
+                )}
+                {isOwnProfile && (
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Logout
+                  </button>
+                )}
+              </div>
             </div>
 
             {/* Tabs */}

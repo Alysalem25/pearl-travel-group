@@ -419,7 +419,7 @@
 import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import { ChevronDown, Menu, X, Globe, BarChart3 } from "lucide-react";
+import { ChevronDown, Menu, X, Globe, BarChart3 , User } from "lucide-react";
 import { translations } from "@/data/translations";
 import { Language, getDirection } from "@/lib/language";
 import { getLanguageFromSearchParams, updateLanguage } from "@/lib/language";
@@ -674,13 +674,26 @@ function NavbarContent() {
                 </div>
 
                 {isAdmin() && (
-                  <Link
-                    href={`/Admindashbord?lang=${lang}`}
-                    className="flex items-center gap-1 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 font-medium text-sm"
-                  >
-                    <BarChart3 size={16} />
-                    Dashboard
-                  </Link>
+                  <div>
+
+                  // In Navbar.tsx, update the profile link:
+                    <Link
+                      href={`/profile/${user?.id}`}  // Use actual user ID instead of hardcoded
+                      onClick={() => setOpen(false)}
+                      className="flex items-center justify-center gap-2 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 font-medium"
+                    >
+                      <User className="w-4 h-4" />  // Change icon to User instead of BarChart3
+                      Profile
+                    </Link>
+                    <Link
+                      href={`/Admindashbord?lang=${lang}`}
+                      onClick={() => setOpen(false)}
+                      className="flex items-center justify-center gap-2 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 font-medium"
+                    >
+                      <BarChart3 size={16} />
+                      Dashboard
+                    </Link>
+                  </div>
                 )}
               </div>
             ) : (
@@ -875,23 +888,27 @@ function NavbarContent() {
                       </p>
 
                     </div>
-                    <Link
-                      href={`/profile/${user?.id}`}
-                      onClick={() => setOpen(false)}
-                      className="flex items-center justify-center gap-2 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 font-medium"
-                    >
-                      <BarChart3 size={16} />
-                      profile
-                    </Link>
                     {isAdmin() && (
-                      <Link
-                        href={`/Admindashbord?lang=${lang}`}
-                        onClick={() => setOpen(false)}
-                        className="flex items-center justify-center gap-2 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 font-medium"
-                      >
-                        <BarChart3 size={16} />
-                        Dashboard
-                      </Link>
+                      <div>
+
+                      // In Navbar.tsx, update the profile link:
+                        <Link
+                          href={`/profile/${user?.id}`}  // Use actual user ID instead of hardcoded
+                          onClick={() => setOpen(false)}
+                          className="flex items-center justify-center gap-2 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 font-medium"
+                        >
+                          <User className="w-4 h-4" />  // Change icon to User instead of BarChart3
+                          Profile
+                        </Link>
+                        <Link
+                          href={`/Admindashbord?lang=${lang}`}
+                          onClick={() => setOpen(false)}
+                          className="flex items-center justify-center gap-2 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 font-medium"
+                        >
+                          <BarChart3 size={16} />
+                          Dashboard
+                        </Link>
+                      </div>
                     )}
                   </div>
                 ) : (
