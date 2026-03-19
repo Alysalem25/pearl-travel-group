@@ -281,12 +281,29 @@ export const api = {
    * Stats endpoint
    */
   getStats: () => apiClient.get("/stats"),
+ 
+ 
   users: {
+    // Existing methods...
     getSummary: (id: string, start?: string, end?: string) =>
       apiClient.get(`/users/${id}/summary`, {
         params: { ...(start ? { start } : {}), ...(end ? { end } : {}) }
       }),
-    getOne: (id: string) => apiClient.get(`/users/${id}`)
+    getOne: (id: string) => apiClient.get(`/users/${id}`),
+    
+    // New Profile methods
+    getProfile: (id: string) => apiClient.get(`/auth/profile/${id}`),
+    
+    updateProfile: (id: string, data: FormData) =>
+      apiClient.put(`/auth/profile/${id}`, data, {
+        headers: { "Content-Type": "multipart/form-data" }
+      }),
+    
+    deleteImage: (id: string, imageName: string) =>
+      apiClient.delete(`/auth/profile/${id}/images/${imageName}`),
+    
+    changePassword: (id: string, data: { currentPassword: string; newPassword: string }) =>
+      apiClient.put(`/auth/profile/${id}/password`, data)
   }
 };
 

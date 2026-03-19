@@ -32,7 +32,7 @@ router.post(
   handleValidationErrors,
   async (req, res, next) => {
     try {
-      const { name, email, password, number, role, inTeam , roleInTeam } = req.body;
+      const { name, email, password, number, role, inTeam, roleInTeam } = req.body;
 
       // Check if user already exists
       const existingUser = await User.findOne({ email });
@@ -73,7 +73,7 @@ router.post(
       //   email:user.email,
       //   image: user.image ? normalizeImagePath(user.image) : null
       // });
-      
+
       const response = {
         ...user.toObject(),
         images: user.images.map(normalizeImagePath)
@@ -229,4 +229,169 @@ router.get("/team", async (req, res, next) => {
   }
 });
 
+/**
+ * GET /auth/profile/:id
+ * Get user profile by ID (protected route)
+ * Returns full user details including images
+ */
+router.get("/profile/:id", authMiddleware, async (req, res, next) => {
+  try {
+    // Users can only view their own profile unless they're admin
+    if (req.user.id !== req.params.id && req.user.role !== "admin") {
+      return res.status(403).json({ error: "Access denied" });
+    }
+
+    const user = await User.findById(req.params.id).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json({
+      user: {
+        ...user.toObject(),
+        images: user.images ? user.images.map(normalizeImagePath) : []
+      }
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * PUT /auth/profile/:id
+ * Update user profile (protected route)
+ * Supports partial updates and image uploads
+ */
+router.put(
+  "/profile/:id",
+  authMiddleware,
+  uploadUser.array("images", 5), // Allow up to 5 images
+  async (req, res, next) => {
+    try {
+      // Users can only update their own profile unless they're admin
+      if (req.user.id !== req.params.id && req.user.role !== "admin") {
+        return res.status(403).json({ error: "Access denied" });
+      }
+
+      const { name, email, number, inTeam, roleInTeam } = req.body;
+      const updateData = {};
+
+      // Only include fields that are provided
+      if (name) updateData.name = name;
+      if (email) updateData.email = email.toLowerCase();
+      if (number) updateData.number = number;
+      if (inTeam !== undefined) updateData.inTeam = inTeam === 'true' || inTeam === true;
+      if (roleInTeam !== undefined) updateData.roleInTeam = roleInTeam;
+
+      // Handle new images if uploaded
+      if (req.files && req.files.length > 0) {
+        const newImages = req.files.map(f => f.filename);
+        // Add to existing images or create new array
+        const user = await User.findById(req.params.id);
+        updateData.images = [...(user.images || []), ...newImages];
+      }
+
+      // Check email uniqueness if email is being updated
+      if (email) {
+        const existingUser = await User.findOne({
+          email: email.toLowerCase(),
+          _id: { $ne: req.params.id }
+        });
+        if (existingUser) {
+          return res.status(400).json({ error: "Email already in use" });
+        }
+      }
+
+      const updatedUser = await User.findByIdAndUpdate(
+        req.params.id,
+        updateData,
+        { new: true, runValidators: true }
+      ).select("-password");
+
+      if (!updatedUser) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      res.json({
+        message: "Profile updated successfully",
+        user: {
+          ...updatedUser.toObject(),
+          images: updatedUser.images ? updatedUser.images.map(normalizeImagePath) : []
+        }
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+/**
+ * DELETE /auth/profile/:id/images/:imageName
+ * Delete specific user image (protected route)
+ */
+router.delete("/profile/:id/images/:imageName", authMiddleware, async (req, res, next) => {
+  try {
+    if (req.user.id !== req.params.id && req.user.role !== "admin") {
+      return res.status(403).json({ error: "Access denied" });
+    }
+
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Remove image from array
+    user.images = user.images.filter(img => img !== req.params.imageName);
+    await user.save();
+
+    // TODO: Optionally delete file from filesystem here
+
+    res.json({
+      message: "Image deleted successfully",
+      images: user.images.map(normalizeImagePath)
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * PUT /auth/profile/:id/password
+ * Change password (protected route)
+ */
+router.put("/profile/:id/password", authMiddleware, async (req, res, next) => {
+  try {
+    if (req.user.id !== req.params.id) {
+      return res.status(403).json({ error: "Can only change your own password" });
+    }
+
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ error: "Current and new password required" });
+    }
+
+    if (newPassword.length < 8) {
+      return res.status(400).json({ error: "Password must be at least 8 characters" });
+    }
+
+    const user = await User.findById(req.params.id).select("+password");
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch) {
+      return res.status(401).json({ error: "Current password is incorrect" });
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    res.json({ message: "Password updated successfully" });
+  } catch (err) {
+    next(err);
+  }
+});
 module.exports = router;

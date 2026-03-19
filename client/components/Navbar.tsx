@@ -788,8 +788,8 @@ function NavbarContent() {
                       />
                     </div>
                   </summary>
-                  <div className={`pl-4 mt-2 space-y-2 rtl:pl-0 rtl:pr-4 ${scrolled ? 
-                   "text-gray-600 dark:text-gray-400" : "text-white/80"
+                  <div className={`pl-4 mt-2 space-y-2 rtl:pl-0 rtl:pr-4 ${scrolled ?
+                    "text-gray-600 dark:text-gray-400" : "text-white/80"
                     }`}>
                     <Link
                       href={`/egypt?lang=${lang}`}
@@ -873,8 +873,16 @@ function NavbarContent() {
                         }`}>
                         {user?.role === "admin" ? "Admin" : "User"}
                       </p>
-                    </div>
 
+                    </div>
+                    <Link
+                      href={`/profile/${user?.id}`}
+                      onClick={() => setOpen(false)}
+                      className="flex items-center justify-center gap-2 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 font-medium"
+                    >
+                      <BarChart3 size={16} />
+                      profile
+                    </Link>
                     {isAdmin() && (
                       <Link
                         href={`/Admindashbord?lang=${lang}`}
