@@ -213,6 +213,9 @@ export const api = {
     getProgamsByCategory: (categoryId: string) =>
       apiClient.get(`/programs/category/${categoryId}`),
 
+      deleteImage: (programId: string, imageName: string) =>
+    apiClient.delete(`/programs/${programId}/images/${imageName}`),
+
     // FIXED: Support FormData for image uploads on update
     update: (id: string, data: FormData | any) => {
       const isFormData = data instanceof FormData;

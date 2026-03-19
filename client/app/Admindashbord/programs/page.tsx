@@ -1131,6 +1131,33 @@ function ProgramsPageContent() {
         }
     })
 
+    // ================= DELETE IMAGE MUTATION =================
+    const deleteImageMutation = useMutation({
+        mutationFn: ({ programId, imageName }: { programId: string; imageName: string }) =>
+            api.programs.deleteImage(programId, imageName),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['programs'] });
+            // Refresh current editing program data
+            if (editingProgram) {
+                api.programs.getOne(editingProgram._id).then(res => {
+                    const updatedProgram = res.data;
+                    const rawImages = updatedProgram.images || [];
+                    setExistingImages(rawImages.map((img: string) =>
+                        img.replace('/uploads/programs/', '')
+                    ));
+                    const serverImages = rawImages.map((img: string) =>
+                        img.startsWith('http') ? img : `http://147.93.126.15${img}`
+                    );
+                    setPreviewImages(serverImages);
+                });
+            }
+        },
+        onError: (error: any) => {
+            alert('Failed to delete image: ' + (error.response?.data?.error || 'Unknown error'));
+        }
+    });
+
+
     const deleteMutation = useMutation({
         mutationFn: (id: string) =>
             api.programs.delete(id),
@@ -1170,21 +1197,49 @@ function ProgramsPageContent() {
         ])
     }
 
+    // const removePreviewImage = (index: number) => {
+    //     // Check if it's an existing image or new image
+    //     const imageToRemove = previewImages[index];
+
+    //     // If it's a blob URL (new image), remove from images array
+    //     if (imageToRemove.startsWith('blob:')) {
+    //         const newIndex = previewImages.slice(0, index).filter(p => p.startsWith('blob:')).length;
+    //         setImages((prev) => prev.filter((_, i) => i !== newIndex))
+    //     } else {
+    //         // It's an existing server image
+    //         setExistingImages((prev) => prev.filter((_, i) => i !== index))
+    //     }
+
+    //     setPreviewImages((prev) => prev.filter((_, i) => i !== index))
+    // }
+
+
+    // ================= UPDATED REMOVE HANDLER =================
     const removePreviewImage = (index: number) => {
-        // Check if it's an existing image or new image
         const imageToRemove = previewImages[index];
-        
-        // If it's a blob URL (new image), remove from images array
+
+        // If it's a blob URL (new image not yet saved), just remove from state
         if (imageToRemove.startsWith('blob:')) {
             const newIndex = previewImages.slice(0, index).filter(p => p.startsWith('blob:')).length;
-            setImages((prev) => prev.filter((_, i) => i !== newIndex))
+            setImages((prev) => prev.filter((_, i) => i !== newIndex));
+            setPreviewImages((prev) => prev.filter((_, i) => i !== index));
         } else {
-            // It's an existing server image
-            setExistingImages((prev) => prev.filter((_, i) => i !== index))
+            // It's an existing server image - confirm before deleting
+            if (!editingProgram) return;
+
+            // Extract filename from URL
+            const imageName = imageToRemove.split('/').pop();
+            if (!imageName) return;
+
+            if (confirm('Delete this image permanently?')) {
+                deleteImageMutation.mutate({
+                    programId: editingProgram._id,
+                    imageName: imageName
+                });
+            }
         }
-        
-        setPreviewImages((prev) => prev.filter((_, i) => i !== index))
-    }
+    };
+
 
     const updateDay = (i: number, field: keyof Day, value: string) => {
         const copy = days.map((d, idx) =>
@@ -1262,20 +1317,20 @@ function ProgramsPageContent() {
             itineraryAr: p.itineraryAr ?? '',
             status: p.status,
         })
-        
+
         // Reset new images
         setImages([])
-        
+
         // Store existing images from server
         const rawImages = p.images || []
         setExistingImages(rawImages)
-        
+
         // Create full URLs for preview
-        const serverImages = rawImages.map((img) => 
+        const serverImages = rawImages.map((img) =>
             img.startsWith('http') ? img : `http://147.93.126.15${img}`
         )
         setPreviewImages(serverImages)
-        
+
         setDays(
             p.days?.length
                 ? p.days.map((d, idx) => ({ ...d, dayNumber: idx + 1 }))
@@ -1340,81 +1395,81 @@ function ProgramsPageContent() {
                                 required
                             />
                         </div>
-                        
+
                         {/* category & country */}
                         <div className="flex w-full gap-6">
-                            <select 
-                                className="bg-white w-full p-2 rounded border border-gray-600" 
-                                value={formData.category} 
-                                onChange={e => setFormData({ ...formData, category: e.target.value })} 
+                            <select
+                                className="bg-white w-full p-2 rounded border border-gray-600"
+                                value={formData.category}
+                                onChange={e => setFormData({ ...formData, category: e.target.value })}
                                 required
                             >
                                 <option value="">Select Category</option>
                                 {categories.map((c: any) => <option key={c._id} value={c._id}>{c.nameEn}</option>)}
                             </select>
 
-                            <select 
-                                className="bg-white w-full p-2 rounded border border-gray-600" 
-                                value={formData.country} 
+                            <select
+                                className="bg-white w-full p-2 rounded border border-gray-600"
+                                value={formData.country}
                                 onChange={e => setFormData({ ...formData, country: e.target.value as any })}
                             >
                                 <option value="Egypt">Egypt</option>
                                 <option value="Albania">Albania</option>
                             </select>
                         </div>
-                        
+
                         <div className="flex gap-6">
                             <label className="gap-6 w-full">
                                 Duration days
-                                <input 
-                                    type="number" 
-                                    placeholder="Days"  
-                                    className="bg-white p-2 rounded border border-gray-600 w-full" 
-                                    value={formData.durationDays} 
-                                    onChange={e => setFormData({ ...formData, durationDays: parseInt(e.target.value) })} 
-                                    required 
+                                <input
+                                    type="number"
+                                    placeholder="Days"
+                                    className="bg-white p-2 rounded border border-gray-600 w-full"
+                                    value={formData.durationDays}
+                                    onChange={e => setFormData({ ...formData, durationDays: parseInt(e.target.value) })}
+                                    required
                                 />
                             </label>
                             <label className="gap-2 w-full">
                                 Duration nights
-                                <input 
-                                    type="number" 
-                                    placeholder="Nights" 
-                                    className="bg-white p-2 rounded border border-gray-600 w-full" 
-                                    value={formData.durationNights} 
-                                    onChange={e => setFormData({ ...formData, durationNights: parseInt(e.target.value) })} 
-                                    required 
+                                <input
+                                    type="number"
+                                    placeholder="Nights"
+                                    className="bg-white p-2 rounded border border-gray-600 w-full"
+                                    value={formData.durationNights}
+                                    onChange={e => setFormData({ ...formData, durationNights: parseInt(e.target.value) })}
+                                    required
                                 />
                             </label>
                         </div>
 
-                        <textarea 
+                        <textarea
                             placeholder="Description (EN)"
                             className="bg-white p-2 rounded border border-gray-600 w-full h-20"
                             value={formData.descriptionEn}
-                            onChange={e => setFormData({ ...formData, descriptionEn: e.target.value })} 
+                            onChange={e => setFormData({ ...formData, descriptionEn: e.target.value })}
                         />
-                        
-                        <textarea 
+
+                        <textarea
                             placeholder="التفاصيل بالعربي"
                             className="bg-white p-2 rounded border border-gray-600 w-full h-20 text-right"
-                            value={formData.descriptionAr} 
-                            onChange={e => setFormData({ ...formData, descriptionAr: e.target.value })} 
+                            value={formData.descriptionAr}
+                            onChange={e => setFormData({ ...formData, descriptionAr: e.target.value })}
                         />
 
                         {/* images */}
                         <div className="space-y-2">
                             <label className="font-semibold">Upload Images:</label>
-                            <input 
-                                type="file" 
-                                multiple 
+                            <input
+                                type="file"
+                                multiple
                                 accept="image/*"
                                 onChange={handleImageChange}
                                 className="bg-white p-2 rounded border border-gray-600 w-full"
                             />
                         </div>
 
-                        {previewImages.length > 0 && (
+                        {/* {previewImages.length > 0 && (
                             <div className="grid grid-cols-3 gap-3">
                                 {previewImages.map((src, i) => (
                                     <div key={i} className="relative">
@@ -1429,7 +1484,47 @@ function ProgramsPageContent() {
                                     </div>
                                 ))}
                             </div>
+                        )} */}
+                        {previewImages.length > 0 && (
+                            <div className="grid grid-cols-3 gap-3">
+                                {previewImages.map((src, i) => (
+                                    <div key={i} className="relative group">
+                                        <img
+                                            src={src}
+                                            className="rounded h-32 w-full object-cover"
+                                            alt={`Preview ${i + 1}`}
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => removePreviewImage(i)}
+                                            disabled={deleteImageMutation.isPending}
+                                            className="absolute top-1 right-1 bg-red-600 text-white px-2 py-1 text-xs rounded hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
+                                        >
+                                            {deleteImageMutation.isPending && src === previewImages[i] ? (
+                                                <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24">
+                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                                                </svg>
+                                            ) : (
+                                                '✕'
+                                            )}
+                                        </button>
+                                        {/* Show badge for existing vs new images */}
+                                        {!src.startsWith('blob:') && (
+                                            <span className="absolute bottom-1 left-1 bg-blue-600 text-white text-xs px-2 py-0.5 rounded">
+                                                Saved
+                                            </span>
+                                        )}
+                                        {src.startsWith('blob:') && (
+                                            <span className="absolute bottom-1 left-1 bg-yellow-600 text-white text-xs px-2 py-0.5 rounded">
+                                                New
+                                            </span>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
                         )}
+
 
                         {/* days */}
                         <h3 className="font-bold">Days</h3>
@@ -1457,7 +1552,7 @@ function ProgramsPageContent() {
                                         }
                                     />
                                 </div>
-                                
+
                                 <div className="flex w-full flex-col gap-2">
                                     <textarea
                                         placeholder="Description EN"
@@ -1488,8 +1583,8 @@ function ProgramsPageContent() {
                             </div>
                         ))}
 
-                        <button 
-                            type="button" 
+                        <button
+                            type="button"
                             onClick={addDay}
                             className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                         >
@@ -1497,8 +1592,8 @@ function ProgramsPageContent() {
                         </button>
 
                         {/* Submit Button with Loading State */}
-                        <button 
-                            type="submit" 
+                        <button
+                            type="submit"
                             className="w-full bg-green-600 py-3 rounded text-white font-semibold flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-green-700 transition-colors"
                             disabled={programMutation.isPending}
                         >
@@ -1527,7 +1622,7 @@ function ProgramsPageContent() {
                     <h2 className="text-xl font-bold mb-4">Available Programs ({programs.length})</h2>
                     <div className="grid grid-cols-1 gap-4">
                         {programs.map((p: Program) => (
-                            <div 
+                            <div
                                 key={p._id}
                                 onClick={() => window.location.href = `/Admindashbord/programs/${p._id}`}
                                 className="bg-gray-800 p-4 text-white rounded border border-gray-700 flex justify-between items-center hover:border-blue-500 cursor-pointer"
@@ -1540,25 +1635,25 @@ function ProgramsPageContent() {
                                     </span>
                                 </div>
                                 <div className="flex gap-2">
-                                    <button 
+                                    <button
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             e.preventDefault();
                                             startEdit(p)
-                                        }} 
+                                        }}
                                         className="bg-yellow-600 px-3 py-1 rounded text-sm hover:bg-yellow-700"
                                     >
                                         Edit
                                     </button>
 
-                                    <button 
+                                    <button
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             e.preventDefault();
                                             if (confirm('Are you sure you want to delete this program?')) {
                                                 deleteMutation.mutate(p._id)
                                             }
-                                        }} 
+                                        }}
                                         className="bg-red-600 px-3 py-1 rounded text-sm hover:bg-red-700"
                                     >
                                         Delete
