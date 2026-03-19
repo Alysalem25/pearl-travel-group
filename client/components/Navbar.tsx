@@ -681,7 +681,7 @@ function NavbarContent() {
                       onClick={() => setOpen(false)}
                       className="flex items-center justify-center gap-2 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 font-medium"
                     >
-                      <User className="w-4 h-4" />  // Change icon to User instead of BarChart3
+                      <User className="w-4 h-4" />  
                       Profile
                     </Link>
                     <Link
@@ -890,13 +890,12 @@ function NavbarContent() {
                     {isAdmin() && (
                       <div>
 
-                      // In Navbar.tsx, update the profile link:
                         <Link
-                          href={`/profile/${user?.id}`}  // Use actual user ID instead of hardcoded
+                          href={`/profile/${user?.id}`}  
                           onClick={() => setOpen(false)}
                           className="flex items-center justify-center gap-2 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 font-medium"
                         >
-                          <User className="w-4 h-4" />  // Change icon to User instead of BarChart3
+                          <User className="w-4 h-4" /> 
                           Profile
                         </Link>
                         <Link
