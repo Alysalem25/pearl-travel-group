@@ -320,4 +320,40 @@ router.get("/:id", async (req, res, next) => {
 });
 
 // export router so it can be used in index.js
+// DELETE IMAGE FROM CRUISE
+router.delete(
+  "/:id/images/:imageName",
+  authMiddleware,
+  authorize("admin"),
+  async (req, res, next) => {
+    try {
+      const { id, imageName } = req.params;
+
+      const cruise = await Cruisies.findById(id);
+      if (!cruise) {
+        return res.status(404).json({ error: "Cruise not found" });
+      }
+
+      // remove from DB
+      cruise.images = cruise.images.filter(img => {
+        const name = img.split('/').pop();
+        return name !== imageName;
+      });
+
+      await cruise.save();
+
+      const fs = require('fs');
+      const path = require('path');
+      const imagePath = path.join("/app/uploads/Cruisies", path.basename(imageName));
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
+
+      res.json({ message: "Image deleted successfully", cruise });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
 module.exports = router;

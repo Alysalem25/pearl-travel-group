@@ -167,7 +167,7 @@ export const api = {
     // categories/country/${countryName}
     // get categories by country name
     getCategoryByCountry: (countryName: string) =>
-      apiClient.get(`categories/country/${countryName}`),
+      apiClient.get(`/categories/country/${countryName}`),
 
     deleteImage: (id: string, imageName: string) =>
       apiClient.delete(`/categories/${id}/images/${imageName}`)
@@ -310,6 +310,8 @@ export const api = {
       apiClient.post(`/cruisies/${id}/images`, files, {
         headers: { "Content-Type": "multipart/form-data" }
       }),
+    deleteImage: (id: string, imageName: string) =>
+      apiClient.delete(`/cruisies/${id}/images/${imageName}`),
     book: (data: { userEmail: string; userName: string; userNumber: string; message: string; cruiseId: string }) =>
       apiClient.post("/cruisies/book", data),
     getAllBooked: () => apiClient.get("/cruisies/book"),

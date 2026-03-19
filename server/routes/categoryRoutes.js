@@ -253,7 +253,14 @@ router.delete(
 
       await category.save();
 
-      res.json({ message: "Image deleted successfully" });
+      const fs = require('fs');
+      const path = require('path');
+      const imagePath = path.join("/app/uploads/categories", path.basename(imageName));
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
+
+      res.json({ message: "Image deleted successfully", category });
     } catch (err) {
       next(err);
     }

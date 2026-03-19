@@ -6,6 +6,11 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/lib/api'
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 
+function buildImageUrl(path: string) {
+    if (!path) return '';
+    return path.startsWith('http') ? path : `http://147.93.126.15${path}`;
+}
+
 interface Day {
     dayNumber: number
     titleEn: string
@@ -38,8 +43,13 @@ function CruisiesPageContent() {
     const [showForm, setShowForm] = useState(false)
     const [editingCruisies, setEditingCruisies] = useState<Cruisies | null>(null)
 
+    type PreviewImage = {
+        url: string
+        name?: string
+        isNew: boolean
+    }
     const [images, setImages] = useState<File[]>([])
-    const [previewImages, setPreviewImages] = useState<string[]>([])
+    const [previewImages, setPreviewImages] = useState<PreviewImage[]>([])
     const [error, setError] = useState('')
 
     const [days, setDays] = useState<Day[]>([
@@ -99,6 +109,29 @@ function CruisiesPageContent() {
             queryClient.invalidateQueries({ queryKey: ['cruisies'] }),
     })
 
+    const deleteImageMutation = useMutation({
+        mutationFn: ({ cruiseId, imageName }: { cruiseId: string, imageName: string }) =>
+            api.cruisies.deleteImage(cruiseId, imageName),
+
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['cruisies'] })
+
+            if (editingCruisies) {
+                api.cruisies.getOne(editingCruisies._id).then((res) => {
+                    const updated = res.data
+
+                    const serverImages = (updated.images || []).map((img: string) => ({
+                        url: buildImageUrl(img),
+                        name: img.split('/').pop(),
+                        isNew: false
+                    }))
+
+                    setPreviewImages(serverImages)
+                })
+            }
+        }
+    })
+
     // ================= HANDLERS =================
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
@@ -124,13 +157,29 @@ function CruisiesPageContent() {
         setImages((prev) => [...prev, ...files])
         setPreviewImages((prev) => [
             ...prev,
-            ...files.map((file) => URL.createObjectURL(file)),
+            ...files.map((file) => ({
+                url: URL.createObjectURL(file),
+                isNew: true
+            })),
         ])
     }
 
     const removePreviewImage = (index: number) => {
-        setImages((prev) => prev.filter((_, i) => i !== index))
-        setPreviewImages((prev) => prev.filter((_, i) => i !== index))
+        const image = previewImages[index]
+
+        if (image.isNew) {
+            setImages([])
+            setPreviewImages((prev) => prev.filter((_, i) => i !== index))
+        } else {
+            if (!editingCruisies || !image.name) return
+
+            if (confirm('Delete this image permanently?')) {
+                deleteImageMutation.mutate({
+                    cruiseId: editingCruisies._id,
+                    imageName: image.name
+                })
+            }
+        }
     }
 
     const updateDay = (i: number, field: keyof Day, value: string) => {
@@ -289,9 +338,9 @@ function CruisiesPageContent() {
 
                         {previewImages.length > 0 && (
                             <div className="grid grid-cols-3 gap-3">
-                                {previewImages.map((src, i) => (
+                                {previewImages.map((img, i) => (
                                     <div key={i} className="relative">
-                                        <img src={src} className="rounded h-32 object-cover" />
+                                        <img src={img.url} className="rounded h-32 object-cover" />
                                         <button
                                             type="button"
                                             onClick={() => removePreviewImage(i)}
@@ -299,6 +348,16 @@ function CruisiesPageContent() {
                                         >
                                             ✕
                                         </button>
+                                        {!img.isNew && (
+                                            <span className="absolute bottom-1 left-1 bg-blue-600 text-white text-xs px-2 rounded">
+                                                Saved
+                                            </span>
+                                        )}
+                                        {img.isNew && (
+                                            <span className="absolute bottom-1 left-1 bg-yellow-600 text-white text-xs px-2 rounded">
+                                                New
+                                            </span>
+                                        )}
                                     </div>
                                 ))}
                             </div>
@@ -404,7 +463,12 @@ function CruisiesPageContent() {
                                             status: c.status,
                                         });
                                         setDays(c.days || []);
-                                        setPreviewImages(c.images || []);
+                                        const serverImages = (c.images || []).map((img: string) => ({
+                                            url: buildImageUrl(img),
+                                            name: img.split('/').pop(),
+                                            isNew: false
+                                        }))
+                                        setPreviewImages(serverImages);
                                         setShowForm(true);
                                     }} className="bg-yellow-600 px-3 py-1 rounded text-sm hover:bg-yellow-700">Edit</button>
 
