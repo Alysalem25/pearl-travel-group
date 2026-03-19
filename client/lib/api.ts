@@ -173,7 +173,34 @@ export const api = {
   /**
    * Program endpoints
    */
-  programs: {
+  // programs: {
+  //   getAll: () => apiClient.get("/programs"),
+
+  //   getOne: (id: string) => apiClient.get(`/programs/${id}`),
+
+  //   create: (data: FormData) =>
+  //     apiClient.post("/programs", data, {
+  //       headers: { "Content-Type": "multipart/form-data" }
+  //     }),
+
+  //   getProgamsByCategory: (categoryId: string) =>
+  //     apiClient.get(`/programs/category/${categoryId}`),
+
+  //   update: (id: string, data: any) =>
+  //     apiClient.put(`/programs/${id}`, data),
+
+  //   delete: (id: string) =>
+  //     apiClient.delete(`/programs/${id}`),
+
+  //   addImages: (id: string, files: FormData) =>
+  //     apiClient.post(`/programs/${id}/images`, files, {
+  //       headers: { "Content-Type": "multipart/form-data" }
+  //     })
+  // },
+
+  // countries endpoints
+  
+    programs: {
     getAll: () => apiClient.get("/programs"),
 
     getOne: (id: string) => apiClient.get(`/programs/${id}`),
@@ -186,8 +213,15 @@ export const api = {
     getProgamsByCategory: (categoryId: string) =>
       apiClient.get(`/programs/category/${categoryId}`),
 
-    update: (id: string, data: any) =>
-      apiClient.put(`/programs/${id}`, data),
+    // FIXED: Support FormData for image uploads on update
+    update: (id: string, data: FormData | any) => {
+      const isFormData = data instanceof FormData;
+      return apiClient.put(`/programs/${id}`, data, {
+        headers: isFormData 
+          ? { "Content-Type": "multipart/form-data" } 
+          : undefined
+      });
+    },
 
     delete: (id: string) =>
       apiClient.delete(`/programs/${id}`),
@@ -197,8 +231,8 @@ export const api = {
         headers: { "Content-Type": "multipart/form-data" }
       })
   },
-
-  // countries endpoints
+  
+  
   countries: {
     getAll: () => apiClient.get("/countries"),
     getInVisa: () => apiClient.get("/countries/inVisa"),

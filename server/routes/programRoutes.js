@@ -305,19 +305,12 @@ const router = express.Router();
 
 /**
  * Image path normalization helper
- * Database stores: "programs/filename.jpg"
- * API returns: "/uploads/programs/filename.jpg"
  */
 function normalizeImagePath(imagePath) {
-  // If already full path, return as-is
+  // Check if already normalized
   if (imagePath.startsWith('/uploads/')) {
     return imagePath;
   }
-  // If has folder prefix (new format)
-  if (imagePath.includes('/')) {
-    return `/uploads/${imagePath}`;
-  }
-  // Legacy: just filename
   return `/uploads/programs/${imagePath}`;
 }
 
@@ -351,6 +344,12 @@ router.get("/category/:categoryId", async (req, res, next) => {
       status: "active",
     }).populate("category", "nameEn nameAr");
 
+    if (!programs.length) {
+      return res.status(404).json({
+        message: "No programs found for this category"
+      });
+    }
+
     const normalizedPrograms = programs.map(program => ({
       ...program.toObject(),
       images: program.images ? program.images.map(normalizeImagePath) : []
@@ -381,7 +380,7 @@ router.put("/booked/:id/status", authMiddleware, authorize("admin"), async (req,
     }
     const bookedProgram = await BookedPrograms.findByIdAndUpdate(
       req.params.id,
-      { status },
+      { status: status === "pending" ? "pending" : "reviewed" },
       { new: true, runValidators: true }
     ).populate("program");
     if (!bookedProgram) return res.status(404).json({ error: "Booking not found" });
@@ -451,6 +450,10 @@ router.get("/:id", async (req, res, next) => {
 /**
  * POST /programs
  * Create new program - ADMIN ONLY
+ * 
+ * Security:
+ * - Requires authentication and admin role
+ * - File uploads restricted to 5 images
  */
 router.post(
   "/",
@@ -473,8 +476,8 @@ router.post(
         days
       } = req.body;
 
-      // ✅ FIX: Store "programs/filename.jpg" not just "filename.jpg"
-      const images = (req.files || []).map(f => `programs/${f.filename}`);
+      // Extract uploaded image filenames
+      const images = (req.files || []).map(f => f.filename);
 
       const program = new Program({
         titleEn,
@@ -483,10 +486,10 @@ router.post(
         descriptionAr,
         category,
         country,
-        durationDays: parseInt(durationDays) || 1,
-        durationNights: parseInt(durationNights) || 0,
-        price: parseFloat(price) || 0,
-        status: status || "active",
+        durationDays,
+        durationNights,
+        price,
+        status,
         images,
         days: days ? JSON.parse(days) : []
       });
@@ -494,7 +497,7 @@ router.post(
       await program.save();
       await program.populate("category");
 
-      // Return with normalized paths
+      // Normalize response
       const response = {
         ...program.toObject(),
         images: program.images.map(normalizeImagePath)
@@ -510,13 +513,13 @@ router.post(
 /**
  * PUT /programs/:id
  * Update program - ADMIN ONLY
- * ✅ FIX: Now handles image uploads
+ * FIXED: Added upload.array("images") to handle image uploads
  */
 router.put(
   "/:id",
   authMiddleware,
   authorize("admin"),
-  upload.array("images", 5), // ✅ ADDED: Handle image uploads
+  upload.array("images", 5), // FIXED: Added multer middleware for image uploads
   async (req, res, next) => {
     try {
       const {
@@ -530,27 +533,23 @@ router.put(
         durationNights,
         price,
         status,
-        days,
-        keepImages // ✅ ADDED: JSON array of existing images to keep
+        days
       } = req.body;
 
-      // Find existing program
+      // Get existing program to merge images
       const existingProgram = await Program.findById(req.params.id);
       if (!existingProgram) {
         return res.status(404).json({ error: "Program not found" });
       }
 
-      // Parse kept images from request
-      let keptImages = [];
-      try {
-        keptImages = keepImages ? JSON.parse(keepImages) : [];
-      } catch (e) {
-        keptImages = [];
+      // Handle images: keep existing + add new ones
+      let images = existingProgram.images || [];
+      
+      // Add new uploaded images
+      if (req.files && req.files.length > 0) {
+        const newImages = req.files.map(f => f.filename);
+        images = [...images, ...newImages];
       }
-
-      // ✅ FIX: Handle new images + kept images
-      const newImages = (req.files || []).map(f => `programs/${f.filename}`);
-      const finalImages = [...keptImages, ...newImages]; // Combine kept and new
 
       const updateData = {
         titleEn,
@@ -559,12 +558,12 @@ router.put(
         descriptionAr,
         category,
         country,
-        durationDays: parseInt(durationDays) || existingProgram.durationDays,
-        durationNights: parseInt(durationNights) || existingProgram.durationNights,
-        price: parseFloat(price) || existingProgram.price,
-        status: status || existingProgram.status,
-        days: days ? JSON.parse(days) : existingProgram.days,
-        images: finalImages // ✅ Use combined images
+        durationDays,
+        durationNights,
+        price,
+        status,
+        images,
+        days: days ? JSON.parse(days) : undefined
       };
 
       const program = await Program.findByIdAndUpdate(
@@ -573,7 +572,11 @@ router.put(
         { new: true, runValidators: true }
       ).populate("category");
 
-      // Return with normalized paths
+      if (!program) {
+        return res.status(404).json({ error: "Program not found" });
+      }
+
+      // Normalize response
       const response = {
         ...program.toObject(),
         images: program.images.map(normalizeImagePath)
