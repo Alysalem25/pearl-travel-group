@@ -184,7 +184,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - /root/uploads:/root/uploads:ro
+      - /root/uploads:/root/uploads:ro  # ← ADD THIS LINE
     depends_on:
       server:
         condition: service_healthy
