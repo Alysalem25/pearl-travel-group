@@ -136,82 +136,19 @@ router.post(
  * PUT /counties/:id
  * Update country - ADMIN ONLY
  */
-// router.put(
-//   "/:id",
-//   authMiddleware,
-//   authorize("admin"),
-//   //   validateCategory,
-//   handleValidationErrors,
-//   async (req, res, next) => {
-//     try {
-//       const { nameEn, nameAr, inhomepage } = req.body;
-
-//       const country = await Country.findByIdAndUpdate(
-//         req.params.id,
-//         { nameEn, nameAr, inhomepage },
-//         { new: true, runValidators: true }
-//       );
-
-//       if (!country) {
-//         return res.status(404).json({ error: "country not found" });
-//       }
-
-//       const response = {
-//         ...country.toObject(),
-//         images: country.images ? country.images.map(normalizeImagePath) : []
-//       };
-
-//       res.json(response);
-//     } catch (err) {
-//       next(err);
-//     }
-//   }
-// );
-
-
-// routes/countryRoutes.js - PUT update section
 router.put(
   "/:id",
   authMiddleware,
   authorize("admin"),
-  uploadCountry.array("images", 1), // ✅ ADD upload middleware
+  //   validateCategory,
+  handleValidationErrors,
   async (req, res, next) => {
     try {
-      const { nameEn, nameAr, inhomepage, inVisa, inFromCountry, inToCountry, keepImages } = req.body;
-
-      // Parse kept images
-      let keptImages = [];
-      try {
-        keptImages = keepImages ? JSON.parse(keepImages) : [];
-      } catch (e) {
-        keptImages = [];
-      }
-
-      // Clean up paths
-      keptImages = keptImages.map(img => 
-        img.replace(/^\/uploads\//, '').replace(/^countries\//, '')
-      );
-
-      // Add new images if uploaded
-      const newImages = (req.files || []).map(f => `countries/${f.filename}`);
-      
-      // Combine
-      const finalImages = [
-        ...keptImages.map(img => img.startsWith('countries/') ? img : `countries/${img}`),
-        ...newImages
-      ];
+      const { nameEn, nameAr, inhomepage } = req.body;
 
       const country = await Country.findByIdAndUpdate(
         req.params.id,
-        { 
-          nameEn, 
-          nameAr, 
-          inhomepage: inhomepage === "true" || inhomepage === true,
-          inVisa: inVisa === "true" || inVisa === true,
-          inFromCountry: inFromCountry === "true" || inFromCountry === true,
-          inToCountry: inToCountry === "true" || inToCountry === true,
-          images: finalImages
-        },
+        { nameEn, nameAr, inhomepage },
         { new: true, runValidators: true }
       );
 
@@ -221,7 +158,7 @@ router.put(
 
       const response = {
         ...country.toObject(),
-        images: country.images.map(normalizeImagePath)
+        images: country.images ? country.images.map(normalizeImagePath) : []
       };
 
       res.json(response);
@@ -230,6 +167,7 @@ router.put(
     }
   }
 );
+
 /**
  * DELETE /countries/:id
  * Delete country - ADMIN ONLY
