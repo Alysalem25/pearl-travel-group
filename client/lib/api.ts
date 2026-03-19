@@ -153,8 +153,12 @@ export const api = {
       apiClient.post("/categories", data, {
         headers: { "Content-Type": "multipart/form-data" }
       }),
-    update: (id: string, data: any) =>
-      apiClient.put(`/categories/${id}`, data),
+    update: (id: string, data: FormData | any) => {
+      const isFormData = data instanceof FormData;
+      return apiClient.put(`/categories/${id}`, data, {
+        headers: isFormData ? { "Content-Type": "multipart/form-data" } : undefined
+      });
+    },
 
     delete: (id: string) =>
       apiClient.delete(`/categories/${id}`),
@@ -247,8 +251,12 @@ export const api = {
       apiClient.post("/countries", data, {
         headers: { "Content-Type": "multipart/form-data" }
       }),
-    update: (id: string, data: any) =>
-      apiClient.put(`/countries/${id}`, data),
+    update: (id: string, data: FormData | any) => {
+      const isFormData = data instanceof FormData;
+      return apiClient.put(`/countries/${id}`, data, {
+        headers: isFormData ? { "Content-Type": "multipart/form-data" } : undefined
+      });
+    },
     delete: (id: string) =>
       apiClient.delete(`/countries/${id}`),
     addImages: (id: string, files: FormData) =>
@@ -302,8 +310,12 @@ export const api = {
       apiClient.post("/cruisies", data, {
         headers: { "Content-Type": "multipart/form-data" }
       }),
-    update: (id: string, data: any) =>
-      apiClient.put(`/cruisies/${id}`, data),
+    update: (id: string, data: FormData | any) => {
+      const isFormData = data instanceof FormData;
+      return apiClient.put(`/cruisies/${id}`, data, {
+        headers: isFormData ? { "Content-Type": "multipart/form-data" } : undefined
+      });
+    },
     delete: (id: string) =>
       apiClient.delete(`/cruisies/${id}`),
     addImages: (id: string, files: FormData) =>

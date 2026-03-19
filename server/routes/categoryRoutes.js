@@ -150,15 +150,28 @@ router.put(
   "/:id",
   authMiddleware,
   authorize("admin"),
+  uploadCategory.array("images", 5),
   validateCategory,
   handleValidationErrors,
   async (req, res, next) => {
     try {
       const { nameEn, nameAr, type, descriptionEn, descriptionAr, country, isActive } = req.body;
 
+      const existingCategory = await Category.findById(req.params.id);
+      if (!existingCategory) {
+        return res.status(404).json({ error: "Category not found" });
+      }
+
+      let images = existingCategory.images || [];
+
+      if (req.files && req.files.length > 0) {
+        const newImages = req.files.map(f => "/uploads/categories/" + f.filename);
+        images = [...images, ...newImages];
+      }
+
       const category = await Category.findByIdAndUpdate(
         req.params.id,
-        { nameEn, nameAr, type, descriptionEn, descriptionAr, country, isActive },
+        { nameEn, nameAr, type, descriptionEn, descriptionAr, country, isActive, images },
         { new: true, runValidators: true }
       );
 

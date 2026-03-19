@@ -140,15 +140,27 @@ router.put(
   "/:id",
   authMiddleware,
   authorize("admin"),
-  //   validateCategory,
+  uploadCountry.array("images", 5),
   handleValidationErrors,
   async (req, res, next) => {
     try {
-      const { nameEn, nameAr, inhomepage } = req.body;
+      const { nameEn, nameAr, inhomepage, inVisa, inFromCountry, inToCountry } = req.body;
+
+      const existingCountry = await Country.findById(req.params.id);
+      if (!existingCountry) {
+        return res.status(404).json({ error: "country not found" });
+      }
+
+      let images = existingCountry.images || [];
+
+      if (req.files && req.files.length > 0) {
+        const newImages = req.files.map(f => "/uploads/countries/" + f.filename);
+        images = [...images, ...newImages];
+      }
 
       const country = await Country.findByIdAndUpdate(
         req.params.id,
-        { nameEn, nameAr, inhomepage },
+        { nameEn, nameAr, inhomepage, inVisa, inFromCountry, inToCountry, images },
         { new: true, runValidators: true }
       );
 

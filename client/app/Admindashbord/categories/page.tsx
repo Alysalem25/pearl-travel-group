@@ -136,37 +136,24 @@ const CategoriesPageContent = () => {
         e.preventDefault()
 
         try {
+            const data = new FormData();
+
+            data.append('nameEn', formData.nameEn);
+            data.append('nameAr', formData.nameAr);
+            data.append('type', formData.type);
+            data.append('country', formData.country);
+            data.append('isActive', String(formData.isActive));
+
+            if (images.length > 0) {
+                data.append('images', images[0]);
+            }
+
             if (editingCategory) {
-                // If a new image was selected while editing, upload it first
-                if (images.length > 0) {
-                    const imgForm = new FormData();
-                    imgForm.append('images', images[0]);
-                    await api.categories.addImages(editingCategory._id, imgForm);
-                }
-
-                await api.categories.update(editingCategory._id, {
-                    nameEn: formData.nameEn,
-                    nameAr: formData.nameAr,
-                    type: formData.type,
-                    country: formData.country,
-                    isActive: formData.isActive
-                });
-
+                await api.categories.update(editingCategory._id, data);
                 alert('Category updated!');
             } else {
-                const data = new FormData();
-
-                data.append('nameEn', formData.nameEn);
-                data.append('nameAr', formData.nameAr);
-                data.append('type', formData.type);
-                data.append('country', formData.country);
-                data.append('isActive', String(formData.isActive));
-
-                if (images.length > 0) {
-                    data.append('images', images[0]);
-                }
-
                 await api.categories.create(data);
+                alert('Category created!');
             }
 
             queryClient.invalidateQueries({ queryKey: ['categories'] });

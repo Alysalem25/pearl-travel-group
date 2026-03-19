@@ -124,32 +124,21 @@ const CountryPageContent = () => {
         e.preventDefault()
 
         try {
+            const data = new FormData();
+            data.append('nameEn', formData.nameEn);
+            data.append('nameAr', formData.nameAr);
+            data.append('inVisa', String(formData.inVisa));
+            data.append('inFromCountry', String(formData.inFromCountry));
+            data.append('inToCountry', String(formData.inToCountry));
+            
+            if (images.length > 0) {
+                data.append('images', images[0]);
+            }
+
             if (editingCountry) {
-                // If a new image was selected while editing, upload it first
-                if (images.length > 0) {
-                    const imgForm = new FormData();
-                    imgForm.append('images', images[0]);
-                    await api.countries.addImages(editingCountry._id, imgForm);
-                }
-
-                await api.countries.update(editingCountry._id, {
-              nameEn: formData.nameEn,
-                    nameAr: formData.nameAr,
-                    inVisa: formData.inVisa,
-                    inFromCountry: formData.inFromCountry,
-                    inToCountry: formData.inToCountry
-                });
-
-                alert('Category updated!');
+                await api.countries.update(editingCountry._id, data);
+                alert('Country updated!');
             } else {
-             const data = new FormData();
-                data.append('nameEn', formData.nameEn);
-                data.append('nameAr', formData.nameAr);
-                data.append('inVisa', String(formData.inVisa));
-                data.append('inFromCountry', String(formData.inFromCountry));
-                data.append('inToCountry', String(formData.inToCountry));
-                if (images.length > 0) data.append('images', images[0]);
-
                 await api.countries.create(data);
                 alert('Country added!');
             }
