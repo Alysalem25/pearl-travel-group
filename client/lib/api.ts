@@ -1,3 +1,316 @@
+// /**
+//  * Secure API Client
+//  * Axios instance with JWT interceptors and error handling
+//  * 
+//  * Security Features:
+//  * - Automatically adds Authorization header with JWT
+//  * - Handles 401/403 errors (redirect to login)
+//  * - Centralized error handling
+//  * - Token refresh support (can be extended)
+//  * - Type-safe requests
+//  */
+
+// import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from "axios";
+// import { getAuthToken, clearAuthData } from "./auth";
+
+
+// type CategoryPayload = {
+//   nameEn: string
+//   nameAr: string
+//   type: string
+//   country: string
+//   images: string
+//   isActive: boolean
+// }
+
+// // Create axios instance with base URL
+// const apiClient: AxiosInstance = axios.create({
+//   baseURL: "/api",
+//   timeout: 10000,
+//   headers: {
+//     "Content-Type": "application/json"
+//   }
+// });
+
+// /**
+//  * Request Interceptor
+//  * Automatically add JWT token to all requests
+//  */
+// apiClient.interceptors.request.use(
+//   (config: InternalAxiosRequestConfig) => {
+//     const token = getAuthToken();
+//     if (token) {
+//       config.headers.Authorization = `Bearer ${token}`;
+//     }
+//     return config;
+//   },
+//   (error: AxiosError) => {
+//     return Promise.reject(error);
+//   }
+// );
+
+// /**
+//  * Response Interceptor
+//  * Handle authentication errors globally
+//  */
+// apiClient.interceptors.response.use(
+//   (response) => response,
+//   (error: AxiosError) => {
+//     // Handle 401 Unauthorized (token expired or invalid)
+//     if (error.response?.status === 401) {
+//       clearAuthData();
+
+//       // Only redirect in client-side (not during SSR)
+//       // if (typeof window !== "undefined") {
+//       //   window.location.href = "/login";
+//       // }
+
+//       return Promise.reject({
+//         ...error,
+//         message: "Session expired. Please log in again."
+//       });
+//     }
+
+//     // Handle 403 Forbidden (insufficient permissions)
+//     if (error.response?.status === 403) {
+//       if (typeof window !== "undefined") {
+//         window.location.href = "/";
+//       }
+
+//       return Promise.reject({
+//         ...error,
+//         message: "You don't have permission to access this resource."
+//       });
+//     }
+
+//     // Handle 404 Not Found
+//     if (error.response?.status === 404) {
+//       return Promise.reject({
+//         ...error,
+//         message: "Resource not found."
+//       });
+//     }
+
+//     // Handle 400 Bad Request (validation errors)
+//     if (error.response?.status === 400) {
+//       const data = error.response.data as any;
+//       return Promise.reject({
+//         ...error,
+//         message: data?.error || "Invalid request."
+//       });
+//     }
+
+//     // Handle 500 Server Error
+//     if (error.response?.status === 500) {
+//       return Promise.reject({
+//         ...error,
+//         message: "Server error. Please try again later."
+//       });
+//     }
+
+//     // Network error or timeout
+//     if (!error.response) {
+//       return Promise.reject({
+//         ...error,
+//         message: "Network error. Please check your connection."
+//       });
+//     }
+
+//     return Promise.reject(error);
+//   }
+// );
+
+// /**
+//  * API Methods with proper typing
+//  */
+// export const api = {
+//   /**
+//    * Authentication endpoints
+//    */
+//   auth: {
+//     register: (data: FormData | { name: string; email: string; password: string; number: string }) =>
+//       apiClient.post("/auth/register", data, {
+//         headers: data instanceof FormData ? { "Content-Type": "multipart/form-data" } : undefined
+//       }),
+
+//     login: (data: { email: string; password: string }) =>
+//       apiClient.post("/auth/login", data),
+
+//     me: () => apiClient.get("/auth/me"),
+
+//     team: () => apiClient.get("/auth/team")
+//   },
+
+//   /**
+//    * Category endpoints
+//    */
+//   categories: {
+//     getAll: () => apiClient.get("/categories"),
+
+//     getOne: (id: string) => apiClient.get(`/categories/${id}`),
+
+//     create: (data: FormData) =>
+//       apiClient.post("/categories", data, {
+//         headers: { "Content-Type": "multipart/form-data" }
+//       }),
+//     update: (id: string, data: any) =>
+//       apiClient.put(`/categories/${id}`, data),
+
+//     delete: (id: string) =>
+//       apiClient.delete(`/categories/${id}`),
+
+//     addImages: (id: string, files: FormData) =>
+//       apiClient.post(`/categories/${id}/images`, files, {
+//         headers: { "Content-Type": "multipart/form-data" }
+//       }),
+
+//     // categories/country/${countryName}
+//     // get categories by country name
+//     getCategoryByCountry: (countryName: string) =>
+//       apiClient.get(`categories/country/${countryName}`)
+//   },
+
+//   /**
+//    * Program endpoints
+//    */
+//   programs: {
+//     getAll: () => apiClient.get("/programs"),
+
+//     getOne: (id: string) => apiClient.get(`/programs/${id}`),
+
+//     create: (data: FormData) =>
+//       apiClient.post("/programs", data, {
+//         headers: { "Content-Type": "multipart/form-data" }
+//       }),
+
+//     getProgamsByCategory: (categoryId: string) =>
+//       apiClient.get(`/programs/category/${categoryId}`),
+
+//     update: (id: string, data: any) =>
+//       apiClient.put(`/programs/${id}`, data),
+
+//     delete: (id: string) =>
+//       apiClient.delete(`/programs/${id}`),
+
+//     addImages: (id: string, files: FormData) =>
+//       apiClient.post(`/programs/${id}/images`, files, {
+//         headers: { "Content-Type": "multipart/form-data" }
+//       })
+//   },
+
+//   // countries endpoints
+//   countries: {
+//     getAll: () => apiClient.get("/countries"),
+//     getInVisa: () => apiClient.get("/countries/inVisa"),
+//     getOne: (id: string) => apiClient.get(`/countries/${id}`),
+//     create: (data: FormData) =>
+//       apiClient.post("/countries", data, {
+//         headers: { "Content-Type": "multipart/form-data" }
+//       }),
+//     update: (id: string, data: any) =>
+//       apiClient.put(`/countries/${id}`, data),
+//     delete: (id: string) =>
+//       apiClient.delete(`/countries/${id}`),
+//     addImages: (id: string, files: FormData) =>
+//       apiClient.post(`/countries/${id}/images`, files, {
+//         headers: { "Content-Type": "multipart/form-data" }
+//       })
+//   },
+
+//   // flights endpoints
+//   flights: {
+//     create: (data: { userEmail: string; userName?: string; userNumber?: number; from: string; to: string }) =>
+//       apiClient.post("/flights", data),
+//     getAll: () => apiClient.get("/flights"),
+//     delete: (id: string) => apiClient.delete(`/flights/${id}`),
+//     changeStatus: (id: string, status: string) => apiClient.put(`/flights/${id}/status`, { status })
+//   },
+
+//   // booked programs endpoints
+//   bookings: {
+//     create: (data: { userEmail: string; userName: string; userNumber: string; message: string; programId: string }) =>
+//       apiClient.post("/programs/book", data),
+//     getAll: () => apiClient.get("/programs/booked"),
+//     delete: (id: string) => apiClient.delete(`/programs/booked/${id}`),
+//     changeStatus: (id: string, status: string,) => apiClient.put(`/programs/booked/${id}/status`, { status })
+//   },
+
+//   // car trips endpoints
+//   carTrips: {
+//     create: (data: { userEmail: string; userName: string; userNumber: string; message: string; carId: string }) =>
+//       apiClient.post("/carTrip", data),
+//     getAll: () => apiClient.get("/carTrip"),
+//     delete: (id: string) => apiClient.delete(`/carTrip/${id}`),
+//     changeStatus: (id: string, status: string) => apiClient.put(`/carTrip/${id}/status`, { status })
+//   },
+
+//   // hotel endpoints
+//   hotelBooking: {
+//     create: (data: { userEmail: string; userName: string; userNumber: string; message: string; hotelId: string }) =>
+//       apiClient.post("/hotelBooking", data),
+//     getAll: () => apiClient.get("/hotelBooking"),
+//     delete: (id: string) => apiClient.delete(`/hotelBooking/${id}`),
+//     changeStatus: (id: string, status: string, reviewedBy?: string) =>
+//       apiClient.put(`/hotelBooking/${id}/status`, { status, reviewedBy })
+//   },
+
+//   // cruisies endpoints
+//   cruisies: {
+//     getAll: () => apiClient.get("/cruisies"),
+//     getOne: (id: string) => apiClient.get(`/cruisies/${id}`),
+//     create: (data: FormData) =>
+//       apiClient.post("/cruisies", data, {
+//         headers: { "Content-Type": "multipart/form-data" }
+//       }),
+//     update: (id: string, data: any) =>
+//       apiClient.put(`/cruisies/${id}`, data),
+//     delete: (id: string) =>
+//       apiClient.delete(`/cruisies/${id}`),
+//     addImages: (id: string, files: FormData) =>
+//       apiClient.post(`/cruisies/${id}/images`, files, {
+//         headers: { "Content-Type": "multipart/form-data" }
+//       }),
+//     book: (data: { userEmail: string; userName: string; userNumber: string; message: string; cruiseId: string }) =>
+//       apiClient.post("/cruisies/book", data),
+//     getAllBooked: () => apiClient.get("/cruisies/book"),
+//     deleteBooked: (id: string) => apiClient.delete(`/cruisies/book/${id}`),
+//     changeStatusBooked: (id: string, status: string) => apiClient.put(`/cruisies/book/${id}/status`, { status })
+//   },
+
+//   /**
+//    * Stats endpoint
+//    */
+//   getStats: () => apiClient.get("/stats"),
+ 
+ 
+//   users: {
+//     // Existing methods...
+//     getSummary: (id: string, start?: string, end?: string) =>
+//       apiClient.get(`/users/${id}/summary`, {
+//         params: { ...(start ? { start } : {}), ...(end ? { end } : {}) }
+//       }),
+//     getOne: (id: string) => apiClient.get(`/users/${id}`),
+    
+//     // New Profile methods
+//     getProfile: (id: string) => apiClient.get(`/auth/profile/${id}`),
+    
+//     updateProfile: (id: string, data: FormData) =>
+//       apiClient.put(`/auth/profile/${id}`, data, {
+//         headers: { "Content-Type": "multipart/form-data" }
+//       }),
+    
+//     deleteImage: (id: string, imageName: string) =>
+//       apiClient.delete(`/auth/profile/${id}/images/${imageName}`),
+    
+//     changePassword: (id: string, data: { currentPassword: string; newPassword: string }) =>
+//       apiClient.put(`/auth/profile/${id}/password`, data)
+//   }
+// };
+
+// export default apiClient;
+
+
+
 /**
  * Secure API Client
  * Axios instance with JWT interceptors and error handling
@@ -8,20 +321,11 @@
  * - Centralized error handling
  * - Token refresh support (can be extended)
  * - Type-safe requests
+ * - Extended timeout for file uploads
  */
 
 import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from "axios";
 import { getAuthToken, clearAuthData } from "./auth";
-
-
-type CategoryPayload = {
-  nameEn: string
-  nameAr: string
-  type: string
-  country: string
-  images: string
-  isActive: boolean
-}
 
 // Create axios instance with base URL
 const apiClient: AxiosInstance = axios.create({
@@ -60,11 +364,6 @@ apiClient.interceptors.response.use(
     if (error.response?.status === 401) {
       clearAuthData();
 
-      // Only redirect in client-side (not during SSR)
-      // if (typeof window !== "undefined") {
-      //   window.location.href = "/login";
-      // }
-
       return Promise.reject({
         ...error,
         message: "Session expired. Please log in again."
@@ -91,12 +390,20 @@ apiClient.interceptors.response.use(
       });
     }
 
+    // Handle 413 Payload Too Large (file too big)
+    if (error.response?.status === 413) {
+      return Promise.reject({
+        ...error,
+        message: "File too large. Maximum size is 20MB per image."
+      });
+    }
+
     // Handle 400 Bad Request (validation errors)
     if (error.response?.status === 400) {
       const data = error.response.data as any;
       return Promise.reject({
         ...error,
-        message: data?.error || "Invalid request."
+        message: data?.error || data?.message || "Invalid request."
       });
     }
 
@@ -130,7 +437,8 @@ export const api = {
   auth: {
     register: (data: FormData | { name: string; email: string; password: string; number: string }) =>
       apiClient.post("/auth/register", data, {
-        headers: data instanceof FormData ? { "Content-Type": "multipart/form-data" } : undefined
+        headers: data instanceof FormData ? { "Content-Type": "multipart/form-data" } : undefined,
+        timeout: 30000 // 30s for uploads
       }),
 
     login: (data: { email: string; password: string }) =>
@@ -138,7 +446,22 @@ export const api = {
 
     me: () => apiClient.get("/auth/me"),
 
-    team: () => apiClient.get("/auth/team")
+    team: () => apiClient.get("/auth/team"),
+
+    // Profile methods
+    getProfile: (id: string) => apiClient.get(`/auth/profile/${id}`),
+    
+    updateProfile: (id: string, data: FormData) =>
+      apiClient.put(`/auth/profile/${id}`, data, {
+        headers: { "Content-Type": "multipart/form-data" },
+        timeout: 30000
+      }),
+    
+    deleteImage: (id: string, imageName: string) =>
+      apiClient.delete(`/auth/profile/${id}/images/${imageName}`),
+    
+    changePassword: (id: string, data: { currentPassword: string; newPassword: string }) =>
+      apiClient.put(`/auth/profile/${id}/password`, data)
   },
 
   /**
@@ -151,21 +474,25 @@ export const api = {
 
     create: (data: FormData) =>
       apiClient.post("/categories", data, {
-        headers: { "Content-Type": "multipart/form-data" }
+        headers: { "Content-Type": "multipart/form-data" },
+        timeout: 30000 // 30s for image uploads
       }),
-    update: (id: string, data: any) =>
-      apiClient.put(`/categories/${id}`, data),
+
+    update: (id: string, data: FormData) =>
+      apiClient.put(`/categories/${id}`, data, {
+        headers: { "Content-Type": "multipart/form-data" },
+        timeout: 30000
+      }),
 
     delete: (id: string) =>
       apiClient.delete(`/categories/${id}`),
 
     addImages: (id: string, files: FormData) =>
       apiClient.post(`/categories/${id}/images`, files, {
-        headers: { "Content-Type": "multipart/form-data" }
+        headers: { "Content-Type": "multipart/form-data" },
+        timeout: 30000
       }),
 
-    // categories/country/${countryName}
-    // get categories by country name
     getCategoryByCountry: (countryName: string) =>
       apiClient.get(`categories/country/${countryName}`)
   },
@@ -180,130 +507,176 @@ export const api = {
 
     create: (data: FormData) =>
       apiClient.post("/programs", data, {
-        headers: { "Content-Type": "multipart/form-data" }
+        headers: { "Content-Type": "multipart/form-data" },
+        timeout: 60000 // 60s for multiple images
       }),
 
     getProgamsByCategory: (categoryId: string) =>
       apiClient.get(`/programs/category/${categoryId}`),
 
-    update: (id: string, data: any) =>
-      apiClient.put(`/programs/${id}`, data),
+    update: (id: string, data: FormData) =>
+      apiClient.put(`/programs/${id}`, data, {
+        headers: { "Content-Type": "multipart/form-data" },
+        timeout: 60000 // 60s for image uploads
+      }),
 
     delete: (id: string) =>
       apiClient.delete(`/programs/${id}`),
 
     addImages: (id: string, files: FormData) =>
       apiClient.post(`/programs/${id}/images`, files, {
-        headers: { "Content-Type": "multipart/form-data" }
+        headers: { "Content-Type": "multipart/form-data" },
+        timeout: 30000
       })
   },
 
-  // countries endpoints
+  /**
+   * Countries endpoints
+   */
   countries: {
     getAll: () => apiClient.get("/countries"),
+    
     getInVisa: () => apiClient.get("/countries/inVisa"),
+    
     getOne: (id: string) => apiClient.get(`/countries/${id}`),
+    
     create: (data: FormData) =>
       apiClient.post("/countries", data, {
-        headers: { "Content-Type": "multipart/form-data" }
+        headers: { "Content-Type": "multipart/form-data" },
+        timeout: 30000
       }),
-    update: (id: string, data: any) =>
-      apiClient.put(`/countries/${id}`, data),
+    
+    update: (id: string, data: FormData) =>
+      apiClient.put(`/countries/${id}`, data, {
+        headers: { "Content-Type": "multipart/form-data" },
+        timeout: 30000
+      }),
+    
     delete: (id: string) =>
       apiClient.delete(`/countries/${id}`),
+    
     addImages: (id: string, files: FormData) =>
       apiClient.post(`/countries/${id}/images`, files, {
-        headers: { "Content-Type": "multipart/form-data" }
+        headers: { "Content-Type": "multipart/form-data" },
+        timeout: 30000
       })
   },
 
-  // flights endpoints
+  /**
+   * Flights endpoints
+   */
   flights: {
     create: (data: { userEmail: string; userName?: string; userNumber?: number; from: string; to: string }) =>
       apiClient.post("/flights", data),
+    
     getAll: () => apiClient.get("/flights"),
+    
     delete: (id: string) => apiClient.delete(`/flights/${id}`),
-    changeStatus: (id: string, status: string) => apiClient.put(`/flights/${id}/status`, { status })
+    
+    changeStatus: (id: string, status: string) => 
+      apiClient.put(`/flights/${id}/status`, { status })
   },
 
-  // booked programs endpoints
+  /**
+   * Booked programs endpoints
+   */
   bookings: {
     create: (data: { userEmail: string; userName: string; userNumber: string; message: string; programId: string }) =>
       apiClient.post("/programs/book", data),
+    
     getAll: () => apiClient.get("/programs/booked"),
+    
     delete: (id: string) => apiClient.delete(`/programs/booked/${id}`),
-    changeStatus: (id: string, status: string,) => apiClient.put(`/programs/booked/${id}/status`, { status })
+    
+    changeStatus: (id: string, status: string) => 
+      apiClient.put(`/programs/booked/${id}/status`, { status })
   },
 
-  // car trips endpoints
+  /**
+   * Car trips endpoints
+   */
   carTrips: {
     create: (data: { userEmail: string; userName: string; userNumber: string; message: string; carId: string }) =>
       apiClient.post("/carTrip", data),
+    
     getAll: () => apiClient.get("/carTrip"),
+    
     delete: (id: string) => apiClient.delete(`/carTrip/${id}`),
-    changeStatus: (id: string, status: string) => apiClient.put(`/carTrip/${id}/status`, { status })
+    
+    changeStatus: (id: string, status: string) => 
+      apiClient.put(`/carTrip/${id}/status`, { status })
   },
 
-  // hotel endpoints
+  /**
+   * Hotel endpoints
+   */
   hotelBooking: {
     create: (data: { userEmail: string; userName: string; userNumber: string; message: string; hotelId: string }) =>
       apiClient.post("/hotelBooking", data),
+    
     getAll: () => apiClient.get("/hotelBooking"),
+    
     delete: (id: string) => apiClient.delete(`/hotelBooking/${id}`),
+    
     changeStatus: (id: string, status: string, reviewedBy?: string) =>
       apiClient.put(`/hotelBooking/${id}/status`, { status, reviewedBy })
   },
 
-  // cruisies endpoints
+  /**
+   * Cruisies endpoints
+   */
   cruisies: {
     getAll: () => apiClient.get("/cruisies"),
+    
     getOne: (id: string) => apiClient.get(`/cruisies/${id}`),
+    
     create: (data: FormData) =>
       apiClient.post("/cruisies", data, {
-        headers: { "Content-Type": "multipart/form-data" }
+        headers: { "Content-Type": "multipart/form-data" },
+        timeout: 30000
       }),
-    update: (id: string, data: any) =>
-      apiClient.put(`/cruisies/${id}`, data),
+    
+    update: (id: string, data: FormData) =>
+      apiClient.put(`/cruisies/${id}`, data, {
+        headers: { "Content-Type": "multipart/form-data" },
+        timeout: 30000
+      }),
+    
     delete: (id: string) =>
       apiClient.delete(`/cruisies/${id}`),
+    
     addImages: (id: string, files: FormData) =>
       apiClient.post(`/cruisies/${id}/images`, files, {
-        headers: { "Content-Type": "multipart/form-data" }
+        headers: { "Content-Type": "multipart/form-data" },
+        timeout: 30000
       }),
+    
     book: (data: { userEmail: string; userName: string; userNumber: string; message: string; cruiseId: string }) =>
       apiClient.post("/cruisies/book", data),
+    
     getAllBooked: () => apiClient.get("/cruisies/book"),
+    
     deleteBooked: (id: string) => apiClient.delete(`/cruisies/book/${id}`),
-    changeStatusBooked: (id: string, status: string) => apiClient.put(`/cruisies/book/${id}/status`, { status })
+    
+    changeStatusBooked: (id: string, status: string) => 
+      apiClient.put(`/cruisies/book/${id}/status`, { status })
   },
 
   /**
    * Stats endpoint
    */
   getStats: () => apiClient.get("/stats"),
- 
- 
+
+  /**
+   * Users endpoints
+   */
   users: {
-    // Existing methods...
     getSummary: (id: string, start?: string, end?: string) =>
       apiClient.get(`/users/${id}/summary`, {
         params: { ...(start ? { start } : {}), ...(end ? { end } : {}) }
       }),
-    getOne: (id: string) => apiClient.get(`/users/${id}`),
     
-    // New Profile methods
-    getProfile: (id: string) => apiClient.get(`/auth/profile/${id}`),
-    
-    updateProfile: (id: string, data: FormData) =>
-      apiClient.put(`/auth/profile/${id}`, data, {
-        headers: { "Content-Type": "multipart/form-data" }
-      }),
-    
-    deleteImage: (id: string, imageName: string) =>
-      apiClient.delete(`/auth/profile/${id}/images/${imageName}`),
-    
-    changePassword: (id: string, data: { currentPassword: string; newPassword: string }) =>
-      apiClient.put(`/auth/profile/${id}/password`, data)
+    getOne: (id: string) => apiClient.get(`/users/${id}`)
   }
 };
 
