@@ -1072,7 +1072,12 @@ function ProgramsPageContent() {
     const [editingProgram, setEditingProgram] = useState<Program | null>(null)
 
     const [images, setImages] = useState<File[]>([])
-    const [previewImages, setPreviewImages] = useState<string[]>([])
+    type PreviewImage = {
+        url: string
+        name?: string
+        isNew: boolean
+    }
+    const [previewImages, setPreviewImages] = useState<PreviewImage[]>([])
     const [existingImages, setExistingImages] = useState<string[]>([]) // Track server images
     const [error, setError] = useState('')
 
@@ -1185,17 +1190,17 @@ function ProgramsPageContent() {
         programMutation.mutate(fd)
     }
 
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (!e.target.files) return
+    // const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     if (!e.target.files) return
 
-        const files = Array.from(e.target.files)
+    //     const files = Array.from(e.target.files)
 
-        setImages((prev) => [...prev, ...files])
-        setPreviewImages((prev) => [
-            ...prev,
-            ...files.map((file) => URL.createObjectURL(file)),
-        ])
-    }
+    //     setImages((prev) => [...prev, ...files])
+    //     setPreviewImages((prev) => [
+    //         ...prev,
+    //         ...files.map((file) => URL.createObjectURL(file)),
+    //     ])
+    // }
 
     // const removePreviewImage = (index: number) => {
     //     // Check if it's an existing image or new image
@@ -1215,31 +1220,75 @@ function ProgramsPageContent() {
 
 
     // ================= UPDATED REMOVE HANDLER =================
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files) return
+
+        const files = Array.from(e.target.files)
+
+        setImages(prev => [...prev, ...files])
+
+        setPreviewImages(prev => [
+            ...prev,
+            ...files.map(file => ({
+                url: URL.createObjectURL(file),
+                isNew: true
+            }))
+        ])
+    }
+
+
+
+    // const removePreviewImage = (index: number) => {
+    //     const imageToRemove = previewImages[index];
+
+    //     // If it's a blob URL (new image not yet saved), just remove from state
+    //     if (imageToRemove.startsWith('blob:')) {
+    //         const newIndex = previewImages.slice(0, index).filter(p => p.startsWith('blob:')).length;
+    //         setImages((prev) => prev.filter((_, i) => i !== newIndex));
+    //         setPreviewImages((prev) => prev.filter((_, i) => i !== index));
+    //     } else {
+    //         // It's an existing server image - confirm before deleting
+    //         if (!editingProgram) return;
+
+    //         // Extract filename from URL
+    //         const imageName = imageToRemove.split('/').pop();
+    //         if (!imageName) return;
+
+    //         if (confirm('Delete this image permanently?')) {
+    //             deleteImageMutation.mutate({
+    //                 programId: editingProgram._id,
+    //                 imageName: imageName
+    //             });
+    //         }
+    //     }
+    // };
+
+
     const removePreviewImage = (index: number) => {
-        const imageToRemove = previewImages[index];
+        const image = previewImages[index]
 
-        // If it's a blob URL (new image not yet saved), just remove from state
-        if (imageToRemove.startsWith('blob:')) {
-            const newIndex = previewImages.slice(0, index).filter(p => p.startsWith('blob:')).length;
-            setImages((prev) => prev.filter((_, i) => i !== newIndex));
-            setPreviewImages((prev) => prev.filter((_, i) => i !== index));
-        } else {
-            // It's an existing server image - confirm before deleting
-            if (!editingProgram) return;
+        // 🟡 NEW IMAGE
+        if (image.isNew) {
+            const newIndex = previewImages
+                .slice(0, index)
+                .filter(img => img.isNew).length
 
-            // Extract filename from URL
-            const imageName = imageToRemove.split('/').pop();
-            if (!imageName) return;
+            setImages(prev => prev.filter((_, i) => i !== newIndex))
+            setPreviewImages(prev => prev.filter((_, i) => i !== index))
+        }
+        // 🔵 EXISTING IMAGE
+        else {
+            if (!editingProgram || !image.name) return
 
             if (confirm('Delete this image permanently?')) {
                 deleteImageMutation.mutate({
                     programId: editingProgram._id,
-                    imageName: imageName
-                });
+                    imageName: image.name // ✅ FIXED
+                })
             }
         }
-    };
-
+    }
 
     const updateDay = (i: number, field: keyof Day, value: string) => {
         const copy = days.map((d, idx) =>
@@ -1301,8 +1350,50 @@ function ProgramsPageContent() {
         setError('')
     }
 
+    // const startEdit = (p: Program) => {
+    //     setEditingProgram(p)
+    //     setFormData({
+    //         titleEn: p.titleEn,
+    //         titleAr: p.titleAr,
+    //         category: typeof p.category === 'object' && p.category ? p.category._id : '',
+    //         country: p.country,
+    //         durationDays: p.durationDays,
+    //         durationNights: p.durationNights ?? 0,
+    //         price: p.price,
+    //         descriptionEn: p.descriptionEn ?? '',
+    //         descriptionAr: p.descriptionAr ?? '',
+    //         itineraryEn: p.itineraryEn ?? '',
+    //         itineraryAr: p.itineraryAr ?? '',
+    //         status: p.status,
+    //     })
+
+    //     // Reset new images
+    //     setImages([])
+
+    //     // Store existing images from server
+    //     const rawImages = p.images || []
+    //     setExistingImages(rawImages)
+
+    //     // Create full URLs for preview
+    //     const serverImages = rawImages.map((img) =>
+    //         img.startsWith('http') ? img : `http://147.93.126.15${img}`
+    //     )
+    //     setPreviewImages(serverImages)
+
+    //     setDays(
+    //         p.days?.length
+    //             ? p.days.map((d, idx) => ({ ...d, dayNumber: idx + 1 }))
+    //             : [{ dayNumber: 1, titleEn: '', titleAr: '', descriptionEn: '', descriptionAr: '' }]
+    //     )
+    //     setShowForm(true)
+    // }
+
+    // ================= UI =================
+
+
     const startEdit = (p: Program) => {
         setEditingProgram(p)
+
         setFormData({
             titleEn: p.titleEn,
             titleAr: p.titleAr,
@@ -1318,17 +1409,18 @@ function ProgramsPageContent() {
             status: p.status,
         })
 
-        // Reset new images
         setImages([])
 
-        // Store existing images from server
         const rawImages = p.images || []
-        setExistingImages(rawImages)
 
-        // Create full URLs for preview
-        const serverImages = rawImages.map((img) =>
-            img.startsWith('http') ? img : `http://147.93.126.15${img}`
-        )
+        const serverImages = rawImages.map((img) => ({
+            url: img.startsWith('http')
+                ? img
+                : `http://147.93.126.15${img}`,
+            name: img.split('/').pop(), // ✅ مهم
+            isNew: false
+        }))
+
         setPreviewImages(serverImages)
 
         setDays(
@@ -1336,10 +1428,11 @@ function ProgramsPageContent() {
                 ? p.days.map((d, idx) => ({ ...d, dayNumber: idx + 1 }))
                 : [{ dayNumber: 1, titleEn: '', titleAr: '', descriptionEn: '', descriptionAr: '' }]
         )
+
         setShowForm(true)
     }
 
-    // ================= UI =================
+
     return (
         <div className="min-h-screen flex bg-white text-black">
             <AdminSidebar
@@ -1485,7 +1578,7 @@ function ProgramsPageContent() {
                                 ))}
                             </div>
                         )} */}
-                        {previewImages.length > 0 && (
+                        {/* {previewImages.length > 0 && (
                             <div className="grid grid-cols-3 gap-3">
                                 {previewImages.map((src, i) => (
                                     <div key={i} className="relative group">
@@ -1509,13 +1602,46 @@ function ProgramsPageContent() {
                                                 '✕'
                                             )}
                                         </button>
-                                        {/* Show badge for existing vs new images */}
                                         {!src.startsWith('blob:') && (
                                             <span className="absolute bottom-1 left-1 bg-blue-600 text-white text-xs px-2 py-0.5 rounded">
                                                 Saved
                                             </span>
                                         )}
                                         {src.startsWith('blob:') && (
+                                            <span className="absolute bottom-1 left-1 bg-yellow-600 text-white text-xs px-2 py-0.5 rounded">
+                                                New
+                                            </span>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        )} */}
+                        {previewImages.length > 0 && (
+                            <div className="grid grid-cols-3 gap-3">
+                                {previewImages.map((img, i) => (
+                                    <div key={i} className="relative group">
+                                        <img
+                                            src={img.url}
+                                            className="rounded h-32 w-full object-cover"
+                                            alt="preview"
+                                        />
+
+                                        <button
+                                            type="button"
+                                            onClick={() => removePreviewImage(i)}
+                                            disabled={deleteImageMutation.isPending}
+                                            className="absolute top-1 right-1 bg-red-600 text-white px-2 py-1 text-xs rounded"
+                                        >
+                                            ✕
+                                        </button>
+
+                                        {!img.isNew && (
+                                            <span className="absolute bottom-1 left-1 bg-blue-600 text-white text-xs px-2 py-0.5 rounded">
+                                                Saved
+                                            </span>
+                                        )}
+
+                                        {img.isNew && (
                                             <span className="absolute bottom-1 left-1 bg-yellow-600 text-white text-xs px-2 py-0.5 rounded">
                                                 New
                                             </span>

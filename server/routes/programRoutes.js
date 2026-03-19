@@ -612,6 +612,36 @@ router.delete("/:id", authMiddleware, authorize("admin"), async (req, res, next)
  * DELETE /programs/:id/images/:imageName
  * Delete a specific image from a program - ADMIN ONLY
  */
+// router.delete("/:id/images/:imageName", authMiddleware, authorize("admin"), async (req, res, next) => {
+//   try {
+//     const { id, imageName } = req.params;
+    
+//     const program = await Program.findById(id);
+//     if (!program) {
+//       return res.status(404).json({ error: "Program not found" });
+//     }
+
+//     // Remove image from array
+//     program.images = program.images.filter(img => img !== imageName);
+//     await program.save();
+
+//     // Optionally: Delete file from filesystem
+//     const fs = require('fs');
+//     const path = require('path');
+//     const imagePath = path.join(__dirname, '../uploads/programs', imageName);
+    
+//     if (fs.existsSync(imagePath)) {
+//       fs.unlinkSync(imagePath);
+//     }
+
+//     res.json({ 
+//       message: "Image deleted successfully",
+//       images: program.images.map(normalizeImagePath)
+//     });
+//   } catch (err) {
+//     next(err);
+//   }
+// });
 router.delete("/:id/images/:imageName", authMiddleware, authorize("admin"), async (req, res, next) => {
   try {
     const { id, imageName } = req.params;
@@ -621,11 +651,13 @@ router.delete("/:id/images/:imageName", authMiddleware, authorize("admin"), asyn
       return res.status(404).json({ error: "Program not found" });
     }
 
-    // Remove image from array
-    program.images = program.images.filter(img => img !== imageName);
+    // ✅ FIX: handle both cases
+    program.images = program.images.filter(img => {
+      return img !== imageName && img !== `/uploads/programs/${imageName}`;
+    });
+
     await program.save();
 
-    // Optionally: Delete file from filesystem
     const fs = require('fs');
     const path = require('path');
     const imagePath = path.join(__dirname, '../uploads/programs', imageName);
@@ -636,7 +668,7 @@ router.delete("/:id/images/:imageName", authMiddleware, authorize("admin"), asyn
 
     res.json({ 
       message: "Image deleted successfully",
-      images: program.images.map(normalizeImagePath)
+      images: program.images
     });
   } catch (err) {
     next(err);
