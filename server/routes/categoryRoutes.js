@@ -231,40 +231,32 @@ router.post(
 );
 
 
-router.delete("/:id/images/:imageName", authMiddleware, authorize("admin"), async (req, res, next) => {
-  try {
-    const { id, imageName } = req.params;
+// DELETE IMAGE FROM CATEGORY
+router.delete(
+  "/:id/images/:imageName",
+  authMiddleware,
+  authorize("admin"),
+  async (req, res, next) => {
+    try {
+      const { id, imageName } = req.params;
 
-    const category = await Category.findById(id);
-    if (!category) {
-      return res.status(404).json({ error: "Category not found" });
+      const category = await Category.findById(id);
+      if (!category) {
+        return res.status(404).json({ error: "Category not found" });
+      }
+
+      // 🧹 remove from DB
+      category.images = category.images.filter(img => {
+        const name = img.split('/').pop();
+        return name !== imageName;
+      });
+
+      await category.save();
+
+      res.json({ message: "Image deleted successfully" });
+    } catch (err) {
+      next(err);
     }
-
-    // ✅ remove from DB
-    category.images = category.images.filter(img => {
-      return img !== imageName && img !== `/uploads/categories/${imageName}`;
-    });
-
-    await category.save();
-
-    // ✅ delete file from server
-    const fs = require('fs');
-    const path = require('path');
-
-    const imagePath = path.join(__dirname, '../uploads/categories', imageName);
-
-    if (fs.existsSync(imagePath)) {
-      fs.unlinkSync(imagePath);
-    }
-
-    res.json({
-      message: "Image deleted successfully",
-      images: category.images.map(img => normalizeImagePath(img))
-    });
-
-  } catch (err) {
-    next(err);
   }
-});
-
+);
 module.exports = router;

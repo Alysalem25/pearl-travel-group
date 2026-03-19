@@ -169,8 +169,8 @@ export const api = {
     getCategoryByCountry: (countryName: string) =>
       apiClient.get(`categories/country/${countryName}`),
 
-    deleteImage: (categoryId: string, imageName: string) =>
-      apiClient.delete(`/categories/${categoryId}/images/${imageName}`),
+    deleteImage: (id: string, imageName: string) =>
+      apiClient.delete(`/categories/${id}/images/${imageName}`)
   },
 
   /**
