@@ -676,7 +676,6 @@ function NavbarContent() {
                 {isAdmin() && (
                   <div>
 
-                  // In Navbar.tsx, update the profile link:
                     <Link
                       href={`/profile/${user?.id}`}  // Use actual user ID instead of hardcoded
                       onClick={() => setOpen(false)}
