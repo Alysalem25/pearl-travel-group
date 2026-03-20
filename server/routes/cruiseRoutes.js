@@ -103,6 +103,7 @@ router.put(
   "/:id",
   authMiddleware,
   authorize("admin"),
+  uploadCruisies.array("images", 5),
   async (req, res, next) => {
     try {
       const {
@@ -131,6 +132,11 @@ router.put(
         days: days ? JSON.parse(days) : undefined
       };
 
+      // clean undefined fields
+      Object.keys(updateData).forEach(
+        key => updateData[key] === undefined && delete updateData[key]
+      );
+
       const cruise = await Cruisies.findByIdAndUpdate(
         req.params.id,
         updateData,
@@ -139,6 +145,12 @@ router.put(
 
       if (!cruise) {
         return res.status(404).json({ error: "Cruise not found" });
+      }
+
+      if (req.files && req.files.length > 0) {
+        const newImages = req.files.map(f => "/uploads/Cruisies/" + f.filename);
+        cruise.images.push(...newImages);
+        await cruise.save();
       }
 
       const response = {
