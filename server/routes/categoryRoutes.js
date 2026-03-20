@@ -13,9 +13,18 @@ const router = express.Router();
  * ✅ Returns: /uploads/categories/filename.jpg
  * Used by API to return absolute paths that work in browser
  */
+// function normalizeImagePath(imagePath) {
+//   return `/uploads/categories/${imagePath}`; 
+// }
+
 function normalizeImagePath(imagePath) {
-  return `/uploads/categories/${imagePath}`; 
+  // Check if already normalized
+  if (imagePath.startsWith('/uploads/')) {
+    return imagePath;
+  }
+  return `/uploads/categories/${imagePath}`;
 }
+
 
 /**
  * GET /categories
