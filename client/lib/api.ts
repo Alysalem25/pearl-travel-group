@@ -242,7 +242,6 @@ export const api = {
       })
   },
 
-
   countries: {
     getAll: () => apiClient.get("/countries"),
     getInVisa: () => apiClient.get("/countries/inVisa"),
