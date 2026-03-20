@@ -10,8 +10,16 @@ const jwt = require("jsonwebtoken");
 const router = express.Router();
 
 
-function normalizeImagePath(filename) {
-  return `/uploads/users/${filename}`;
+// function normalizeImagePath(filename) {
+//   return `/uploads/users/${filename}`;
+// }
+
+function normalizeImagePath(imagePath) {
+  // Check if already normalized
+  if (imagePath.startsWith('/uploads/')) {
+    return imagePath;
+  }
+  return `/uploads/users/${imagePath}`;
 }
 
 /**
