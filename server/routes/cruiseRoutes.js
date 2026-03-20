@@ -11,6 +11,10 @@ const router = express.Router();
  * Image path normalization helper
  */
 function normalizeImagePath(imagePath) {
+  // Check if already normalized
+  if (imagePath.startsWith('/uploads/')) {
+    return imagePath;
+  }
   // folder on disk uses uppercase 'Cruisies', so reflect that in URL
   return `/uploads/Cruisies/${imagePath}`;
 }

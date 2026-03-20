@@ -434,7 +434,6 @@ function CruisiesPageContent() {
                     <div className="grid grid-cols-1 gap-4">
                         {cruisies.map((c: Cruisies) => (
                             <div key={c._id}
-                                onClick={() => window.location.href = `/Admindashbord/cruisies/${c._id}`}
                                 className="bg-gray-800 p-4 text-white    rounded border border-gray-700 flex justify-between items-center hover:border-blue-500">
                                 <div>
                                     <h3 className="text-lg font-bold">{c.titleEn} / {c.titleAr}</h3>
@@ -458,8 +457,6 @@ function CruisiesPageContent() {
                                             price: c.price,
                                             descriptionEn: c.descriptionEn,
                                             descriptionAr: c.descriptionAr,
-                                            itineraryEn: c.itineraryEn || '',
-                                            itineraryAr: c.itineraryAr || '',
                                             status: c.status,
                                         });
                                         setDays(c.days || []);

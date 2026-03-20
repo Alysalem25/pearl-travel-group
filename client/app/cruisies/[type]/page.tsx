@@ -363,7 +363,7 @@ function CruisesContent() {
                       {/* Image */}
                       <div className="relative h-48 overflow-hidden">
                         <img
-                          src={`http://147.93.126.15${cruise.images?.[0]}`}
+                          src={cruise.images && cruise.images.length > 0 ? `http://147.93.126.15${cruise.images[0]}` : '/default-image.jpg'}
                           alt={lang === "ar" ? cruise.titleAr : cruise.titleEn}
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                         />
