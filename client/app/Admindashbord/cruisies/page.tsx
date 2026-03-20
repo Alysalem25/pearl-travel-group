@@ -527,8 +527,8 @@ interface Cruisies {
     price: number
     descriptionEn: string
     descriptionAr: string
-    itineraryEn: string
-    itineraryAr: string
+    // itineraryEn: string
+    // itineraryAr: string
     status: 'active' | 'inactive'
     images?: string[]
     days?: Day[]
@@ -569,8 +569,8 @@ function CruisiesPageContent() {
         price: 0,
         descriptionEn: '',
         descriptionAr: '',
-        itineraryEn: '',
-        itineraryAr: '',
+        // itineraryEn: '',
+        // itineraryAr: '',
         status: 'active',
     })
 
@@ -720,8 +720,8 @@ function CruisiesPageContent() {
             price: 0,
             descriptionEn: '',
             descriptionAr: '',
-            itineraryEn: '',
-            itineraryAr: '',
+            // itineraryEn: '',
+            // itineraryAr: '',
             status: 'active',
         })
         setImages([])
@@ -751,8 +751,8 @@ function CruisiesPageContent() {
             price: c.price,
             descriptionEn: c.descriptionEn,
             descriptionAr: c.descriptionAr,
-            itineraryEn: c.itineraryEn || '',  // FIXED: Added missing field
-            itineraryAr: c.itineraryAr || '',  // FIXED: Added missing field
+            // itineraryEn: c.itineraryEn || '',  // FIXED: Added missing field
+            // itineraryAr: c.itineraryAr || '',  // FIXED: Added missing field
             status: c.status,
         })
         setDays(c.days || [])
@@ -858,13 +858,13 @@ function CruisiesPageContent() {
                             className="bg-white p-2 rounded border border-gray-600 w-full h-20 text-right"
                             value={formData.descriptionAr} onChange={e => setFormData({ ...formData, descriptionAr: e.target.value })} />
 
-                        <textarea placeholder="Itinerary (EN)"
+                        {/* <textarea placeholder="Itinerary (EN)"
                             className="bg-white p-2 rounded border border-gray-600 w-full h-20"
                             value={formData.itineraryEn}
                             onChange={e => setFormData({ ...formData, itineraryEn: e.target.value })} />
                         <textarea placeholder="خط السير بالعربي"
                             className="bg-white p-2 rounded border border-gray-600 w-full h-20 text-right"
-                            value={formData.itineraryAr} onChange={e => setFormData({ ...formData, itineraryAr: e.target.value })} />
+                            value={formData.itineraryAr} onChange={e => setFormData({ ...formData, itineraryAr: e.target.value })} /> */}
 
                         {/* images */}
                         <div className="space-y-2">
