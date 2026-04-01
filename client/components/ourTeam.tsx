@@ -63,7 +63,7 @@ const OurTeam = () => {
                                     <div className="relative w-72 h-72 mb-4">
                                         <img
                                             src={member.images
-                                                ? `http://147.93.126.15${member.images[0]}`
+                                                ? `${member.images[0]}`
                                                 : '/default-profile.png'} alt={member.name}
                                             className="w-full h-full object-cover m-2 rounded-full"
                                         />

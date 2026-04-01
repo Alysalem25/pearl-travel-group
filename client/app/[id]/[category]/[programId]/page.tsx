@@ -33,7 +33,7 @@ interface Program {
     durationNights: number;
     images?: string[];
     days: {
-        dayNumber: number;
+        dayNumber: string;
         titleEn: string;
         titleAr: string;
         descriptionEn: string;
@@ -126,7 +126,7 @@ const ProgramPage = () => {
                 <Navbar />
             </Suspense>
 
-            <main className="flex-1 pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+            <main className="flex-1 pt-28 pb-12 px-4 sm:px-6 lg:px-8">
                 {/* Header */}
                 <header className="max-w-6xl mx-auto mb-10">
                     <p className="text-xs sm:text-sm uppercase tracking-[0.2em] text-blue-900 mb-2">
@@ -196,7 +196,7 @@ const ProgramPage = () => {
                                             <SwiperSlide key={index}>
                                                 <div className="relative w-full h-[260px] sm:h-[340px] md:h-[420px] lg:h-[460px] overflow-hidden">
                                                     <img
-                                                        src={`http://147.93.126.15${img}`}
+                                                        src={`${img}`}
                                                         alt={`Program Image ${index + 1}`}
                                                         className="w-full h-full object-cover"
                                                     />
@@ -295,7 +295,7 @@ const ProgramPage = () => {
                                                         <div className="flex justify-between items-center gap-4">
                                                             <div className='flex flex-row items-center gap-3'>
                                 <h3 className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-900 text-white font-semibold text-lg">
-                                                                    {index + 1}
+                                                                    {day.dayNumber}
                                                                 </h3>
                                                                 <p className="text-gray-900 text-base font-medium">
                                                                     {lang === "en" ? day.titleEn : day.titleAr}

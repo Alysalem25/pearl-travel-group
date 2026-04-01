@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const DaySchema = new mongoose.Schema(
   {
-    dayNumber: { type: Number, required: true },
+    dayNumber: { type: String, required: true },
 
     titleEn: { type: String, required: true },
     titleAr: { type: String, required: true },

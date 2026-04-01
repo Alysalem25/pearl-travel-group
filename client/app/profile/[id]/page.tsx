@@ -332,7 +332,7 @@ export default function ProfilePage() {
                 <div className="w-24 h-24 rounded-full bg-white p-1 shadow-lg">
                   {profileData.images && profileData.images.length > 0 ? (
                     <img
-                      src={`http://147.93.126.15${profileData.images[0]}`}
+                      src={`${profileData.images[0]}`}
                       alt={profileData.name}
                       className="w-full h-full rounded-full object-cover"
                     />
@@ -520,7 +520,7 @@ export default function ProfilePage() {
                       {profileData.images.map((img, idx) => (
                         <div key={idx} className="relative group aspect-square">
                           <img
-                            src={`http://147.93.126.15${img}`}
+                            src={`${img}`}
                             alt={`Profile ${idx + 1}`}
                             className="w-full h-full object-cover rounded-lg"
                           />
@@ -672,7 +672,7 @@ export default function ProfilePage() {
                       {profileData.images.map((img, idx) => (
                         <div key={idx} className="aspect-square rounded-lg overflow-hidden bg-gray-100">
                           <img
-                            src={`http://147.93.126.15${img}`}
+                            src={`${img}`}
                             alt={`Gallery ${idx + 1}`}
                             className="w-full h-full object-cover hover:scale-105 transition-transform"
                           />

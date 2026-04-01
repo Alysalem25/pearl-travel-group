@@ -84,7 +84,7 @@ function CruisiesContent() {
     //         };
     //         // const response = await api.visa.apply(payload);
     //         console.log("Submitting visa application with payload:", payload);
-    //         const response = await axios.post("http://localhost:5000/cruisies", payload);
+    //         const response = await axios.post("${process.env.NEXT_PUBLIC_API_URL || '/api'}/cruisies", payload);
 
     //         if (response.data.applicationId) {
     //             setApplicationId(response.data.applicationId);
@@ -149,7 +149,7 @@ function CruisiesContent() {
                 <Navbar />
 
                 {/* Same layout as Egypt page: section + max-w-7xl + title + grid */}
-                <div className="py-20 px-4 sm:px-6 lg:px-8 pt-32">
+                <div className="py-20 px-4 sm:px-6 lg:px-8  pt-28">
                     <div className="max-w-7xl mx-auto">
                         <h2 className="text-3xl font-bold text-red-700 mb-12 text-center">
                             Where your journey begins

@@ -296,12 +296,12 @@ import Image from "next/image";
 import axios from "axios";
 import apiClient from "@/lib/api";
 import SuccessPopup from "@/components/SuccessPopup";
-import { 
-  MapPin, 
-  Calendar, 
-  Users, 
-  Briefcase, 
-  Car, 
+import {
+  MapPin,
+  Calendar,
+  Users,
+  Briefcase,
+  Car,
   ArrowRight,
   ArrowLeft,
   CheckCircle2,
@@ -330,7 +330,7 @@ interface TripData {
 
 const translations = {
   en: {
-    title: "Car Rental",
+    title: "Limo Service",
     subtitle: "Enjoy safe, reliable, and comfortable rides with our airport transfers, city tours, and private chauffeur services",
     step1: "Step 1: Trip Details",
     step2: "Step 2: Passenger Details",
@@ -460,7 +460,7 @@ function CarRentalContent() {
   const handleNextStep = (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    
+
     if (formData.carType === "") {
       setError(t.errors.selectCar);
       return;
@@ -475,7 +475,7 @@ function CarRentalContent() {
   const handleFinalSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
       await apiClient.post(`/carTrip`, formData);
       setShowPopup(true);
@@ -505,7 +505,7 @@ function CarRentalContent() {
   return (
     <div dir={getDirection(lang)} className="min-h-screen bg-gray-50">
       <Navbar />
-      
+
       <SuccessPopup
         isOpen={showPopup}
         onClose={() => setShowPopup(false)}
@@ -513,7 +513,7 @@ function CarRentalContent() {
         message={t.successMessage}
       />
 
-      <main className="relative z-10 flex items-center justify-center min-h-screen px-4 py-20 pt-24">
+      <main className="relative z-10 flex items-center justify-center min-h-screen px-4 py-20 pt-28">
         <div className="w-full max-w-4xl">
           {/* Header */}
           <div className="relative mb-8 text-center">
@@ -521,7 +521,7 @@ function CarRentalContent() {
               <Sparkles className="w-4 h-4" />
               <span>{isRTL ? "خدمة متميزة" : "Premium Service"}</span>
             </div>
-            
+
             <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
               {t.title}
             </h1>
@@ -532,7 +532,7 @@ function CarRentalContent() {
 
           {/* Main Form Card */}
           <div className="relative bg-white border-2 border-gray-200 rounded-3xl p-8 shadow-xl shadow-gray-200 overflow-hidden">
-            
+
             {/* Step Indicator */}
             <div className="flex items-center justify-center mb-8">
               <div className="flex items-center gap-4">
@@ -564,18 +564,18 @@ function CarRentalContent() {
                   <label className="block text-sm font-medium text-gray-700 mb-3">{t.carType}</label>
                   <div className="grid grid-cols-2 gap-4">
                     <label className={`relative flex flex-col items-center p-6 border-2 rounded-xl cursor-pointer transition-all ${formData.carType === 'Premium' ? 'border-red-500 bg-red-50' : 'border-gray-200 hover:border-red-200'}`}>
-                      <input 
-                        type="radio" 
-                        name="carType" 
-                        value="Premium" 
+                      <input
+                        type="radio"
+                        name="carType"
+                        value="Premium"
                         onChange={handleChange}
                         className="absolute opacity-0"
                       />
-                      <Image 
-                        src="/car-wash.png" 
-                        alt="Premium" 
-                        width={80} 
-                        height={80} 
+                      <Image
+                        src="/car-wash.png"
+                        alt="Premium"
+                        width={80}
+                        height={80}
                         className={`mb-3 transition-all ${formData.carType === 'Premium' ? 'grayscale-0' : 'grayscale'}`}
                       />
                       <span className="font-semibold text-gray-800">{t.premium}</span>
@@ -585,18 +585,18 @@ function CarRentalContent() {
                     </label>
 
                     <label className={`relative flex flex-col items-center p-6 border-2 rounded-xl cursor-pointer transition-all ${formData.carType === 'Normal' ? 'border-red-500 bg-red-50' : 'border-gray-200 hover:border-red-200'}`}>
-                      <input 
-                        type="radio" 
-                        name="carType" 
-                        value="Normal" 
+                      <input
+                        type="radio"
+                        name="carType"
+                        value="Normal"
                         onChange={handleChange}
                         className="absolute opacity-0"
                       />
-                      <Image 
-                        src="/car.png" 
-                        alt="Normal" 
-                        width={80} 
-                        height={80} 
+                      <Image
+                        src="/car.png"
+                        alt="Normal"
+                        width={80}
+                        height={80}
                         className={`mb-3 transition-all ${formData.carType === 'Normal' ? 'grayscale-0' : 'grayscale'}`}
                       />
                       <span className="font-semibold text-gray-800">{t.normal}</span>
@@ -651,9 +651,9 @@ function CarRentalContent() {
                   </div>
 
                   <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl border-2 border-gray-200">
-                    <input 
-                      type="checkbox" 
-                      id="isReturn" 
+                    <input
+                      type="checkbox"
+                      id="isReturn"
                       checked={formData.isReturn}
                       onChange={() => setFormData(prev => ({ ...prev, isReturn: !prev.isReturn }))}
                       className="w-5 h-5 text-red-600 border-gray-300 rounded focus:ring-red-500"
@@ -792,7 +792,7 @@ function CarRentalContent() {
                     {isRTL ? <ArrowRight className="w-5 h-5 inline ml-2" /> : <ArrowLeft className="w-5 h-5 inline mr-2" />}
                     {t.back}
                   </button>
-                  
+
                   <button
                     type="submit"
                     disabled={loading}

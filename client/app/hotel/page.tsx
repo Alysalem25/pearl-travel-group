@@ -655,7 +655,7 @@ function HotelBookingContent() {
         message={t.successMessage}
       />
 
-      <main className="relative z-10 flex items-center justify-center min-h-screen px-4 py-20 pt-24">
+      <main className="relative z-10 flex items-center justify-center min-h-screen px-4 py-20  pt-28">
         <div className="w-full max-w-4xl">
           {/* Header */}
           <div className="relative mb-8 text-center">

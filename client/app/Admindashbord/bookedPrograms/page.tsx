@@ -14,6 +14,8 @@ interface BookedProgram {
     status: 'pending' | 'reviewed'
     createdAt?: string
     programId: string
+    reviewedBy?: string
+    reviewedAt?: string
 }
 
 export default function BookedProgramsPage() {
@@ -78,11 +80,12 @@ const BookedProgramsPageContent = () => {
                                         <div className="text-sm text-gray-700 mt-2">Program - {f.program?.titleEn} • {f.program?.titleAr}</div>
                                         <div className="text-sm text-gray-700 mt-2">Massage - {f.message}</div>
                                         <div className="text-xs text-gray-500">{f.createdAt ? new Date(f.createdAt).toLocaleString() : ''}</div>
+                                        <div className="text-xs text-gray-500">{f.reviewedBy ? `Reviewed by ${f.reviewedBy} at ${new Date(f.reviewedAt).toLocaleString()}` : 'Not reviewed yet'}</div>
                                     </div>
                                     <div className="flex gap-2">
-                                        <button onClick={() => changeStatusMutation.mutate({ id: f._id, status: f.status === 'pending' ? 'reviewed' : 'pending' })} 
-                                        className={` text-white px-3 py-1 rounded ${f.status === 'reviewed' ? 'bg-red-600' : 'bg-green-600'}`}>{f.status === 'pending' ? 'Review' : 'Pending'}</button>
-                                   
+                                        <button onClick={() => changeStatusMutation.mutate({ id: f._id, status: f.status === 'pending' ? 'reviewed' : 'pending' })}
+                                            className={` text-white px-3 py-1 rounded ${f.status === 'reviewed' ? 'bg-red-600' : 'bg-green-600'}`}>{f.status === 'pending' ? 'Review' : 'Pending'}</button>
+
                                         <button onClick={() => deleteMutation.mutate(f._id)} className="bg-red-600 text-white px-3 py-1 rounded">Delete</button>
                                     </div>
                                 </div>

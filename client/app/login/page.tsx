@@ -27,7 +27,7 @@ interface FormErrors {
 export default function LoginPage() {
   const router = useRouter();
   const { login, isAuthenticated } = useAuth();
-  
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -75,7 +75,7 @@ export default function LoginPage() {
 
     try {
       await login(email, password);
-      
+
       // Redirect to dashboard or homepage
       router.push("/Admindashbord");
     } catch (error: any) {
@@ -108,6 +108,12 @@ export default function LoginPage() {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Submit Error */}
+            {errors.submit && (
+              <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-sm text-red-700">{errors.submit}</p>
+              </div>
+            )}
             {/* Email Field */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
@@ -118,11 +124,10 @@ export default function LoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition ${
-                  errors.email
+                className={`w-full px-4 text-black py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition ${errors.email
                     ? "border-red-500 focus:ring-red-500"
                     : "border-gray-300"
-                }`}
+                  }`}
                 placeholder="you@example.com"
                 disabled={loading}
               />
@@ -142,11 +147,10 @@ export default function LoginPage() {
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition ${
-                    errors.password
+                  className={`w-full px-4 text-black py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition ${errors.password
                       ? "border-red-500 focus:ring-red-500"
                       : "border-gray-300"
-                  }`}
+                    }`}
                   placeholder="••••••••"
                   disabled={loading}
                 />
@@ -163,12 +167,7 @@ export default function LoginPage() {
               )}
             </div>
 
-            {/* Submit Error */}
-            {errors.submit && (
-              <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-sm text-red-700">{errors.submit}</p>
-              </div>
-            )}
+
 
             {/* Submit Button */}
             <button

@@ -265,7 +265,7 @@
 //                   <div
 //                     className="bg-gradient-to-br rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 p-12 text-white h-64 flex flex-col items-center justify-center relative overflow-hidden"
 //                     style={{
-//                       backgroundImage: `url('http://147.93.126.15${country.images[0]}')`,
+//                       backgroundImage: `url('${country.images[0]}')`,
 //                       backgroundSize: "cover",
 //                       backgroundPosition: "center",
 //                     }}
@@ -1005,7 +1005,7 @@ function VisaPageContent() {
                 <div
                   className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
                   style={{
-                    backgroundImage: `url('http://147.93.126.15${country.images[0]}')`,
+                    backgroundImage: `url('${country.images[0]}')`,
                   }}
                 />
                 <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors" />

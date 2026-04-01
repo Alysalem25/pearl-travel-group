@@ -134,7 +134,7 @@
 //                 style={{
 //                   backgroundImage: `
 //                   linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)),
-//                   url(http://147.93.126.15${cruise.images?.[0]})
+//                   url(${cruise.images?.[0]})
 //                   `
 //                 }}
 //               >
@@ -363,7 +363,7 @@ function CruisesContent() {
                       {/* Image */}
                       <div className="relative h-48 overflow-hidden">
                         <img
-                          src={cruise.images && cruise.images.length > 0 ? `http://147.93.126.15${cruise.images[0]}` : '/default-image.jpg'}
+                          src={cruise.images && cruise.images.length > 0 ? `${cruise.images[0]}` : '/default-image.jpg'}
                           alt={lang === "ar" ? cruise.titleAr : cruise.titleEn}
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                         />

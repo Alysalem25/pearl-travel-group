@@ -127,7 +127,7 @@ const Page = () => {
           {categories.map(cat => {
             const imageUrl =
               cat.images && cat.images.length > 0
-                ? `http://147.93.126.15${cat.images[0]}`
+                ? `${cat.images[0]}`
                 : '/default-country.jpg'; // fallback
 
             return (

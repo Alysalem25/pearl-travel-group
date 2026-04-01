@@ -419,7 +419,7 @@
 import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import { ChevronDown, Menu, X, Globe, BarChart3 , User } from "lucide-react";
+import { ChevronDown, Menu, X, Globe, BarChart3, User, Instagram, Facebook } from "lucide-react";
 import { translations } from "@/data/translations";
 import { Language, getDirection } from "@/lib/language";
 import { getLanguageFromSearchParams, updateLanguage } from "@/lib/language";
@@ -519,10 +519,46 @@ function NavbarContent() {
     <nav
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${scrolled
         ? "bg-white/95  backdrop-blur-xl shadow-md"
-        : " bg-transparent backdrop-blur-xl shadow-md"
+        : "bg-transparent backdrop-blur-xl shadow-md"
         } ${isRTL ? "font-arabic" : ""}`}
-      dir={direction}
+      dir='ltr'
     >
+      <div className="flex flex-row justify-between bg-gray-600 max-w-full mx-auto px-8 sm:px-6 lg:px-8">
+        <div className="col flex flex-row px-4 py-2 gap-4">
+          <div className="flex flex-row">
+            <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#e3e3e3"><path d="M798-120q-125 0-247-54.5T329-329Q229-429 174.5-551T120-798q0-18 12-30t30-12h162q14 0 25 9.5t13 22.5l26 140q2 16-1 27t-11 19l-97 98q20 37 47.5 71.5T387-386q31 31 65 57.5t72 48.5l94-94q9-9 23.5-13.5T670-390l138 28q14 4 23 14.5t9 23.5v162q0 18-12 30t-30 12ZM241-600l66-66-17-94h-89q5 41 14 81t26 79Zm358 358q39 17 79.5 27t81.5 13v-88l-94-19-67 67ZM241-600Zm358 358Z" /></svg>
+            <a href="tel:+201067588333" className="call-button px-2">+201067588333</a>
+          </div>
+
+          <div className="flex flex-row border-l px-2">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M440-520 120-720v400h400v80H120q-33 0-56.5-23.5T40-320v-480q0-33 23.5-56.5T120-880h640q33 0 56.5 23.5T840-800v200h-80v-120L440-520Zm0-80 320-200H120l320 200ZM760-80q-66 0-113-47t-47-113v-180q0-42 29-71t71-29q42 0 71 29t29 71v180h-80v-180q0-8-6-14t-14-6q-8 0-14 6t-6 14v180q0 33 23.5 56.5T760-160q33 0 56.5-23.5T840-240v-160h80v160q0 66-47 113T760-80ZM120-720v-80 480-400Z" /></svg>
+            <a href="mailto:info@pearltravelgroup.com" className="px-2">info@pearltravelgroup.com</a>
+          </div>
+
+        </div>
+        <div className="flex flex-row px-4  gap-4">
+
+          <a
+            href="https://www.facebook.com/share/1DWP3cFfix/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2 "
+            aria-label="Facebook"
+          >
+            <Facebook size={20} className="text-white" />
+          </a>
+          <a
+            href="https://www.instagram.com/pearltravel1?igsh=MTBsaXdtMGhtcGxseg=="
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2 border-l"
+            aria-label="Instagram"
+          >
+            <Instagram size={20} color="#e3e3e3" />
+          </a>
+
+        </div>
+      </div>
       <div className="max-w-full mx-auto px-8 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -552,22 +588,13 @@ function NavbarContent() {
               {t.navbar.home}
             </Link>
             <Link
-              href={`/visa?lang=${lang}`}
+              href={`/Flight?lang=${lang}`}
               className={`transition-colors duration-200 font-medium ${scrolled
                 ? "text-black hover:text-[var(--mainColor)]"
                 : "text-black hover:text-red-700"
                 }`}
             >
-              {t.navbar.visa}
-            </Link>
-            <Link
-              href={`/cars?lang=${lang}`}
-              className={`transition-colors duration-200 font-medium ${scrolled
-                ? "text-black hover:text-[var(--mainColor)]"
-                : "text-black hover:text-red-700"
-                }`}
-            >
-              {t.navbar.cars}
+              {t.navbar.flight}
             </Link>
             <Link
               href={`/hotel?lang=${lang}`}
@@ -578,6 +605,17 @@ function NavbarContent() {
             >
               {t.navbar.hotel}
             </Link>
+
+            <Link
+              href={`/cars?lang=${lang}`}
+              className={`transition-colors duration-200 font-medium ${scrolled
+                ? "text-black hover:text-[var(--mainColor)]"
+                : "text-black hover:text-red-700"
+                }`}
+            >
+              {t.navbar.cars}
+            </Link>
+
             <Link
               href={`/cruisies?lang=${lang}`}
               className={`transition-colors duration-200 font-medium ${scrolled
@@ -586,6 +624,15 @@ function NavbarContent() {
                 }`}
             >
               {t.navbar.cruisies}
+            </Link>
+            <Link
+              href={`/visa?lang=${lang}`}
+              className={`transition-colors duration-200 font-medium ${scrolled
+                ? "text-black hover:text-[var(--mainColor)]"
+                : "text-black hover:text-red-700"
+                }`}
+            >
+              {t.navbar.visa}
             </Link>
 
             {/* Dropdown */}
@@ -634,15 +681,7 @@ function NavbarContent() {
               </AnimatePresence>
             </div>
 
-            <Link
-              href={`/Flight?lang=${lang}`}
-              className={`transition-colors duration-200 font-medium ${scrolled
-                ? "text-black hover:text-[var(--mainColor)]"
-                : "text-black hover:text-red-700"
-                }`}
-            >
-              {t.navbar.flight}
-            </Link>
+
 
             {/* Language Switcher */}
             <div className="relative ml-4" data-dropdown="language">
@@ -681,7 +720,7 @@ function NavbarContent() {
                       onClick={() => setOpen(false)}
                       className="flex items-center justify-center gap-2 m-2 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 font-medium"
                     >
-                      <User className="w-4 h-4" />  
+                      <User className="w-4 h-4" />
                       Profile
                     </Link>
                     <Link
@@ -743,14 +782,24 @@ function NavbarContent() {
                   {t.navbar.home}
                 </Link>
                 <Link
-                  href={`/visa?lang=${lang}`}
+                  href={`/Flight?lang=${lang}`}
                   onClick={() => setOpen(false)}
                   className={`block py-2 transition-colors duration-200 font-medium ${scrolled
                     ? "text-white hover:text-blue-600 dark:hover:text-blue-400"
                     : "text-white hover:text-white/80"
                     }`}
                 >
-                  {t.navbar.visa}
+                  {t.navbar.flight}
+                </Link>
+                <Link
+                  href={`/hotel?lang=${lang}`}
+                  onClick={() => setOpen(false)}
+                  className={`block py-2 transition-colors duration-200 font-medium ${scrolled
+                    ? "text-white hover:text-blue-600 dark:hover:text-blue-400"
+                    : "text-white hover:text-white/80"
+                    }`}
+                >
+                  {t.navbar.hotel}
                 </Link>
                 <Link
                   href={`/cars?lang=${lang}`}
@@ -763,19 +812,6 @@ function NavbarContent() {
                   {t.navbar.cars}
                 </Link>
                 <Link
-                  href={`/hotel?lang=${lang}`}
-                  onClick={() => setOpen(false)}
-                  className={`block py-2 transition-colors duration-200 font-medium ${scrolled
-                    ? "text-white hover:text-blue-600 dark:hover:text-blue-400"
-                    : "text-white hover:text-white/80"
-                    }`}
-                >
-                  {t.navbar.hotel}
-                </Link>
-
-
-
-                <Link
                   href={`/cruisies?lang=${lang}`}
                   onClick={() => setOpen(false)}
                   className={`block py-2 transition-colors duration-200 font-medium ${scrolled
@@ -785,7 +821,16 @@ function NavbarContent() {
                 >
                   {t.navbar.cruisies}
                 </Link>
-
+                <Link
+                  href={`/visa?lang=${lang}`}
+                  onClick={() => setOpen(false)}
+                  className={`block py-2 transition-colors duration-200 font-medium ${scrolled
+                    ? "text-white hover:text-blue-600 dark:hover:text-blue-400"
+                    : "text-white hover:text-white/80"
+                    }`}
+                >
+                  {t.navbar.visa}
+                </Link>
                 {/* Mobile Dropdown */}
                 <details className="group">
                   <summary className={`cursor-pointer py-2 transition-colors duration-200 font-medium list-none ${scrolled
@@ -822,16 +867,7 @@ function NavbarContent() {
                   </div>
                 </details>
 
-                <Link
-                  href={`/Flight?lang=${lang}`}
-                  onClick={() => setOpen(false)}
-                  className={`block py-2 transition-colors duration-200 font-medium ${scrolled
-                    ? "text-white hover:text-blue-600 dark:hover:text-blue-400"
-                    : "text-white hover:text-white/80"
-                    }`}
-                >
-                  {t.navbar.flight}
-                </Link>
+
 
 
                 {/* Mobile Language Switcher */}
@@ -891,11 +927,12 @@ function NavbarContent() {
                       <div>
 
                         <Link
-                          href={`/profile/${user?.id}`}  
+                          href={`/profile/${user?.id}`}
                           onClick={() => setOpen(false)}
-                          className="flex items-center justify-center gap-2 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 font-medium"
+                          className="flex items-center justify-center gap-2 py-2 px-4 bg-blue-600
+                                   hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 font-medium"
                         >
-                          <User className="w-4 h-4" /> 
+                          <User className="w-4 h-4" />
                           Profile
                         </Link>
                         <Link

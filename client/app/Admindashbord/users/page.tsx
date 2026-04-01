@@ -334,7 +334,7 @@ const UsersPageContent = () => {
                                         <div className="flex items-start justify-between">
                                             <img
                                                 src={user.images
-                                                    ? `http://147.93.126.15${user.images[0]}`
+                                                    ? `${user.images[0]}`
                                                     : '/default-profile.png'}
 
                                                 alt={user.name}

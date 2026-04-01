@@ -329,7 +329,35 @@ export const api = {
     deleteBooked: (id: string) => apiClient.delete(`/cruisies/book/${id}`),
     changeStatusBooked: (id: string, status: string) => apiClient.put(`/cruisies/book/${id}/status`, { status })
   },
+/**
+ * Event endpoints
+ */
+events: {
+  getAll: (params?: { category?: string; country?: string; status?: string; featured?: boolean; upcoming?: boolean }) =>
+    apiClient.get("/events", { params }),
 
+  getFeatured: () => apiClient.get("/events/featured"),
+
+  getByCategory: (categoryId: string, country?: string) =>
+    apiClient.get(`/events/category/${categoryId}`, { params: country ? { country } : {} }),
+
+  getOne: (id: string) => apiClient.get(`/events/${id}`),
+
+  create: (data: FormData) =>
+    apiClient.post("/events", data, {
+      headers: { "Content-Type": "multipart/form-data" }
+    }),
+
+  update: (id: string, data: FormData) =>
+    apiClient.put(`/events/${id}`, data, {
+      headers: { "Content-Type": "multipart/form-data" }
+    }),
+
+  delete: (id: string) => apiClient.delete(`/events/${id}`),
+
+  deleteImage: (eventId: string, imageName: string) =>
+    apiClient.delete(`/events/${eventId}/images/${imageName}`)
+},
   /**
    * Stats endpoint
    */

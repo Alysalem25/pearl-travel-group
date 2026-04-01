@@ -8,7 +8,7 @@
 
 // function buildImageUrl(path: string) {
 //     if (!path) return '';
-//     return path.startsWith('http') ? path : `http://147.93.126.15${path}`;
+//     return path.startsWith('http') ? path : `${path}`;
 // }
 
 // interface Day {
@@ -506,7 +506,7 @@ import { ProtectedRoute } from '@/components/ProtectedRoute';
 
 function buildImageUrl(path: string) {
     if (!path) return '';
-    return path.startsWith('http') ? path : `http://147.93.126.15${path}`;
+    return path.startsWith('http') ? path : `${path}`;
 }
 
 interface Day {

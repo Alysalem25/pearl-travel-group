@@ -128,7 +128,7 @@ const ProgramPageContent = () => {
                                         {program.images.map((img: string, index: number) => (
                                             <SwiperSlide key={index} style={{ height: '400px' }}>
                                                 <img
-                                                    src={`http://147.93.126.15${img}`}
+                                                    src={`${img}`}
                                                     alt={`Program Image ${index + 1}`}
                                                     className="w-full h-full object-cover"
                                                 />
@@ -225,7 +225,7 @@ const ProgramPageContent = () => {
                                                 className="rounded-lg overflow-hidden hover:scale-105 transition-transform cursor-pointer"
                                             >
                                                 <img
-                                                    src={`http://147.93.126.15${img}`}
+                                                    src={`${img}`}
                                                     alt={`Thumbnail ${index + 1}`}
                                                     className="w-full h-32 object-cover"
                                                 />

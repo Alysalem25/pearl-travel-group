@@ -178,7 +178,7 @@ const CountryPageContent = () => {
 
         // show existing images from server
         setImages([])
-        setPreviewImages((c.images || []).map(img => `http://147.93.126.15/uploads/countries/${img}`))
+        setPreviewImages((c.images || []).map(img => `/uploads/countries/${img}`))
 
         setShowForm(true)
     }
@@ -299,7 +299,7 @@ const CountryPageContent = () => {
                         {countries.map((p: Country) => {
                             const imageUrl =
                                 p.images && p.images.length > 0
-                                    ? `http://147.93.126.15${p.images[0]}`
+                                    ? `${p.images[0]}`
                                     : '/default-country.jpg'
 
                             return (

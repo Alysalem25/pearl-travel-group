@@ -61,7 +61,7 @@ const UserSummaryPage = () => {
           <div className="flex items-center gap-4">
           {userData.images && userData.images.length > 0 ? (
             <img
-              src={`http://147.93.126.15${userData.images[0]}`}
+              src={`${userData.images[0]}`}
               alt="profile"
               className="w-20 h-20 rounded-full object-cover ring-2 ring-slate-200"
             />

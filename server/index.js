@@ -35,10 +35,20 @@ app.use(helmet());
 // Parse JSON request bodies
 app.use(express.json({ limit: "10mb" }));
 
-// CORS Configuration - Restrict to frontend origin
+const allowedOrigins = process.env.CLIENT_URL 
+  ? process.env.CLIENT_URL.split(',') 
+  : ["http://localhost:3000"];
+
 app.use(cors({
-  origin: ["http://147.93.126.15"],
-      credentials: true,
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin || allowedOrigins.indexOf(origin) !== -1 || allowedOrigins.includes('*')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
@@ -69,10 +79,10 @@ const carTripsRoutes = require("./routes/carTrip");
 const hotelRoute = require("./routes/hotel");
 const userRoutes = require("./routes/userRoutes");
 const cruiseRoutes = require("./routes/cruiseRoutes");
-
+const eventRouter = require('./routes/eventRouter');
 
 // ============================================
-// 🗄️ DATABASE CONNECTION
+// 🗄️ DATABASE CONNECTION 
 // ============================================
 
 mongoose
@@ -90,7 +100,7 @@ mongoose
 /**
  * Basic health check endpoint
  * Used by Docker healthcheck and load balancers
- */
+*/
 app.get("/health", (req, res) => {
   res.status(200).json({
     status: "healthy",
@@ -148,7 +158,7 @@ app.use("/api/categories", categoryRoutes);
  * POST   /api/programs       - Create (admin only)
  * PUT    /api/programs/:id   - Update (admin only)
  * DELETE /api/programs/:id   - Delete (admin only)
- */
+*/
 app.use("/api/programs", programRoutes);
 
 app.use("/api/countries", countryRoutes);
@@ -169,6 +179,7 @@ app.use("/api/flights", flightRoutes);
 app.use("/api/carTrip", carTripsRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/cruisies", cruiseRoutes);
+app.use('/api/events', eventRouter);
 // ============================================
 // 📊 STATS ENDPOINT (PUBLIC)
 // ============================================

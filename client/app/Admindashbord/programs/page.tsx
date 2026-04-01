@@ -51,20 +51,20 @@
 // //     // ————————— DATA FETCHING —————————
 // //     const { data: categories = [] } = useQuery({
 // //         queryKey: ['categories'],
-// //         queryFn: async () => (await axios.get('http://localhost:5000/categories')).data
+// //         queryFn: async () => (await axios.get('${process.env.NEXT_PUBLIC_API_URL || '/api'}/categories')).data
 // //     })
 
 // //     const { data: programs = [] } = useQuery({
 // //         queryKey: ['programs'],
-// //         queryFn: async () => (await axios.get('http://localhost:5000/programs')).data
+// //         queryFn: async () => (await axios.get('${process.env.NEXT_PUBLIC_API_URL || '/api'}/programs')).data
 // //     })
 
 // //     // ————————— MUTATIONS —————————
 // //     const programMutation = useMutation({
 // //         mutationFn: (payload: any) =>
 // //             editingProgram
-// //                 ? axios.put(`http://localhost:5000/programs/${editingProgram._id}`, payload)
-// //                 : axios.post('http://localhost:5000/programs', payload),
+// //                 ? axios.put(`${process.env.NEXT_PUBLIC_API_URL || '/api'}/programs/${editingProgram._id}`, payload)
+// //                 : axios.post('${process.env.NEXT_PUBLIC_API_URL || '/api'}/programs', payload),
 // //         onSuccess: () => {
 // //             queryClient.invalidateQueries({ queryKey: ['programs'] });
 // //             alert(editingProgram ? "Program updated!" : "Program added!");
@@ -74,7 +74,7 @@
 // //     })
 
 // //     const deleteMutation = useMutation({
-// //         mutationFn: (id: string) => axios.delete(`http://localhost:5000/programs/${id}`),
+// //         mutationFn: (id: string) => axios.delete(`${process.env.NEXT_PUBLIC_API_URL || '/api'}/programs/${id}`),
 // //         onSuccess: () => queryClient.invalidateQueries({ queryKey: ['programs'] })
 // //     })
 
@@ -274,12 +274,12 @@
 // //     // ================= FETCH =================
 // //     const { data: categories = [] } = useQuery({
 // //         queryKey: ['categories'],
-// //         queryFn: async () => (await axios.get('http://localhost:5000/categories')).data
+// //         queryFn: async () => (await axios.get('${process.env.NEXT_PUBLIC_API_URL || '/api'}/categories')).data
 // //     })
 
 // //     const { data: programs = [] } = useQuery({
 // //         queryKey: ['programs'],
-// //         queryFn: async () => (await axios.get('http://localhost:5000/programs')).data
+// //         queryFn: async () => (await axios.get('${process.env.NEXT_PUBLIC_API_URL || '/api'}/programs')).data
 // //     })
 
 // //     // ================= MUTATION =================
@@ -287,12 +287,12 @@
 // //         mutationFn: (payload: FormData) =>
 // //             editingProgram
 // //                 ? axios.put(
-// //                     `http://localhost:5000/programs/${editingProgram._id}`,
+// //                     `${process.env.NEXT_PUBLIC_API_URL || '/api'}/programs/${editingProgram._id}`,
 // //                     payload,
 // //                     { headers: { "Content-Type": "multipart/form-data" } }
 // //                 )
 // //                 : axios.post(
-// //                     'http://localhost:5000/programs',
+// //                     '${process.env.NEXT_PUBLIC_API_URL || '/api'}/programs',
 // //                     payload,
 // //                     { headers: { "Content-Type": "multipart/form-data" } }
 // //                 ),
@@ -306,7 +306,7 @@
 // //     })
 
 // //         const deleteMutation = useMutation({
-// //         mutationFn: (id: string) => axios.delete(`http://localhost:5000/programs/${id}`),
+// //         mutationFn: (id: string) => axios.delete(`${process.env.NEXT_PUBLIC_API_URL || '/api'}/programs/${id}`),
 // //         onSuccess: () => queryClient.invalidateQueries({ queryKey: ['programs'] })
 // //     })
 
@@ -379,7 +379,7 @@
 // //             status: p.status
 // //         })
 // //         setImages(p.images)
-// //         setPreviewImages(p.images.map(img => `http://localhost:5000/uploads/programs/${img}`))
+// //         setPreviewImages(p.images.map(img => `${process.env.NEXT_PUBLIC_API_URL || '/api'}/uploads/programs/${img}`))
 // //         setShowForm(true)
 // //     }
 
@@ -797,7 +797,7 @@
 //             status: p.status,
 //         })
 //         setImages([])
-//         setPreviewImages((p.images || []).map((img) => `http://147.93.126.15${img}`))
+//         setPreviewImages((p.images || []).map((img) => `${img}`))
 //         setDays(
 //             p.days?.length
 //                 ? p.days.map((d, idx) => ({ ...d, dayNumber: idx + 1 }))
@@ -1031,12 +1031,13 @@ import { api } from '@/lib/api'
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 
 interface Day {
-    dayNumber: number
+    dayNumber: string
     titleEn: string
     titleAr: string
     descriptionEn: string
     descriptionAr: string
 }
+
 
 interface Program {
     _id: string
@@ -1083,7 +1084,7 @@ function ProgramsPageContent() {
 
     const [days, setDays] = useState<Day[]>([
         {
-            dayNumber: 1,
+            dayNumber: '',
             titleEn: '',
             titleAr: '',
             descriptionEn: '',
@@ -1151,7 +1152,7 @@ function ProgramsPageContent() {
                     const serverImages = rawImages.map((img: string) => ({
                         url: img.startsWith('http')
                             ? img
-                            : `http://147.93.126.15${img}`,
+                            : `${img}`,
                         name: img.split('/').pop(), // ✅ مهم
                         isNew: false
                     }));
@@ -1271,7 +1272,6 @@ function ProgramsPageContent() {
     const removePreviewImage = (index: number) => {
         const image = previewImages[index]
 
-        // 🟡 NEW IMAGE
         if (image.isNew) {
             const newIndex = previewImages
                 .slice(0, index)
@@ -1293,18 +1293,19 @@ function ProgramsPageContent() {
         }
     }
 
-    const updateDay = (i: number, field: keyof Day, value: string) => {
+    const updateDay = (i: number, field: keyof Day, value: string | number) => {
         const copy = days.map((d, idx) =>
             idx === i ? { ...d, [field]: value } : d
         )
         setDays(copy)
     }
 
+
     const addDay = () => {
         setDays((prev) => [
             ...prev,
             {
-                dayNumber: prev.length + 1,
+                dayNumber: String(prev.length + 1),
                 titleEn: '',
                 titleAr: '',
                 descriptionEn: '',
@@ -1317,7 +1318,7 @@ function ProgramsPageContent() {
         setDays((prev) =>
             prev
                 .filter((_, index) => index !== i)
-                .map((d, idx) => ({ ...d, dayNumber: idx + 1 }))
+                .map((d, idx) => ({ ...d, dayNumber: String(idx + 1) }))
         )
     }
 
@@ -1341,7 +1342,7 @@ function ProgramsPageContent() {
         setExistingImages([])
         setDays([
             {
-                dayNumber: 1,
+                dayNumber: '1',
                 titleEn: '',
                 titleAr: '',
                 descriptionEn: '',
@@ -1379,7 +1380,7 @@ function ProgramsPageContent() {
 
     //     // Create full URLs for preview
     //     const serverImages = rawImages.map((img) =>
-    //         img.startsWith('http') ? img : `http://147.93.126.15${img}`
+    //         img.startsWith('http') ? img : `${img}`
     //     )
     //     setPreviewImages(serverImages)
 
@@ -1419,17 +1420,21 @@ function ProgramsPageContent() {
         const serverImages = rawImages.map((img) => ({
             url: img.startsWith('http')
                 ? img
-                : `http://147.93.126.15${img}`,
-            name: img.split('/').pop(), // ✅ مهم
+                : `${img}`,
+            name: img.split('/').pop(),
             isNew: false
         }))
 
         setPreviewImages(serverImages)
 
+        // FIXED: Convert dayNumber to string
         setDays(
             p.days?.length
-                ? p.days.map((d, idx) => ({ ...d, dayNumber: idx + 1 }))
-                : [{ dayNumber: 1, titleEn: '', titleAr: '', descriptionEn: '', descriptionAr: '' }]
+                ? p.days.map((d, idx) => ({
+                    ...d,
+                    dayNumber: String(d.dayNumber || idx + 1)
+                }))
+                : [{ dayNumber: '1', titleEn: '', titleAr: '', descriptionEn: '', descriptionAr: '' }]
         )
 
         setShowForm(true)
@@ -1660,8 +1665,19 @@ function ProgramsPageContent() {
 
                         {days.map((day, i) => (
                             <div key={i} className="border p-4 rounded space-y-2 align-middle bg-white">
-                                <h4>Day {day.dayNumber}</h4>
 
+                                <div className="flex w-full gap-6">
+                                    <label className="gap-2 w-full">
+                                        Day Number
+                                        <input
+                                            type="text"
+                                            value={day.dayNumber}
+                                            onChange={(e) => updateDay(i, 'dayNumber', e.target.value)}
+                                            className='bg-gray-50  input text-left m-2 rounded border border-gray-600'
+                                            required
+                                        />
+                                    </label>
+                                </div>
                                 <div className="flex w-full gap-6">
                                     <input
                                         placeholder="Title EN"

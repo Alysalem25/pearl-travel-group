@@ -208,7 +208,7 @@ const ProgramPage = () => {
                                             <SwiperSlide key={index}>
                                                 <div className="relative w-full h-[260px] sm:h-[340px] md:h-[420px] lg:h-[460px] overflow-hidden">
                                                     <img
-                                                        src={`http://147.93.126.15${img}`}
+                                                        src={`${img}`}
                                                         alt={`Program Image ${index + 1}`}
                                                         className="w-full h-full object-cover"
                                                     />
