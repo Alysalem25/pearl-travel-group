@@ -113,18 +113,35 @@ router.post("/login", validateLogin, handleValidationErrors, async (req, res, ne
   try {
     const { email, password } = req.body;
 
+    console.log("Login attempt for email:", email);
+
     // Find user and explicitly select password field (normally excluded)
     const user = await User.findOne({ email }).select("+password");
 
+    console.log("User found:", !!user);
+
     // Validate email exists
     if (!user) {
+      console.log("User not found");
       return res.status(401).json({
         error: "Invalid email or password"
       });
     }
 
+    // Check if password field exists
+    if (!user.password) {
+      console.error("User password field is missing");
+      return res.status(500).json({
+        error: "Account configuration error"
+      });
+    }
+
+    console.log("Comparing passwords");
+
     // Compare passwords using bcrypt
     const isPasswordValid = await user.comparePassword(password);
+
+    console.log("Password valid:", isPasswordValid);
 
     if (!isPasswordValid) {
       return res.status(401).json({
@@ -132,15 +149,35 @@ router.post("/login", validateLogin, handleValidationErrors, async (req, res, ne
       });
     }
 
+    // Check JWT_SECRET
+    if (!process.env.JWT_SECRET) {
+      console.error("JWT_SECRET not configured");
+      return res.status(500).json({
+        error: "Server configuration error"
+      });
+    }
+
+    console.log("Generating JWT token");
+
     // Generate JWT token
-    const token = jwt.sign(
-      {
-        id: user._id,
-        role: user.role
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRE || "7d" }
-    );
+    let token;
+    try {
+      token = jwt.sign(
+        {
+          id: user._id.toString(),
+          role: user.role
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: process.env.JWT_EXPIRE || "7d" }
+      );
+    } catch (jwtErr) {
+      console.error("JWT signing error:", jwtErr);
+      return res.status(500).json({
+        error: "Token generation failed"
+      });
+    }
+
+    console.log("Login successful");
 
     // Return success without exposing password
     res.json({
@@ -154,6 +191,7 @@ router.post("/login", validateLogin, handleValidationErrors, async (req, res, ne
       }
     });
   } catch (err) {
+    console.error("Login error:", err);
     next(err);
   }
 });

@@ -71,7 +71,18 @@ UserSchema.pre("save", async function () {
  * 🔑 Compare password
  */
 UserSchema.methods.comparePassword = async function (enteredPassword) {
-  return bcrypt.compare(enteredPassword, this.password);
+  try {
+    if (!this.password) {
+      throw new Error("Password field is not set");
+    }
+    if (!enteredPassword) {
+      return false;
+    }
+    return await bcrypt.compare(enteredPassword, this.password);
+  } catch (err) {
+    console.error("Password comparison error:", err);
+    throw err;
+  }
 };
 
 module.exports = mongoose.model("User", UserSchema);
