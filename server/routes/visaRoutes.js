@@ -63,7 +63,7 @@ router.post("/", handleValidationErrors, async (req, res, next) => {
  * GET /visa
  * Get all visa applications - ADMIN ONLY
  */
-router.get("/", authMiddleware, authorize("admin"), async (req, res, next) => {
+router.get("/", authMiddleware, authorize("manage_visa"), async (req, res, next) => {
     try {
         const { status, email, sortBy = "submittedAt", order = "desc" } = req.query;
         let filter = {};
@@ -109,7 +109,7 @@ router.get("/:id", async (req, res, next) => {
  * PUT /visa/:id
  * Update visa application - ADMIN ONLY
  */
-router.put("/:id", authMiddleware, authorize("admin"), async (req, res, next) => {
+router.put("/:id", authMiddleware, authorize("manage_visa"), async (req, res, next) => {
     try {
         const { status, adminNotes } = req.body;
 
@@ -140,7 +140,7 @@ router.put("/:id", authMiddleware, authorize("admin"), async (req, res, next) =>
  * DELETE /visa/:id
  * Delete visa application - ADMIN ONLY
  */
-router.delete("/:id", authMiddleware, authorize("admin"), async (req, res, next) => {
+router.delete("/:id", authMiddleware, authorize("manage_visa"), async (req, res, next) => {
     try {
         const visa = await Visa.findByIdAndDelete(req.params.id);
 

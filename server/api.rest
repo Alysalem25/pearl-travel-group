@@ -14,17 +14,23 @@
 
 ### 
 
-POST http://147.93.126.15/api/auth/register
+POST http://localhost:5000/api/auth/register
 Content-Type: application/json
 
 {
-  "name": "aly1",
-  "email": "aly1@gmail.com",
-  "password": "aA123456",
-  "number": "43225234",
-  "role":"admin",
+  "name": "headFromPostman8",
+  "email": "headFromPostman8@gmail.com",
+  "password": "hH123456",
+  "number": "432235234",
+  "role":"head",
   "images": [
-    "https://res.cloudinary.com/dzj6l8n0v/image/upload/v1700000000/pearl-travel/user-avatars/default-avatar.png"
+  ],
+  "permissions": [
+    "manage_booked_flights",
+    "manage_booked_transportation",
+    "manage_booked_hotels",
+    "manage_booked_cruises",
+    "manage_users"
   ]
 }
 

@@ -5,6 +5,7 @@ import AdminSidebar from '@/components/adminSidebar'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/lib/api'
 import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { PERMISSIONS } from '@/lib/permissionConstants';
 
 interface Hotel {
     _id: string
@@ -27,7 +28,7 @@ interface Hotel {
 
 export default function HotelsPage() {
     return (
-        <ProtectedRoute requiredRole="admin">
+        <ProtectedRoute requiredPermission={PERMISSIONS.MANAGE_BOOKED_HOTELS}>
             <HotelsPageContent />
         </ProtectedRoute>
     );

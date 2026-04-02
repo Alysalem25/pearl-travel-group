@@ -40,7 +40,7 @@ router.get("/", async (req, res, next) => {
 });
 
 // delete car trip
-router.delete("/:id", authMiddleware, authorize("admin"), async (req, res, next) => {
+router.delete("/:id", authMiddleware, authorize("manage_booked_transportation"), async (req, res, next) => {
   try {
     const carTrip = await CarTrip.findByIdAndDelete(req.params.id);
     if (!carTrip) return res.status(404).json({ error: "Car trip not found" });
@@ -51,7 +51,7 @@ router.delete("/:id", authMiddleware, authorize("admin"), async (req, res, next)
 });
 
 // update car trip status
-router.put("/:id/status", authMiddleware, authorize("admin"), async (req, res, next) => {
+router.put("/:id/status", authMiddleware, authorize("manage_booked_transportation"), async (req, res, next) => {
   try {
     const { status } = req.body;
     if (!["pending", "reviewed"].includes(status)) {

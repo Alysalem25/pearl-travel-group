@@ -101,7 +101,7 @@ router.get("/by-name/:nameEn", async (req, res, next) => {
 router.post(
   "/",
   authMiddleware,
-  authorize("admin"),
+  authorize("add_country"),
   uploadCountry.array("images", 1),
    handleValidationErrors,
   async (req, res, next) => {
@@ -147,7 +147,7 @@ router.post(
 router.put(
   "/:id",
   authMiddleware,
-  authorize("admin"),
+  authorize("update_country"),
   uploadCountry.array("images", 5),
   handleValidationErrors,
   async (req, res, next) => {
@@ -192,7 +192,7 @@ router.put(
  * DELETE /countries/:id
  * Delete country - ADMIN ONLY
  */
-router.delete("/:id", authMiddleware, authorize("admin"), async (req, res, next) => {
+router.delete("/:id", authMiddleware, authorize("delete_country"), async (req, res, next) => {
   try {
     const country = await Country.findByIdAndDelete(req.params.id);
 
@@ -213,7 +213,7 @@ router.delete("/:id", authMiddleware, authorize("admin"), async (req, res, next)
 router.post(
   "/:id/images",
   authMiddleware,
-  authorize("admin"),
+  authorize("add_country"),
   uploadCountry.array("images", 1),
   async (req, res, next) => {
     try {
@@ -298,7 +298,7 @@ router.get("/inToCountry", async (req, res, next) => {
 router.post(
   "/:id/images",
   authMiddleware,
-  authorize("admin"),
+  authorize("add_country"),
   uploadCountry.array("images", 1),
   async (req, res, next) => {
     try {

@@ -436,7 +436,7 @@ function NavbarContent() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
-  const { user, isAuthenticated, isAdmin } = useAuth();
+  const { user, isAuthenticated, isAdmin , isHead } = useAuth();
 
   // Initialize language from URL or localStorage
   useEffect(() => {
@@ -708,11 +708,12 @@ function NavbarContent() {
                   </p>
                   <p className={`text-xs ${scrolled ? "text-gray-500 dark:text-gray-400" : "text-black"
                     }`}>
-                    {user?.role === "admin" ? "Admin" : "User"}
+                    {/* {user?.role === "admin" ? "Admin" : "User"} */}
+                    {isAdmin() ? "Admin" : isHead() ? "Head" : "User"}
                   </p>
                 </div>
 
-                {isAdmin() && (
+                {isAdmin() || isHead() && (
                   <div className="flex flex-row">
 
                     <Link

@@ -5,6 +5,7 @@ import AdminSidebar from '@/components/adminSidebar'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/lib/api'
 import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { PERMISSIONS } from '@/lib/permissionConstants';
 import Link from 'next/link'
 
 interface CarTripReviewer {
@@ -27,7 +28,7 @@ interface Car {
 
 export default function FlightsPage() {
     return (
-        <ProtectedRoute requiredRole="admin">
+        <ProtectedRoute requiredPermission={PERMISSIONS.MANAGE_BOOKED_TRANSPORTATION}>
             <FlightsPageContent />
         </ProtectedRoute>
     );

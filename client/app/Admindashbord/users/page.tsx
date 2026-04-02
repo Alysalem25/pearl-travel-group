@@ -9,6 +9,7 @@ import { User } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { img, s } from 'framer-motion/client'
 import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { PERMISSIONS } from '@/lib/permissionConstants';
 
 
 interface User {
@@ -25,7 +26,7 @@ interface User {
 
 export default function UsersPage() {
     return (
-        <ProtectedRoute requiredRole="admin">
+        <ProtectedRoute requiredPermission={PERMISSIONS.MANAGE_USERS}>
             <UsersPageContent />
         </ProtectedRoute>
     )
@@ -48,6 +49,12 @@ const UsersPageContent = () => {
         inTeam: false,
         roleInTeam: '',
     })
+    const [clientInfo, setClientInfo] = React.useState({
+        nationalId: '',
+        passportNumber: '',
+        address: ''
+    })
+    const [permissions, setPermissions] = React.useState<string[]>([])
 
     const { register, isAuthenticated } = useAuth();
 
@@ -91,6 +98,8 @@ const UsersPageContent = () => {
             newUser.append('role', formData.role)
             newUser.append('inTeam', String(formData.inTeam))
             newUser.append('roleInTeam', formData.roleInTeam)
+            newUser.append('clientInfo', JSON.stringify(clientInfo))
+            newUser.append('permissions', JSON.stringify(permissions))
             if (images.length > 0) newUser.append('images', images[0]);
             await addUserMutation.mutateAsync(newUser)
 
@@ -114,6 +123,8 @@ const UsersPageContent = () => {
             images: '',
             roleInTeam: '',
         })
+        setClientInfo({ nationalId: '', passportNumber: '', address: '' })
+        setPermissions([])
         setPreviewImages([])
         setEditingUser(null)
         setShowForm(false)
@@ -243,13 +254,76 @@ const UsersPageContent = () => {
                                 <select
                                     required
                                     value={formData.role}
-                                    onChange={e => setFormData({ ...formData, role: e.target.value })}
+                                    onChange={e => {setFormData({ ...formData, role: e.target.value }), 
+                                    setPermissions(['add_program','edit_program','delete_program',
+                                        'add_country','edit_country','delete_country',
+                                        'add_category','edit_category','delete_category',
+                                        'add_cruise','edit_cruise','delete_cruise',
+                                        'manage_users','manage_visa',
+                                        'manage_booked_flights',
+                                        'manage_booked_programs',
+                                        'manage_booked_transportation',
+                                        'manage_booked_hotels',
+                                        'manage_booked_cruises'])
+                                }}
                                     className="border p-2 rounded bg-white text-black"
                                 >
                                     <option value="" disabled>Select Role</option>
                                     <option value="admin">Admin</option>
+                                    <option value="head">Head</option>
                                     <option value="user">User</option>
                                 </select>
+
+                                {/* dynamic fields */}
+                                {formData.role === 'user' && (
+                                    <div className="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-gray-100 rounded border border-gray-300">
+                                        <input type="text" placeholder="National ID" value={clientInfo.nationalId} onChange={e => setClientInfo({ ...clientInfo, nationalId: e.target.value })} className="border border-gray-400 p-2 rounded bg-white text-black" />
+                                        <input type="text" placeholder="Passport Number" value={clientInfo.passportNumber} onChange={e => setClientInfo({ ...clientInfo, passportNumber: e.target.value })} className="border border-gray-400 p-2 rounded bg-white text-black" />
+                                        <input type="text" placeholder="Address" value={clientInfo.address} onChange={e => setClientInfo({ ...clientInfo, address: e.target.value })} className="border border-gray-400 p-2 rounded bg-white text-black" />
+                                    </div>
+                                )}
+
+                                {formData.role === 'head' && (
+                                    <div className="col-span-1 md:col-span-2 p-4 bg-gray-100 rounded border border-gray-300">
+                                        <h3 className="font-semibold mb-3 text-black">Permissions:</h3>
+                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                            {[
+                                                { label: 'Add Program', value: 'add_program' },
+                                                { label: 'Edit Program', value: 'edit_program' },
+                                                { label: 'Delete Program', value: 'delete_program' },
+                                                { label: 'Add Country', value: 'add_country' },
+                                                { label: 'Edit Country', value: 'edit_country' },
+                                                { label: 'Delete Country', value: 'delete_country' },
+                                                { label: 'Add Category', value: 'add_category' },
+                                                { label: 'Edit Category', value: 'edit_category' },
+                                                { label: 'Delete Category', value: 'delete_category' },
+                                                { label: 'Add Crouises', value: 'add_cruise' },
+                                                { label: 'Edit Crouises', value: 'edit_cruise' },
+                                                { label: 'Delete Crouises', value: 'delete_cruise' },
+                                                { label: 'Manage Users', value: 'manage_users' },
+                                                { label: 'Manage Visa', value: 'manage_visa' },
+                                                { label: 'Manage Booked Flights', value: 'manage_booked_flights' },
+                                                { label: 'Manage Booked Programs', value: 'manage_booked_programs' },
+                                                { label: 'Manage Booked Transportation', value: 'manage_booked_transportation' },
+                                                { label: 'Manage Booked Hotels', value: 'manage_booked_hotels' },
+                                                { label: 'Manage Booked Cruises', value: 'manage_booked_cruises' }
+                                            ].map(perm => (
+                                                <label key={perm.value} className="flex items-center gap-2 text-black cursor-pointer hover:bg-gray-200 p-1 rounded">
+                                                    <input 
+                                                        type="checkbox" 
+                                                        className="form-checkbox h-4 w-4 text-blue-600"
+                                                        checked={permissions.includes(perm.value)}
+                                                        onChange={(e) => {
+                                                            if (e.target.checked) setPermissions([...permissions, perm.value])
+                                                            else setPermissions(permissions.filter(p => p !== perm.value))
+                                                        }}
+                                                    />
+                                                    <span className="text-sm font-medium">{perm.label}</span>
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
 
                                 {/* inTeam  */}
                                 <label className="flex items-center gap-2 text-black">

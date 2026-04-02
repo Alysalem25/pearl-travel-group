@@ -38,7 +38,9 @@ interface AuthContextType {
   register: (name: string, email: string, password: string, number: string) => Promise<AuthResponse>;
   logout: () => void;
   hasRole: (role: string) => boolean;
+  hasPermission: (permission: string) => boolean;
   isAdmin: () => boolean;
+  isHead:() => boolean;
 }
 
 // Create context
@@ -61,15 +63,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const token = getAuthToken();
       const storedUser = getAuthUser();
       
+      console.log("[AuthContext] Initializing auth:", { 
+        hasToken: !!token, 
+        hasStoredUser: !!storedUser,
+        storedUser 
+      });
+      
       if (token && storedUser) {
         // Check if token has expired
         if (isTokenExpired()) {
+          console.log("[AuthContext] Token expired, clearing auth");
           clearAuthData();
           setUser(null);
         } else {
+          console.log("[AuthContext] Token valid, restoring user:", storedUser);
           setUser(storedUser);
         }
       } else {
+        console.log("[AuthContext] No token or user found");
         setUser(null);
       }
       setLoading(false);
@@ -86,13 +97,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const response = await api.auth.login({ email, password });
       const { token, user: userData } = response.data;
       
+      console.log("[AuthContext] Login successful, user data:", userData);
+      
       // Save to localStorage
       saveAuthData(token, userData);
       setUser(userData);
+      
+      console.log("[AuthContext] User saved to context:", userData);
 
       return { token, user: userData, message: "Login successful" };
     } catch (error: any) {
       const message = error.response?.data?.error || "Login failed";
+      console.error("[AuthContext] Login error:", message);
       throw new Error(message);
     }
   };
@@ -110,13 +126,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const response = await api.auth.register({ name, email, password, number });
       const { token, user: userData } = response.data;
       
+      console.log("[AuthContext] Register successful, user data:", userData);
+      
       // Save to localStorage
       saveAuthData(token, userData);
       setUser(userData);
+      
+      console.log("[AuthContext] User saved to context:", userData);
 
       return { token, user: userData, message: "Registration successful" };
     } catch (error: any) {
       const message = error.response?.data?.error || "Registration failed";
+      console.error("[AuthContext] Register error:", message);
       throw new Error(message);
     }
   };
@@ -137,10 +158,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   /**
+   * Check if user has specific permission
+   */
+const hasPermission = (permission: string): boolean => {
+  if (!user) {
+    alert(`[hasPermission] No user`);
+    return false;
+  }
+
+  if (user.permissions?.includes("*")) {
+    console.log(`[hasPermission] User has wildcard access`, { permission });
+    return true;
+  }
+
+  const result = user.permissions?.includes(permission) || false;
+  console.log(`[hasPermission] ${permission}:`, {
+    result,
+    userPermissions: user.permissions,
+    hasWildcard: user.permissions?.includes("*")
+  });
+  
+  return result;
+};
+
+  /**
    * Check if user is admin
    */
   const isAdmin = (): boolean => {
     return hasRole("admin");
+  };
+
+  const isHead = (): boolean => {
+    return hasRole("head");
   };
 
   return (
@@ -153,7 +202,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         register,
         logout,
         hasRole,
-        isAdmin
+        hasPermission,
+        isAdmin,
+        isHead
       }}
     >
       {children}

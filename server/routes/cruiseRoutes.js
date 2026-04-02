@@ -46,7 +46,7 @@ router.get("/", async (req, res, next) => {
 router.post(
   "/",
   authMiddleware,
-  authorize("admin"),
+  authorize("add_cruise"),
   // accept up to 5 images in the 'images' field
   uploadCruisies.array("images", 5),
   async (req, res, next) => {
@@ -102,7 +102,7 @@ router.post(
 router.put(
   "/:id",
   authMiddleware,
-  authorize("admin"),
+  authorize("edit_cruise"),
   uploadCruisies.array("images", 5),
   async (req, res, next) => {
     try {
@@ -173,7 +173,7 @@ router.put(
 router.post(
   "/:id/images",
   authMiddleware,
-  authorize("admin"),
+  authorize("add_cruise"),
   uploadCruisies.array("images", 5),
   async (req, res, next) => {
     try {
@@ -202,7 +202,7 @@ router.post(
 
 //  delete /cruisies
 router.delete("/:id", authMiddleware,
-  authorize("admin"),
+  authorize("delete_cruise"),
   async (req, res, next) => {
     try {
       const cruise = await Cruisies.findByIdAndDelete(req.params.id);
@@ -282,7 +282,7 @@ router.get("/book", async (req, res) => {
 
 //  delete booked cruise /cruisies/book/:id
 router.delete("/book/:id", authMiddleware,
-  authorize("admin"),
+  authorize("manage_booked_cruises"),
   async (req, res, next) => {
     try {
       const bookedCruisies = await BookedCruisies.findByIdAndDelete(req.params.id);
@@ -296,7 +296,7 @@ router.delete("/book/:id", authMiddleware,
 
 // update status of booked cruise /cruisies/book/:id/status
 router.put("/book/:id/status", authMiddleware,
-  authorize("admin"),
+  authorize("manage_booked_cruises"),
   async (req, res, next) => {
     try {
       const { status } = req.body;
@@ -340,7 +340,7 @@ router.get("/:id", async (req, res, next) => {
 router.delete(
   "/:id/images/:imageName",
   authMiddleware,
-  authorize("admin"),
+  authorize("delete_cruise"),
   async (req, res, next) => {
     try {
       const { id, imageName } = req.params;

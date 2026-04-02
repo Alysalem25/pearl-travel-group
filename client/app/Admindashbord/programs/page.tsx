@@ -1059,7 +1059,7 @@ interface Program {
 
 export default function ProgramsPage() {
     return (
-        <ProtectedRoute requiredRole="admin">
+        <ProtectedRoute requiredPermission="add_program">
             <ProgramsPageContent />
         </ProtectedRoute>
     );

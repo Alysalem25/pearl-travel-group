@@ -298,7 +298,7 @@
 const express = require("express");
 const upload = require("../middlewares/upload");
 const authMiddleware = require("../middlewares/authMiddleware");
-const authorize = require("../middlewares/authorizeMiddleware");
+const authorize = require("../middlewares/authorize");
 const Program = require("../models/Programs");
 const BookedPrograms = require("../models/BookedPrograms");
 const router = express.Router();
@@ -362,9 +362,9 @@ router.get("/category/:categoryId", async (req, res, next) => {
 });
 
 // Admin route to get all booked programs
-router.get("/booked", authMiddleware, authorize("admin"), async (req, res, next) => {
+router.get("/booked", authMiddleware, authorize("manage_booked_programs"), async (req, res, next) => {
   try {
-    const bookedPrograms = await BookedPrograms.find().populate("program");
+    const bookedPrograms = await BookedPrograms.find().populate("program").populate("reviewedBy", "name");
     res.json(bookedPrograms);
   } catch (err) {
     next(err);
@@ -372,18 +372,31 @@ router.get("/booked", authMiddleware, authorize("admin"), async (req, res, next)
 });
 
 // admin update booking status
-router.put("/booked/:id/status", authMiddleware, authorize("admin"), async (req, res, next) => {
+// admin update booking status
+router.put("/booked/:id/status", authMiddleware, authorize("manage_booked_programs"), async (req, res, next) => {
   try {
     const { status } = req.body;
     if (!["pending", "reviewed"].includes(status)) {
       return res.status(400).json({ error: "Invalid status value" });
     }
-    const bookedProgram = await BookedPrograms.findByIdAndUpdate(
+    
+    // Update and then fetch with populate to get full data
+    await BookedPrograms.findByIdAndUpdate(
       req.params.id,
-      { status: status === "pending" ? "pending" : "reviewed" },
+      { 
+        status: status === "pending" ? "pending" : "reviewed",
+        reviewedBy: req.user.id 
+      },
       { new: true, runValidators: true }
-    ).populate("program");
+    );
+    
+    // Fetch the updated document with populated fields
+    const bookedProgram = await BookedPrograms.findById(req.params.id)
+      .populate("program")
+      .populate("reviewedBy", "name");
+      
     if (!bookedProgram) return res.status(404).json({ error: "Booking not found" });
+    
     res.json(bookedProgram);
   } catch (err) {
     next(err);
@@ -414,7 +427,7 @@ router.post("/book", async (req, res, next) => {
 });
 
 //  admin delete a booking
-router.delete("/booked/:id", authMiddleware, authorize("admin"), async (req, res, next) => {
+router.delete("/booked/:id", authMiddleware, authorize("manage_booked_programs"), async (req, res, next) => {
   try {
     const bookedProgram = await BookedPrograms.findByIdAndDelete(req.params.id);
     if (!bookedProgram) return res.status(404).json({ error: "Booking not found" });
@@ -458,7 +471,7 @@ router.get("/:id", async (req, res, next) => {
 router.post(
   "/",
   authMiddleware,
-  authorize("admin"),
+  authorize("add_program"),
   upload.array("images", 5),
   async (req, res, next) => {
     try {
@@ -518,7 +531,7 @@ router.post(
 router.put(
   "/:id",
   authMiddleware,
-  authorize("admin"),
+  authorize("edit_program"),
   upload.array("images", 5), // FIXED: Added multer middleware for image uploads
   async (req, res, next) => {
     try {
@@ -593,7 +606,7 @@ router.put(
  * DELETE /programs/:id
  * Delete program - ADMIN ONLY
  */
-router.delete("/:id", authMiddleware, authorize("admin"), async (req, res, next) => {
+router.delete("/:id", authMiddleware, authorize("delete_program"), async (req, res, next) => {
   try {
     const program = await Program.findByIdAndDelete(req.params.id);
 
@@ -674,5 +687,8 @@ router.delete("/:id/images/:imageName", authMiddleware, authorize("admin"), asyn
     next(err);
   }
 });
+
+
+
 
 module.exports = router;

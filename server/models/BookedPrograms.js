@@ -31,6 +31,11 @@ const BookedProgramsSchema = new mongoose.Schema({
         default: "pending",
     },
 
+      reviewedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
 }, {
     timestamps: true,
 });

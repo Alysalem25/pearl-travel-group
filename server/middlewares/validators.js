@@ -37,7 +37,7 @@ const validateRegister = [
   
   body("role")
     .optional()
-    .isIn(['admin', 'user']).withMessage("Role must be 'admin' or 'user'")
+    .isIn(['admin', 'user','head']).withMessage("Role must be 'admin' or 'user'")
 ];
 
 // Login validation

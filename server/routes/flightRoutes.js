@@ -116,7 +116,7 @@ router.post("/", async (req, res, next) => {
     }
 });
 
-router.get("/", authMiddleware, authorize("admin"), async (req, res, next) => {
+router.get("/", authMiddleware, async (req, res, next) => {
     try {
         // populate country references for admin-friendly output
         const flights = await Flights.find().populate('from', 'nameEn').populate('to', 'nameEn').populate('reviewedBy', 'name');
@@ -138,7 +138,7 @@ router.get("/", authMiddleware, authorize("admin"), async (req, res, next) => {
 });
 
 // Delete a flight (admin only)
-router.delete("/:id", authMiddleware, authorize("admin"), async (req, res, next) => {
+router.delete("/:id", authMiddleware, authorize("manage_booked_flights"), async (req, res, next) => {
     try {
         const flight = await Flights.findByIdAndDelete(req.params.id);
         if (!flight) return res.status(404).json({ error: "Flight not found" });
@@ -152,7 +152,7 @@ router.delete("/:id", authMiddleware, authorize("admin"), async (req, res, next)
 router.put(
   "/:id/status",
   authMiddleware,
-  authorize("admin"),
+  authorize("manage_booked_flights"),
   async (req, res, next) => {
     try {
       let { reviewedBy, status } = req.body;

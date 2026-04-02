@@ -40,7 +40,7 @@ router.post(
   handleValidationErrors,
   async (req, res, next) => {
     try {
-      const { name, email, password, number, role, inTeam, roleInTeam } = req.body;
+      const { name, email, password, number, role, inTeam, roleInTeam, permissions, clientInfo } = req.body;
 
       // Check if user already exists
       const existingUser = await User.findOne({ email });
@@ -51,6 +51,44 @@ router.post(
       }
 
       const images = (req.files || []).map(f => "/uploads/users/" + f.filename);
+      
+      // Assign default permissions based on role
+      let defaultPermissions = [];
+      if (role === 'admin') {
+        defaultPermissions = [
+          'add_program', 'edit_program', 'delete_program',
+          'add_country', 'edit_country', 'delete_country',
+          'add_category', 'edit_category', 'delete_category',
+          'add_cruise', 'edit_cruise', 'delete_cruise',
+          'manage_users', 'manage_visa',
+          'manage_booked_flights', 'manage_booked_programs',
+          'manage_booked_transportation', 'manage_booked_hotels', 'manage_booked_cruises',
+          '*'
+        ];
+      } else if (role === 'head') {
+        defaultPermissions = [
+          'add_program', 'edit_program', 'delete_program',
+          'add_country', 'edit_country', 'delete_country',
+          'add_category', 'edit_category', 'delete_category',
+          'add_cruise', 'edit_cruise', 'delete_cruise',
+          'manage_visa',
+          'manage_booked_flights', 'manage_booked_programs',
+          'manage_booked_transportation', 'manage_booked_hotels', 'manage_booked_cruises',
+        ];
+      }
+      
+      // Parse permissions if sent as a string (from FormData)
+      let parsedPermissions = defaultPermissions;
+      if (permissions) {
+        try {
+          parsedPermissions = typeof permissions === 'string' ? JSON.parse(permissions) : permissions;
+        } catch (e) {
+          parsedPermissions = permissions;
+        }
+      } else {
+        parsedPermissions = defaultPermissions;
+      }
+
       const user = new User({
         name,
         email,
@@ -59,10 +97,10 @@ router.post(
         role,
         inTeam,
         roleInTeam,
-        images
+        images,
+        permissions: parsedPermissions,
+        clientInfo: clientInfo ? JSON.parse(clientInfo) : {}
       });
-
-
 
       await user.save();
 
@@ -87,7 +125,13 @@ router.post(
         images: user.images.map(normalizeImagePath)
       };
 
-      console.log(response);
+      console.log("[Register Response] User registered successfully:", {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        permissions: user.permissions
+      });
 
       res.status(201).json({
         message: "User registered successfully",
@@ -178,17 +222,22 @@ router.post("/login", validateLogin, handleValidationErrors, async (req, res, ne
     }
 
     console.log("Login successful");
+    
+    const responseUser = {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      permissions: user.permissions
+    };
+    
+    console.log("[Login Response] User data being sent to frontend:", responseUser);
 
     // Return success without exposing password
     res.json({
       message: "Login successful",
       token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role
-      }
+      user: responseUser
     });
   } catch (err) {
     console.error("Login error:", err);
@@ -215,7 +264,8 @@ router.get("/me", authMiddleware, async (req, res, next) => {
         name: user.name,
         email: user.email,
         role: user.role,
-        number: user.number
+        number: user.number,
+        permissions: user.permissions
       }
     });
   } catch (err) {
@@ -223,14 +273,10 @@ router.get("/me", authMiddleware, async (req, res, next) => {
   }
 });
 
-// get all users (admin only)
+// get all users (admin or manage_users permission)
 // GET /auth/users
-router.get("/users", authMiddleware, async (req, res, next) => {
+router.get("/users", authMiddleware, authorize("admin", "manage_users"), async (req, res, next) => {
   try {
-    if (req.user.role !== "admin") {
-      return res.status(403).json({ error: "Access denied" });
-    }
-
     const users = await User.find({ _id: { $ne: req.user.id } }).select("-password");
     const normalizedUsers = users.map(user => ({
       ...user.toObject(),
@@ -242,13 +288,9 @@ router.get("/users", authMiddleware, async (req, res, next) => {
   }
 });
 
-// delete user (admin only)
-router.delete("/deleteUser/:id", authMiddleware, async (req, res, next) => {
+// delete user (admin or manage_users permission)
+router.delete("/deleteUser/:id", authMiddleware, authorize("admin", "manage_users"), async (req, res, next) => {
   try {
-    if (req.user.role !== "admin") {
-      return res.status(403).json({ error: "Access denied" });
-    }
-
     const user = await User.findByIdAndDelete(req.params.id);
 
     if (!user) {
@@ -282,8 +324,9 @@ router.get("/team", async (req, res, next) => {
  */
 router.get("/profile/:id", authMiddleware, async (req, res, next) => {
   try {
-    // Users can only view their own profile unless they're admin
-    if (req.user.id !== req.params.id && req.user.role !== "admin") {
+    // Users can only view their own profile unless they're admin or have manage_users permission
+    const { hasPermission } = require("../utils/permission");
+    if (req.user.id !== req.params.id && req.user.role !== "admin" && !hasPermission(req.user, "manage_users")) {
       return res.status(403).json({ error: "Access denied" });
     }
 
@@ -315,8 +358,9 @@ router.put(
   uploadUser.array("images", 5), // Allow up to 5 images
   async (req, res, next) => {
     try {
-      // Users can only update their own profile unless they're admin
-      if (req.user.id !== req.params.id && req.user.role !== "admin") {
+      // Users can only update their own profile unless they're admin or have manage_users permission
+      const { hasPermission } = require("../utils/permission");
+      if (req.user.id !== req.params.id && req.user.role !== "admin" && !hasPermission(req.user, "manage_users")) {
         return res.status(403).json({ error: "Access denied" });
       }
 
@@ -378,7 +422,8 @@ router.put(
  */
 router.delete("/profile/:id/images/:imageName", authMiddleware, async (req, res, next) => {
   try {
-    if (req.user.id !== req.params.id && req.user.role !== "admin") {
+    const { hasPermission } = require("../utils/permission");
+    if (req.user.id !== req.params.id && req.user.role !== "admin" && !hasPermission(req.user, "manage_users")) {
       return res.status(403).json({ error: "Access denied" });
     }
 

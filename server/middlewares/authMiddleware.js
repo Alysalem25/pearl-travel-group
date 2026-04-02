@@ -1,13 +1,13 @@
 const jwt = require("jsonwebtoken");
+const User = require("../models/Users");
 
 /**
  * Authentication Middleware
- * Verifies JWT token and extracts user information
+ * Verifies JWT token and extracts full user information from the database.
  * 
  * Security: Only allows Bearer token format, validates JWT signature
- * Token payload contains: { id, role }
  */
-const authMiddleware = (req, res, next) => {
+const authMiddleware = async (req, res, next) => {
   try {
     // Get token from Authorization header
     const authHeader = req.headers.authorization;
@@ -31,11 +31,14 @@ const authMiddleware = (req, res, next) => {
     // Verify and decode token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
+    // Fetch full user to attach permissions and role
+    const user = await User.findById(decoded.id).select("-password");
+    if (!user) {
+      return res.status(401).json({ error: "User no longer exists" });
+    }
+
     // Attach user info to request object for downstream handlers
-    req.user = {
-      id: decoded.id,
-      role: decoded.role
-    };
+    req.user = user;
 
     next();
   } catch (err) {

@@ -1,10 +1,11 @@
 'use client'
-import React, { use } from 'react'
+import React, { useState } from "react";
 import Link from 'next/link'
-import { useState } from 'react';
 import { LogOut } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { PERMISSIONS } from "@/lib/permissionConstants";
 import { useRouter } from "next/navigation";
+import { p } from "framer-motion/client";
 
 interface AdminSidebarProps {
   sidebarOpen: boolean;
@@ -14,8 +15,72 @@ interface AdminSidebarProps {
 
 const admin_sidebar = ({ sidebarOpen, setSidebarOpen, active }: AdminSidebarProps) => {
   const [Active, setActive] = useState(active);
-  const { user, isAuthenticated, logout, isAdmin } = useAuth();
+  const { hasPermission, logout } = useAuth();
   const router = useRouter();
+  // Using the new auth utility hook
+  const menuItems = [
+    {
+      name: "Dashboard",
+      path: "/Admindashbord",
+      permission: null
+    },
+    {
+      name: "Countries",
+      path: "/Admindashbord/countries",
+      permission: PERMISSIONS.ADD_COUNTRY
+    },
+    {
+      name: "Categories",
+      path: "/Admindashbord/categories",
+      permission: PERMISSIONS.ADD_CATEGORY
+    },
+    {
+      name: "Programs",
+      path: "/Admindashbord/programs",
+      permission: PERMISSIONS.ADD_PROGRAM
+    },
+    {
+      name: "Booked Programs",
+      path: "/Admindashbord/bookedPrograms",
+      permission: PERMISSIONS.MANAGE_BOOKED_PROGRAMS
+    },
+    {
+      name: "Users",
+      path: "/Admindashbord/users",
+      permission: PERMISSIONS.MANAGE_USERS
+    },
+    {
+      name: "Visa Applications",
+      path: "/Admindashbord/visa",
+      permission: PERMISSIONS.MANAGE_VISA
+    },
+    {
+      name: "Flights",
+      path: "/Admindashbord/flights",
+      permission: PERMISSIONS.MANAGE_BOOKED_FLIGHTS
+    },
+    {
+      name: "Transportation",
+      path: "/Admindashbord/transportation",
+      permission: PERMISSIONS.MANAGE_BOOKED_TRANSPORTATION
+    },
+    {
+      name: "Hotels",
+      path: "/Admindashbord/hotel",
+      permission: PERMISSIONS.MANAGE_BOOKED_HOTELS
+    },
+    {
+      name: "Cruises",
+      path: "/Admindashbord/cruisies",
+      permission: PERMISSIONS.ADD_CRUISE
+
+    },
+    {
+      name: "Booked Cruises",
+      path: "/Admindashbord/bookedCrusies",
+      permission: PERMISSIONS.MANAGE_BOOKED_CRUISES
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex">
@@ -61,7 +126,7 @@ const admin_sidebar = ({ sidebarOpen, setSidebarOpen, active }: AdminSidebarProp
           {/* Navigation */}
           <nav className="flex-1 overflow-y-auto p-4">
             <ul className="space-y-2">
-              <li onClick={() => setActive("dashboard")} className={Active === "dashboard" ? "bg-gray-200  rounded-lg" : ""}>
+              {/* <li onClick={() => setActive("dashboard")} className={Active === "dashboard" ? "bg-gray-200  rounded-lg" : ""}>
                 <Link
                   href="/Admindashbord"
                   className="flex items-center px-4 py-3 text-black  rounded-lg hover:bg-gray-100  transition-colors"
@@ -69,17 +134,40 @@ const admin_sidebar = ({ sidebarOpen, setSidebarOpen, active }: AdminSidebarProp
                   <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="38px" fill="black"><path d="M600-160v-280h280v280H600ZM440-520v-280h440v280H440ZM80-160v-280h440v280H80Zm0-360v-280h280v280H80Zm440-80h280v-120H520v120ZM160-240h280v-120H160v120Zm520 0h120v-120H680v120ZM160-600h120v-120H160v120Zm360 0Zm-80 240Zm240 0ZM280-600Z" /></svg>
                   Dashboard
                 </Link>
-              </li>
-              <li onClick={() => setActive("programs")} className={Active === "programsprograms" ? "bg-gray-200 dark:bg-gray-100 rounded-lg" : ""}>
-                <Link
-                  href="/Admindashbord/programs"
-                  className="flex items-center px-4 py-3 text-black  rounded-lg hover:bg-gray-100   transition-colors"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="38px" fill="black"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" /></svg>
-                  Manage Programs
-                </Link>
-              </li>
-              <li onClick={() => setActive("buses")} className={Active === "buses" ? "bg-gray-200 dark:bg-gray-100 rounded-lg" : ""}>
+              </li> */}
+              {menuItems.map((item) => {
+                if (item.permission && !hasPermission(item.permission)) {
+                  return null;
+                }
+
+                return (
+                  <li
+                    key={item.path}
+                    onClick={() => setActive(item.name)}
+                    className={Active === item.name ? "bg-gray-200  rounded-lg" : ""}
+                  >
+                    <Link
+                      href={item.path}
+                      className="flex items-center px-4 py-3 text-black  rounded-lg hover:bg-gray-100  transition-colors"
+                    >
+                      {item.name}
+                    </Link>
+                  </li>
+                );
+              })}
+
+              {/* {canManagePrograms && (
+                <li onClick={() => setActive("programs")} className={Active === "programsprograms" ? "bg-gray-200 dark:bg-gray-100 rounded-lg" : ""}>
+                  <Link
+                    href="/Admindashbord/programs"
+                    className="flex items-center px-4 py-3 text-black  rounded-lg hover:bg-gray-100   transition-colors"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="38px" fill="black"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" /></svg>
+                    Manage Programs
+                  </Link>
+                </li>
+              )} */}
+              {/* <li onClick={() => setActive("buses")} className={Active === "buses" ? "bg-gray-200 dark:bg-gray-100 rounded-lg" : ""}>
                 <Link
                   href="/Admindashbord/categories"
                   className="flex items-center px-4 py-3 text-black rounded-lg hover:bg-gray-100  transition-colors"
@@ -171,7 +259,7 @@ const admin_sidebar = ({ sidebarOpen, setSidebarOpen, active }: AdminSidebarProp
                   <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="black"><path d="M152-80h-32v-80h32q48 0 91.5-10.5T341-204q38 19 66.5 31.5T480-160q44 0 72.5-12.5T619-204q53 23 97.5 33.5T809-160h31v80h-31q-49 0-95.5-9T622-116q-40 19-73 27t-69 8q-36 0-68.5-8T339-116q-45 18-91.5 27T152-80Zm223-200-45-40q-27 27-60.5 46T198-247l-85-273q-5-17 3-31t25-19l59-16v-134q0-33 23.5-56.5T280-800h100v-80h200v80h100q33 0 56.5 23.5T760-720v134l59 16q17 5 25 19t3 31l-85 273q-38-8-71.5-27T630-320l-45 40q-45 40-105 40t-105-40Zm107-40q31 0 55-20.5t44-43.5l46-53 41 42q11 11 22.5 20.5T713-355l46-149-279-73-278 73 46 149q11-10 22.5-19.5T293-395l41-42 46 53q20 24 45 44t57 20ZM280-607l200-53 200 53v-113H280v113Zm201 158Z" /></svg>
                   Booked Crusies
                 </Link>
-              </li> 
+              </li> */}
             </ul>
           </nav>
           <button

@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path");
 const uploadCategory = require("../middlewares/uploadCategory");
 const authMiddleware = require("../middlewares/authMiddleware");
-const authorize = require("../middlewares/authorizeMiddleware");
+const authorize = require("../middlewares/authorize");
 const { validateCategory, handleValidationErrors } = require("../middlewares/validators");
 const Category = require("../models/Category");
 
@@ -108,7 +108,7 @@ router.get("/:id", async (req, res, next) => {
 router.post(
   "/",
   authMiddleware,
-  authorize("admin"),
+  authorize("add_category"),
   uploadCategory.array("images", 1),
   validateCategory,
   handleValidationErrors,
@@ -158,7 +158,7 @@ router.post(
 router.put(
   "/:id",
   authMiddleware,
-  authorize("admin"),
+  authorize("edit_category"),
   uploadCategory.array("images", 5),
   validateCategory,
   handleValidationErrors,
@@ -204,7 +204,7 @@ router.put(
  * DELETE /categories/:id
  * Delete category - ADMIN ONLY
  */
-router.delete("/:id", authMiddleware, authorize("admin"), async (req, res, next) => {
+router.delete("/:id", authMiddleware, authorize("delete_category"), async (req, res, next) => {
   try {
     const category = await Category.findByIdAndDelete(req.params.id);
 
@@ -225,7 +225,7 @@ router.delete("/:id", authMiddleware, authorize("admin"), async (req, res, next)
 router.post(
   "/:id/images",
   authMiddleware,
-  authorize("admin"),
+  authorize("edit_category"),
   uploadCategory.array("images", 1),
   async (req, res, next) => {
     try {
@@ -257,7 +257,7 @@ router.post(
 router.delete(
   "/:id/images/:imageName",
   authMiddleware,
-  authorize("admin"),
+  authorize("edit_category"),
   async (req, res, next) => {
     try {
       const { id, imageName } = req.params;
