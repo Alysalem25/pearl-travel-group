@@ -713,7 +713,7 @@ function NavbarContent() {
                   </p>
                 </div>
 
-                {isAdmin() || isHead() && (
+                {(isAdmin() || isHead()) && (
                   <div className="flex flex-row">
 
                     <Link
