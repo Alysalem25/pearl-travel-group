@@ -1,5 +1,6 @@
 const express = require("express");
 const Visa = require("../models/Visa");
+const User = require("../models/Users");
 const authMiddleware = require("../middlewares/authMiddleware");
 const authorize = require("../middlewares/authorizeMiddleware");
 const { handleValidationErrors } = require("../middlewares/validators");

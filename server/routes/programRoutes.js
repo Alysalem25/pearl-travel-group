@@ -301,6 +301,7 @@ const authMiddleware = require("../middlewares/authMiddleware");
 const authorize = require("../middlewares/authorize");
 const Program = require("../models/Programs");
 const BookedPrograms = require("../models/BookedPrograms");
+const User = require("../models/Users");
 const router = express.Router();
 
 /**
@@ -407,11 +408,19 @@ router.put("/booked/:id/status", authMiddleware, authorize("manage_booked_progra
 router.post("/book", async (req, res, next) => {
   try {
     const { userEmail, userName, userNumber, programId, message } = req.body;
+    
+    // Find user by email to get userId
+    const user = await User.findOne({ email: userEmail });
+    if (!user) {
+      return res.status(400).json({ error: "User not found" });
+    }
+
     const program = await Program.findById(programId);
     if (!program) {
       return res.status(404).json({ error: "Program not found" });
     }
     const bookedProgram = new BookedPrograms({
+      userId: user._id,
       userEmail,
       userName,
       userNumber,

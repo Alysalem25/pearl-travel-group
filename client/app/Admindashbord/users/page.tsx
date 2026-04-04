@@ -5,11 +5,12 @@ import axios from 'axios'
 import AdminSidebar from '@/components/adminSidebar'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import apiClient, { api } from '@/lib/api'
-import { User } from 'lucide-react'
+import { User, ChevronRight } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { img, s } from 'framer-motion/client'
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { PERMISSIONS } from '@/lib/permissionConstants';
+import Link from 'next/link'
 
 
 interface User {
@@ -22,6 +23,7 @@ interface User {
     images: string[]
     inTeam: boolean
     roleInTeam: string
+    workStatus?: string
 }
 
 export default function UsersPage() {
@@ -35,6 +37,7 @@ export default function UsersPage() {
 const UsersPageContent = () => {
     const [sidebarOpen, setSidebarOpen] = React.useState(false)
     const [searchTerm, setSearchTerm] = React.useState('')
+    const [workStatusFilter, setWorkStatusFilter] = React.useState<string>('') // New filter
     const [showForm, setShowForm] = React.useState(false)
     const [editingUser, setEditingUser] = React.useState<User | null>(null)
     const [images, setImages] = useState<File[]>([])
@@ -48,6 +51,7 @@ const UsersPageContent = () => {
         images: '',
         inTeam: false,
         roleInTeam: '',
+        workStatus: 'active', // New field
     })
     const [clientInfo, setClientInfo] = React.useState({
         nationalId: '',
@@ -98,6 +102,7 @@ const UsersPageContent = () => {
             newUser.append('role', formData.role)
             newUser.append('inTeam', String(formData.inTeam))
             newUser.append('roleInTeam', formData.roleInTeam)
+            newUser.append('workStatus', formData.workStatus) // Add workStatus
             newUser.append('clientInfo', JSON.stringify(clientInfo))
             newUser.append('permissions', JSON.stringify(permissions))
             if (images.length > 0) newUser.append('images', images[0]);
@@ -122,6 +127,7 @@ const UsersPageContent = () => {
             inTeam: false,
             images: '',
             roleInTeam: '',
+            workStatus: 'active',
         })
         setClientInfo({ nationalId: '', passportNumber: '', address: '' })
         setPermissions([])
@@ -146,11 +152,13 @@ const UsersPageContent = () => {
     }
 
 
-    // Filter usere based on search term
+    // Filter users based on search term and workStatus
     const filteredUsers = drivers.filter((User: User) =>
-        User.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        User.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (User.number || '').toLowerCase().includes(searchTerm.toLowerCase())
+        (searchTerm === '' || 
+         User.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+         User.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+         (User.number || '').toLowerCase().includes(searchTerm.toLowerCase())) &&
+        (workStatusFilter === '' || User.workStatus === workStatusFilter)
     )
 
 
@@ -198,17 +206,30 @@ const UsersPageContent = () => {
                     </div>
                 </header>
 
-                {/* Search Bar */}
+                {/* Search Bar and Filters */}
                 <div className="p-4 m-6 dark:bg-gray-200 text-black ">
-                    <input
-                        type="text"
-                        placeholder="Search drivers..."
-                        value={searchTerm}
-                        onChange={e => setSearchTerm(e.target.value)}
-                        className="border p-2 rounded bg-white text-black w-full"
-                    />
+                    <div className="mb-3 flex gap-3 flex-wrap">
+                        <input
+                            type="text"
+                            placeholder="Search by name, email, or phone..."
+                            value={searchTerm}
+                            onChange={e => setSearchTerm(e.target.value)}
+                            className="border p-2 rounded bg-white text-black flex-1 min-w-48"
+                        />
+                        <select
+                            value={workStatusFilter}
+                            onChange={e => setWorkStatusFilter(e.target.value)}
+                            className="border p-2 rounded bg-white text-black"
+                        >
+                            <option value="">All Work Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="pending">Pending</option>
+                            <option value="suspended">Suspended</option>
+                        </select>
+                    </div>
                     <span className="">
-                        {filteredUsers.length} of {User.length} users
+                        {filteredUsers.length} of {drivers.length} users
                     </span>
                 </div>
 
@@ -272,6 +293,18 @@ const UsersPageContent = () => {
                                     <option value="admin">Admin</option>
                                     <option value="head">Head</option>
                                     <option value="user">User</option>
+                                </select>
+
+                                {/* workStatus option */}
+                                <select
+                                    value={formData.workStatus}
+                                    onChange={e => setFormData({ ...formData, workStatus: e.target.value })}
+                                    className="border p-2 rounded bg-white text-black"
+                                >
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="suspended">Suspended</option>
                                 </select>
 
                                 {/* dynamic fields */}
@@ -420,20 +453,34 @@ const UsersPageContent = () => {
                                                     <p className="text-black text-sm">
                                                         <span className="font-semibold">Email:</span> {user.email}
                                                     </p>
-                                                    {/* <p className="text-gray-400 text-sm">
-                                                        <span className="font-semibold">License Number:</span> {user.licenseNumber || '-'}
-                                                    </p> */}
                                                     {user.number && (
                                                         <p className="text-black text-sm">
                                                             <span className="font-semibold">Number:</span> {user.number}
                                                         </p>
                                                     )}
+                                                    {/* Work Status Badge */}
+                                                    <div className="mt-2">
+                                                        <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
+                                                            user.workStatus === 'active' ? 'bg-green-200 text-green-800' :
+                                                            user.workStatus === 'inactive' ? 'bg-gray-200 text-gray-800' :
+                                                            user.workStatus === 'pending' ? 'bg-yellow-200 text-yellow-800' :
+                                                            user.workStatus === 'suspended' ? 'bg-red-200 text-red-800' :
+                                                            'bg-gray-200 text-gray-800'
+                                                        }`}>
+                                                            {user.workStatus || 'active'}
+                                                        </span>
+                                                    </div>
                                                 </div>
-                                                <div className="mt-4">
-                                                    {/* Future Edit/Delete Buttons can go here */}
+                                                <div className="mt-4 flex gap-2">
+                                                    <Link href={`/Admindashbord/users/${user._id}`}>
+                                                        <button className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 flex items-center gap-2">
+                                                            View Details
+                                                            <ChevronRight size={16} />
+                                                        </button>
+                                                    </Link>
                                                     <button onClick={() => deleteUser(user._id)}
                                                         className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
-                                                    >delete user</button>
+                                                    >Delete</button>
                                                 </div>
                                             </div>
                                         </div>

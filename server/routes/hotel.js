@@ -1,11 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const HotelBooking = require("../models/HotelBooking");
+const User = require("../models/Users");
 const authMiddleware = require("../middlewares/authMiddleware");
 const authorize = require("../middlewares/authorizeMiddleware");
 
 router.post("/", async (req, res, next) => {
     try {
+  
+
         // Ensure isReturn is a boolean if it comes as a string or undefined
         const tripData = {
             ...req.body,

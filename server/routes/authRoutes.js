@@ -40,7 +40,7 @@ router.post(
   handleValidationErrors,
   async (req, res, next) => {
     try {
-      const { name, email, password, number, role, inTeam, roleInTeam, permissions, clientInfo } = req.body;
+      const { name, email, password, number, role, inTeam, roleInTeam, permissions, clientInfo, workStatus } = req.body;
 
       // Check if user already exists
       const existingUser = await User.findOne({ email });
@@ -99,7 +99,8 @@ router.post(
         roleInTeam,
         images,
         permissions: parsedPermissions,
-        clientInfo: clientInfo ? JSON.parse(clientInfo) : {}
+        clientInfo: clientInfo ? JSON.parse(clientInfo) : {},
+        workStatus: workStatus || 'active'
       });
 
       await user.save();

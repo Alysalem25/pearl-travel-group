@@ -29,6 +29,166 @@ router.get('/', authorize(PERMISSIONS.MANAGE_USERS), async (req, res, next) => {
 });
 
 /**
+ * GET /users/reviewed/flights
+ * Get reviewed flights for a user by ID or email (for backward compatibility)
+ */
+router.get('/reviewed/flights', authMiddleware, async (req, res, next) => {
+  try {
+    const { userId, start, end } = req.query;
+    
+    if (!userId) {
+      return res.status(400).json({ error: 'userId query parameter is required' });
+    }
+
+    // Find user to get email for backward compatibility
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ error: 'User not found' });
+    }
+
+    const dateFilter = {};
+    if (start || end) {
+      if (start) dateFilter.$gte = new Date(String(start));
+      if (end) dateFilter.$lte = new Date(String(end));
+    }
+
+    const filter = {
+      status: 'reviewed',
+      ...(Object.keys(dateFilter).length && { updatedAt: dateFilter }),
+      $or: [
+        { userId: user._id },
+        { userEmail: user.email }
+      ]
+    };
+
+    const flights = await Flights.find(filter).sort({ updatedAt: -1 });
+    res.json(flights);
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * GET /users/reviewed/hotels
+ * Get reviewed hotel bookings for a user by ID or email (for backward compatibility)
+ */
+router.get('/reviewed/hotels', authMiddleware, async (req, res, next) => {
+  try {
+    const { userId, start, end } = req.query;
+    
+    if (!userId) {
+      return res.status(400).json({ error: 'userId query parameter is required' });
+    }
+
+    // Find user to get email for backward compatibility
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ error: 'User not found' });
+    }
+
+    const dateFilter = {};
+    if (start || end) {
+      if (start) dateFilter.$gte = new Date(String(start));
+      if (end) dateFilter.$lte = new Date(String(end));
+    }
+
+    const filter = {
+      status: 'reviewed',
+      ...(Object.keys(dateFilter).length && { updatedAt: dateFilter }),
+      $or: [
+        { userId: user._id },
+        { userEmail: user.email }
+      ]
+    };
+
+    const hotels = await HotelBooking.find(filter).sort({ updatedAt: -1 });
+    res.json(hotels);
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * GET /users/reviewed/cartrips
+ * Get reviewed car trips for a user by ID or email (for backward compatibility)
+ */
+router.get('/reviewed/cartrips', authMiddleware, async (req, res, next) => {
+  try {
+    const { userId, start, end } = req.query;
+    
+    if (!userId) {
+      return res.status(400).json({ error: 'userId query parameter is required' });
+    }
+
+    // Find user to get email for backward compatibility
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ error: 'User not found' });
+    }
+
+    const dateFilter = {};
+    if (start || end) {
+      if (start) dateFilter.$gte = new Date(String(start));
+      if (end) dateFilter.$lte = new Date(String(end));
+    }
+
+    const filter = {
+      status: 'reviewed',
+      ...(Object.keys(dateFilter).length && { updatedAt: dateFilter }),
+      $or: [
+        { userId: user._id },
+        { userEmail: user.email }
+      ]
+    };
+
+    const carTrips = await CarTrip.find(filter).sort({ updatedAt: -1 });
+    res.json(carTrips);
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * GET /users/reviewed/visa
+ * Get reviewed visa applications for a user by ID or email (for backward compatibility)
+ */
+router.get('/reviewed/visa', authMiddleware, async (req, res, next) => {
+  try {
+    const { userId, start, end } = req.query;
+    
+    if (!userId) {
+      return res.status(400).json({ error: 'userId query parameter is required' });
+    }
+
+    // Find user to get email for backward compatibility
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ error: 'User not found' });
+    }
+
+    const dateFilter = {};
+    if (start || end) {
+      if (start) dateFilter.$gte = new Date(String(start));
+      if (end) dateFilter.$lte = new Date(String(end));
+    }
+
+    const filter = {
+      status: 'reviewed',
+      ...(Object.keys(dateFilter).length && { updatedAt: dateFilter }),
+      $or: [
+        { userId: user._id },
+        { email: user.email }
+      ]
+    };
+
+    const visas = await Visa.find(filter).sort({ updatedAt: -1 });
+    res.json(visas);
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
  * GET /users/:id
  * Get specific user. Allowed for the user themselves or admin with MANAGE_USERS permission.
  */
@@ -87,7 +247,7 @@ router.post('/', authorize(PERMISSIONS.MANAGE_USERS), async (req, res, next) => 
  */
 router.put('/:id', authorize(PERMISSIONS.MANAGE_USERS), async (req, res, next) => {
   try {
-    const { name, email, number, role, permissions, clientInfo } = req.body;
+    const { name, email, number, role, permissions, clientInfo, workStatus } = req.body;
     
     const user = await User.findById(req.params.id);
     if (!user) return res.status(404).json({ error: 'User not found' });
@@ -99,6 +259,7 @@ router.put('/:id', authorize(PERMISSIONS.MANAGE_USERS), async (req, res, next) =
     if (role !== undefined) user.role = role;
     if (permissions !== undefined) user.permissions = permissions;
     if (clientInfo !== undefined) user.clientInfo = clientInfo;
+    if (workStatus !== undefined) user.workStatus = workStatus;
 
     await user.save();
     
@@ -129,6 +290,7 @@ router.delete('/:id', authorize(PERMISSIONS.MANAGE_USERS), async (req, res, next
  * GET /users/:id/summary
  * Returns counts of reviewed resources for a user.
  * Requires MANAGE_USERS.
+ * Queries both by userId (new bookings) and userEmail (existing bookings)
  */
 router.get('/:id/summary', authorize(PERMISSIONS.MANAGE_USERS), async (req, res, next) => {
   try {
@@ -137,7 +299,6 @@ router.get('/:id/summary', authorize(PERMISSIONS.MANAGE_USERS), async (req, res,
       return res.status(404).json({ error: 'User not found' });
     }
 
-    const email = user.email;
     const { start, end } = req.query;
 
     const now = new Date();
@@ -146,37 +307,140 @@ router.get('/:id/summary', authorize(PERMISSIONS.MANAGE_USERS), async (req, res,
     const startDate = start ? new Date(String(start)) : defaultStartOfMonth;
     const endDate = end ? new Date(String(end)) : now;
 
+    // Query by both userId (new bookings) OR userEmail (existing bookings)
     const filter = {
-      userEmail: email,
       status: 'reviewed',
       updatedAt: {
         $gte: startDate,
         $lte: endDate
-      }
+      },
+      $or: [
+        { userId: user._id },
+        { userEmail: user.email }
+      ]
     };
+
+    const visaFilter = {
+      status: 'reviewed',
+      updatedAt: {
+        $gte: startDate,
+        $lte: endDate
+      },
+      $or: [
+        { userId: user._id },
+        { email: user.email }
+      ]
+    };
+
+    const BookedPrograms = require('../models/BookedPrograms');
+    const BookedCruisies = require('../models/BookedCruseies');
 
     const [
       reviewedFlightsCount,
       reviewedHotelsCount,
       reviewedCarsCount,
-      reviewedVisasCount
+      reviewedVisasCount,
+      reviewedProgramsCount,
+      reviewedCruisesCount
     ] = await Promise.all([
       Flights.countDocuments(filter),
       HotelBooking.countDocuments(filter),
       CarTrip.countDocuments(filter),
-      Visa.countDocuments({
-        email: email,
-        status: 'reviewed',
-        updatedAt: filter.updatedAt
-      })
+      Visa.countDocuments(visaFilter),
+      BookedPrograms.countDocuments(filter),
+      BookedCruisies.countDocuments(filter)
     ]);
 
     res.json({
       reviewedFlightsCount,
       reviewedHotelsCount,
       reviewedCarsCount,
-      reviewedVisasCount
+      reviewedVisasCount,
+      reviewedProgramsCount,
+      reviewedCruisesCount
     });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * GET /users/reviewed/programs
+ * Get reviewed program bookings for a user by ID or email (for backward compatibility)
+ */
+router.get('/reviewed/programs', authMiddleware, async (req, res, next) => {
+  try {
+    const { userId, start, end } = req.query;
+    
+    if (!userId) {
+      return res.status(400).json({ error: 'userId query parameter is required' });
+    }
+
+    // Find user to get email for backward compatibility
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ error: 'User not found' });
+    }
+
+    const dateFilter = {};
+    if (start || end) {
+      if (start) dateFilter.$gte = new Date(String(start));
+      if (end) dateFilter.$lte = new Date(String(end));
+    }
+
+    const filter = {
+      status: 'reviewed',
+      ...(Object.keys(dateFilter).length && { updatedAt: dateFilter }),
+      $or: [
+        { userId: user._id },
+        { userEmail: user.email }
+      ]
+    };
+
+    const BookedPrograms = require('../models/BookedPrograms');
+    const programs = await BookedPrograms.find(filter).sort({ updatedAt: -1 }).populate("program");
+    res.json(programs);
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * GET /users/reviewed/cruises
+ * Get reviewed cruise bookings for a user by ID or email (for backward compatibility)
+ */
+router.get('/reviewed/cruises', authMiddleware, async (req, res, next) => {
+  try {
+    const { userId, start, end } = req.query;
+    
+    if (!userId) {
+      return res.status(400).json({ error: 'userId query parameter is required' });
+    }
+
+    // Find user to get email for backward compatibility
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ error: 'User not found' });
+    }
+
+    const dateFilter = {};
+    if (start || end) {
+      if (start) dateFilter.$gte = new Date(String(start));
+      if (end) dateFilter.$lte = new Date(String(end));
+    }
+
+    const filter = {
+      status: 'reviewed',
+      ...(Object.keys(dateFilter).length && { updatedAt: dateFilter }),
+      $or: [
+        { userId: user._id },
+        { userEmail: user.email }
+      ]
+    };
+
+    const BookedCruisies = require('../models/BookedCruseies');
+    const cruises = await BookedCruisies.find(filter).sort({ updatedAt: -1 }).populate("cruise");
+    res.json(cruises);
   } catch (err) {
     next(err);
   }

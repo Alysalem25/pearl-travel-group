@@ -139,6 +139,13 @@ const UserSchema = new mongoose.Schema(
       address: String
     },
 
+    // 📊 Work Status for filtering users
+    workStatus: {
+      type: String,
+      enum: ["active", "inactive", "pending", "suspended"],
+      default: "active"
+    },
+
     images: [String]
   },
   { timestamps: true }

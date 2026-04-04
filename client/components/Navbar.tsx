@@ -436,7 +436,7 @@ function NavbarContent() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
-  const { user, isAuthenticated, isAdmin , isHead } = useAuth();
+  const { user, isAuthenticated, isAdmin, isHead } = useAuth();
 
   // Initialize language from URL or localStorage
   useEffect(() => {
@@ -523,42 +523,62 @@ function NavbarContent() {
         } ${isRTL ? "font-arabic" : ""}`}
       dir='ltr'
     >
-      <div className="flex flex-row justify-between bg-gray-600 max-w-full mx-auto px-8 sm:px-6 lg:px-8">
-        <div className="col flex flex-row px-4 py-2 gap-4">
-          <div className="flex flex-row">
-            <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#e3e3e3"><path d="M798-120q-125 0-247-54.5T329-329Q229-429 174.5-551T120-798q0-18 12-30t30-12h162q14 0 25 9.5t13 22.5l26 140q2 16-1 27t-11 19l-97 98q20 37 47.5 71.5T387-386q31 31 65 57.5t72 48.5l94-94q9-9 23.5-13.5T670-390l138 28q14 4 23 14.5t9 23.5v162q0 18-12 30t-30 12ZM241-600l66-66-17-94h-89q5 41 14 81t26 79Zm358 358q39 17 79.5 27t81.5 13v-88l-94-19-67 67ZM241-600Zm358 358Z" /></svg>
-            <a href="tel:+201067588333" className="call-button px-2">+201067588333</a>
+      <div className={`flex flex-row  sm:items-center justify-around sm:justify-between sm:px-6 gap-3 py-2 text-sm text-white
+   
+      `}>
+
+        {/* LEFT SIDE */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
+
+          {/* PHONE */}
+          <div className={`flex items-center gap-2 ${scrolled ? "text-black" : "text-white"}`}>
+            <svg xmlns="http://www.w3.org/2000/svg" height="18" width="18" fill={scrolled ? "#000" : "#fff"}  viewBox="0 -960 960 960">
+              <path d="M798-120q-125 0-247-54.5T329-329Q229-429 174.5-551T120-798q0-18 12-30t30-12h162q14 0 25 9.5t13 22.5l26 140q2 16-1 27t-11 19l-97 98q20 37 47.5 71.5T387-386q31 31 65 57.5t72 48.5l94-94q9-9 23.5-13.5T670-390l138 28q14 4 23 14.5t9 23.5v162q0 18-12 30t-30 12Z" />
+            </svg>
+            <a href="tel:+201067588333" className="hover:underline">
+              +20 106 758 8333
+            </a>
           </div>
 
-          <div className="flex flex-row border-l px-2">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M440-520 120-720v400h400v80H120q-33 0-56.5-23.5T40-320v-480q0-33 23.5-56.5T120-880h640q33 0 56.5 23.5T840-800v200h-80v-120L440-520Zm0-80 320-200H120l320 200ZM760-80q-66 0-113-47t-47-113v-180q0-42 29-71t71-29q42 0 71 29t29 71v180h-80v-180q0-8-6-14t-14-6q-8 0-14 6t-6 14v180q0 33 23.5 56.5T760-160q33 0 56.5-23.5T840-240v-160h80v160q0 66-47 113T760-80ZM120-720v-80 480-400Z" /></svg>
-            <a href="mailto:info@pearltravelgroup.com" className="px-2">info@pearltravelgroup.com</a>
+          {/* EMAIL */}
+          <div className={` flex items-center gap-2   sm:border-l sm:pl-4 ${scrolled ? "text-black border-black" : "text-white border-white"}`}>
+            <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" fill={scrolled ? "#000" : "#fff"} viewBox="0 -960 960 960">
+              <path fill="currentColor" d="M440-520 120-720v400h400v80H120q-33 0-56.5-23.5T40-320v-480q0-33 23.5-56.5T120-880h640q33 0 56.5 23.5T840-800v200h-80v-120L440-520Zm0-80 320-200H120l320 200Z" />
+            </svg>
+            <a href="mailto:info@pearltravelgroup.com" className="hover:underline break-all">
+              info@pearltravelgroup.com
+            </a>
           </div>
 
         </div>
-        <div className="flex flex-row px-4  gap-4">
 
-          <a
-            href="https://www.facebook.com/share/1DWP3cFfix/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 "
-            aria-label="Facebook"
-          >
-            <Facebook size={20} className="text-white" />
-          </a>
-          <a
-            href="https://www.instagram.com/pearltravel1?igsh=MTBsaXdtMGhtcGxseg=="
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 border-l"
-            aria-label="Instagram"
-          >
-            <Instagram size={20} color="#e3e3e3" />
-          </a>
-
+        <div className="flex  flex-col sm:flex-row sm:items-center gap-3 py-2 text-sm">
+          <div className="flex items-center gap-2">
+            <a
+              href="https://www.facebook.com/share/1DWP3cFfix/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="sm:p-2 "
+              aria-label="Facebook"
+            >
+              <Facebook size={20} className={`text-${scrolled ? 'black' : 'white'}`} />
+            </a>
+          </div>
+          <div className="flex items-center gap-2 border-black sm:border-l sm:pl-4">
+            <a
+              href="https://www.instagram.com/pearltravel1?igsh=MTBsaXdtMGhtcGxseg=="
+              target="_blank"
+              rel="noopener noreferrer"
+              className="sm:p-2"
+              aria-label="Instagram"
+            >
+              <Instagram size={20} className={`${scrolled ? 'text-black' : 'text-white'}`} />
+            </a>
+          </div>
         </div>
+
       </div>
+
       <div className="max-w-full mx-auto px-8 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}

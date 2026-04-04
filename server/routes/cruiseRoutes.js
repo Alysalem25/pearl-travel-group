@@ -5,6 +5,7 @@ const authMiddleware = require("../middlewares/authMiddleware");
 const authorize = require("../middlewares/authorizeMiddleware");
 const Cruisies = require("../models/Cruisies");
 const BookedCruisies = require("../models/BookedCruseies");
+const User = require("../models/Users");
 const router = express.Router();
 
 /**

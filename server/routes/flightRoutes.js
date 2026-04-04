@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const Flights = require("../models/Flights");
+const User = require("../models/Users");
 const authMiddleware = require("../middlewares/authMiddleware");
 const authorize = require("../middlewares/authorizeMiddleware");
 const { handleValidationErrors } = require("../middlewares/validators");
@@ -81,7 +82,9 @@ router.post("/", async (req, res, next) => {
         // ===============================
         // Create Flight Object
         // ===============================
+ 
         const flightData = {
+            // userId:,
             userEmail,
             userName,
             userNumber,

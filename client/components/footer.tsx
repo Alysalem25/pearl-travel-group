@@ -71,7 +71,7 @@ function FooterContent() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h3 className="text-xl font-bold mb-4 text-[var(--mainColor)]">
+            <h3 className="text-xl font-bold mb-4 text-white ">
               Pearl Travel Group
             </h3>
             <p className="text-gray-300 text-sm leading-relaxed">
@@ -127,11 +127,18 @@ function FooterContent() {
             <div className="space-y-3">
               <div className="flex items-center gap-3">
                 <Phone size={18} className="text-[var(--mainColor)]" />
-                <span className="text-gray-300 text-sm">+201067588333 , 034855588</span>
+                <a href="tel:+201067588333" className="text-gray-300 text-sm hover:text-[var(--mainColor)] transition-colors duration-200 ">
+                  +20 106 758 8333
+                </a>,
+                <a href="tel:+034855588" className="text-gray-300 text-sm hover:text-[var(--mainColor)] transition-colors duration-200">
+                  034855588
+                </a>
               </div>
               <div className="flex items-center gap-3">
                 <Mail size={18} className="text-[var(--mainColor)]" />
-                <span className="text-gray-300 text-sm">info@pearltravelgroup.com</span>
+                <a href="mailto:info@pearltravelgroup.com" className="text-gray-300 text-sm hover:text-[var(--mainColor)] transition-colors duration-200 break-all">
+                  info@pearltravelgroup.com
+                </a>
               </div>
               <a
                 href="https://maps.app.goo.gl/GNxH8HD3JioTAJB2A"
@@ -172,7 +179,7 @@ function FooterContent() {
                 className="p-2 rounded-full bg-gray-700 hover:bg-green-500 transition-colors duration-200"
                 aria-label="WhatsApp"
               >
-                <Phone size={19} className="text-white" />
+                <WhatsApp size={19} className="text-white" />
               </a>
               <a
                 href="https://www.instagram.com/pearltravel1?igsh=MTBsaXdtMGhtcGxseg=="

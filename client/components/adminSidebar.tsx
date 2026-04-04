@@ -80,6 +80,11 @@ const admin_sidebar = ({ sidebarOpen, setSidebarOpen, active }: AdminSidebarProp
       path: "/Admindashbord/bookedCrusies",
       permission: PERMISSIONS.MANAGE_BOOKED_CRUISES
     },
+    {
+      name: "Search ",
+      path: "/Admindashbord/allInOne",
+      permission: null
+    },
   ];
 
   return (
