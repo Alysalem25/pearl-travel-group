@@ -522,6 +522,7 @@ interface Cruisies {
     titleEn: string
     titleAr: string
     category: 'Nile' | 'MSC' | 'Silversea' | 'Caribbean' | 'Norwegian'
+    subCategory?: "altera deluxe" | "deluxe" | "standard"
     durationDays: number
     durationNights: number
     price: number
@@ -564,6 +565,7 @@ function CruisiesPageContent() {
         titleEn: '',
         titleAr: '',
         category: 'Nile',
+        subCategory: '',
         durationDays: 1,
         durationNights: 0,
         price: 0,
@@ -715,6 +717,7 @@ function CruisiesPageContent() {
             titleEn: '',
             titleAr: '',
             category: 'Nile',
+            subCategory:"",
             durationDays: 1,
             durationNights: 0,
             price: 0,
@@ -746,6 +749,7 @@ function CruisiesPageContent() {
             titleEn: c.titleEn,
             titleAr: c.titleAr,
             category: c.category,
+            subCategory: c.subCategory || '',
             durationDays: c.durationDays,
             durationNights: c.durationNights,
             price: c.price,
@@ -835,12 +839,24 @@ function CruisiesPageContent() {
                                 <option value="Norwegian">Norwegian</option>
                             </select>
 
+                            {formData.category === "Nile" && (
+                                <select
+                                    value={formData.subCategory}
+                                    onChange={(e) => setFormData({ ...formData, subCategory: e.target.value })}
+                                >
+                                    <option value="">Select Nile Category</option>
+                                    <option value="altera deluxe">Altera Deluxe</option>
+                                    <option value="deluxe">Deluxe</option>
+                                    <option value="standard">standard</option>
+                                </select>
+                            )}
+
 
                         </div>
                         <div className="flex gap-6">
                             <label className=" gap-6 w-full">
                                 Duration days
-                                <input type="number" placeholder="Days"  className="bg-white p-2 rounded border border-gray-600 w-full" value={formData.durationDays} onChange={e => setFormData({ ...formData, durationDays: parseInt(e.target.value) })} required />
+                                <input type="number" placeholder="Days" className="bg-white p-2 rounded border border-gray-600 w-full" value={formData.durationDays} onChange={e => setFormData({ ...formData, durationDays: parseInt(e.target.value) })} required />
                             </label>
                             <label className=" gap-2 w-full">
                                 Duration nights
@@ -885,8 +901,8 @@ function CruisiesPageContent() {
                                         >
                                             {deleteImageMutation.isPending && !img.isNew ? (
                                                 <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24">
-                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
-                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                                                 </svg>
                                             ) : (
                                                 '✕'
@@ -968,8 +984,8 @@ function CruisiesPageContent() {
                         </button>
 
                         {/* Submit Button with Loading State */}
-                        <button 
-                            type="submit" 
+                        <button
+                            type="submit"
                             disabled={cruisiesMutation.isPending}
                             className="w-full bg-green-600 py-3 rounded text-white font-semibold flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-green-700 transition-colors"
                         >

@@ -681,17 +681,37 @@ function FlightSearch() {
         }
     };
 
-    const tripTypes = [
-        { id: "round", label: "Round Trip", icon: ArrowRightLeft },
-        { id: "oneway", label: "One Way", icon: ArrowRight },
-        { id: "multi", label: "Multi City", icon: Globe },
-    ];
+    const tripTypes = {
+        "en": [
+            { id: "round", label: "Round Trip", icon: ArrowRightLeft },
+            { id: "oneway", label: "One Way", icon: ArrowRight },
+            { id: "multi", label: "Multi City", icon: Globe },
+        ],
+        "ar": [
+            { id: "round", label: "رحلة ذهاب وعودة", icon: ArrowRightLeft },
+            { id: "oneway", label: "رحلة ذهاب فقط", icon: ArrowRight },
+            { id: "multi", label: "مدينة متعددة", icon: Globe },
+        ]
+    };
 
-    const cabinClasses = [
-        { value: "economy", label: "Economy", color: "bg-emerald-50 text-emerald-700 border-emerald-200" },
-        { value: "business", label: "Business", color: "bg-purple-50 text-purple-700 border-purple-200" },
-        { value: "first", label: "First Class", color: "bg-amber-50 text-amber-700 border-amber-200" },
-    ];
+    const cabinClasses = {
+        "en": [
+            { value: "economy", label: "Economy", color: "bg-emerald-50 text-emerald-700 border-emerald-200" },
+            { value: "business", label: "Business", color: "bg-purple-50 text-purple-700 border-purple-200" },
+            { value: "first", label: "First Class", color: "bg-amber-50 text-amber-700 border-amber-200" }
+        ],
+        "ar": [
+            { value: "economy", label: "الاقتصاديه", color: "bg-emerald-50 text-emerald-700 border-emerald-200" },
+            { value: "business", label: "الرجاء اضافه الترجمه", color: "bg-purple-50 text-purple-700 border-purple-200" },
+            { value: "first", label: "الرجاء اضافه الترجمه", color: "bg-amber-50 text-amber-700 border-amber-200" }
+        ]
+    };
+
+    // const cabinClassesar = [
+    //     { value: "economy", label: "الاقتصاديه", color: "bg-emerald-50 text-emerald-700 border-emerald-200" },
+    //     { value: "business", label: "Business", color: "bg-purple-50 text-purple-700 border-purple-200" },
+    //     { value: "first", label: "First Class", color: "bg-amber-50 text-amber-700 border-amber-200" },
+    // ];
 
     // ================= ROUND TRIP =================
     const RoundTripForm = () => (
@@ -702,7 +722,7 @@ function FlightSearch() {
                     airports={fromCountries}
                     value={formData.from}
                     onChange={(iata) => setFormData({ ...formData, from: iata })}
-                    placeholder="From Airport"
+                    placeholder={lang === "en" ? `From Airport` : "من مطار"}
                 />
             </div>
 
@@ -712,14 +732,14 @@ function FlightSearch() {
                     airports={fromCountries}
                     value={formData.to}
                     onChange={(iata) => setFormData({ ...formData, to: iata })}
-                    placeholder="To Airport"
+                    placeholder={lang === "en" ? "To Airport" : "الي مطار"}
                 />
             </div>
 
             <div className="relative">
                 <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600 z-10" />
                 <span className="absolute left-10 top-1/2 -translate-y-1/2">
-                    Going
+                    {lang === "en" ? "Going" : "معاد الذهاب"}
                 </span>
                 <input
                     type="date"
@@ -732,14 +752,14 @@ function FlightSearch() {
             <div className="relative">
                 <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600 z-10" />
                 <span className="absolute left-10 top-1/2 -translate-y-1/2">
-                    Return
+                    {lang === "en" ? "Return" : "معاد العوده"}
                 </span>
                 <label>
                     <input
                         type="date"
                         value={formData.returnDate}
                         onChange={(e) => setFormData({ ...formData, returnDate: e.target.value })}
-                        placeholder="to date"
+                        placeholder={lang === "en" ? "to date" : "معاد العوده"}
                         className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-24  pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
                     />
                 </label>
@@ -748,14 +768,14 @@ function FlightSearch() {
             <div className="relative">
                 <Users className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600 z-10" />
                 <span className="absolute left-10 top-1/2 -translate-y-1/2">
-                    Adults
+                    {lang === "en" ? "Adults" : "البالغين"}
                 </span>
                 <input
                     type="number"
                     min="1"
                     value={formData.numOfAdults}
                     onChange={(e) => setFormData({ ...formData, numOfAdults: parseInt(e.target.value, 10) || 0 })}
-                    placeholder="Adults"
+                    placeholder={lang === "en" ? "Adults" : "البالغين"}
                     className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-24 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
                 />
             </div>
@@ -763,14 +783,15 @@ function FlightSearch() {
             <div className="relative">
                 <Baby className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600 z-10" />
                 <span className="absolute left-10 top-1/2 -translate-y-1/2">
-                    Children
+
+                    {lang === "en" ? "Children" : "الاطفال"}
                 </span>
                 <input
                     type="number"
                     min="0"
                     value={formData.numOfChildren}
                     onChange={(e) => setFormData({ ...formData, numOfChildren: parseInt(e.target.value, 10) || 0 })}
-                    placeholder="Children"
+                    placeholder={lang === "en" ? "Children" : "الاطفال"}
                     className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-26 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
                 />
             </div>
@@ -782,7 +803,7 @@ function FlightSearch() {
                     onChange={(e) => setFormData({ ...formData, cabinClass: e.target.value })}
                     className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all appearance-none cursor-pointer"
                 >
-                    {cabinClasses.map((cabin) => (
+                    {cabinClasses[lang].map((cabin) => (
                         <option key={cabin.value} value={cabin.value} className="bg-white">
                             {cabin.label}
                         </option>
@@ -801,7 +822,7 @@ function FlightSearch() {
                     airports={fromCountries}
                     value={formData.from}
                     onChange={(iata) => setFormData({ ...formData, from: iata })}
-                    placeholder="From Airport"
+                    placeholder={lang === "en" ? "From Airport" : "المطار المصدر"}
                 />
             </div>
 
@@ -811,14 +832,14 @@ function FlightSearch() {
                     airports={fromCountries}
                     value={formData.to}
                     onChange={(iata) => setFormData({ ...formData, to: iata })}
-                    placeholder="To Airport"
+                    placeholder={lang === "en" ? "To Airport" : "المطار الهدف"}
                 />
             </div>
 
             <div className="relative">
                 <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600 z-10" />
                 <span className="absolute left-10 top-1/2 -translate-y-1/2">
-                    Going
+                    {lang === "en" ? "Going" : "السفر"}
                 </span>
                 <input
                     type="date"
@@ -831,14 +852,14 @@ function FlightSearch() {
             <div className="relative">
                 <Users className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600 z-10" />
                 <span className="absolute left-10 top-1/2 -translate-y-1/2">
-                    Adults
+                    {lang === "en" ? "Adults" : "البالغون"}
                 </span>
                 <input
                     type="number"
                     min="1"
                     value={formData.numOfAdults}
                     onChange={(e) => setFormData({ ...formData, numOfAdults: parseInt(e.target.value, 10) || 0 })}
-                    placeholder="Adults"
+                    placeholder={lang === "en" ? "Adults" : "البالغون"}
                     className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-24 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
                 />
             </div>
@@ -846,14 +867,14 @@ function FlightSearch() {
             <div className="relative">
                 <Baby className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600 z-10" />
                 <span className="absolute left-10 top-1/2 -translate-y-1/2">
-                    Children
+                    {lang === "en" ? "Children" : "الأطفال"}
                 </span>
                 <input
                     type="number"
                     min="0"
                     value={formData.numOfChildren}
                     onChange={(e) => setFormData({ ...formData, numOfChildren: parseInt(e.target.value, 10) || 0 })}
-                    placeholder="Children"
+                    placeholder={lang === "en" ? "Children" : "الأطفال"}
                     className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-26 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
                 />
             </div>
@@ -865,7 +886,7 @@ function FlightSearch() {
                     onChange={(e) => setFormData({ ...formData, cabinClass: e.target.value })}
                     className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all appearance-none cursor-pointer"
                 >
-                    {cabinClasses.map((cabin) => (
+                    {cabinClasses[lang].map((cabin) => (
                         <option key={cabin.value} value={cabin.value} className="bg-white">
                             {cabin.label}
                         </option>
@@ -917,7 +938,7 @@ function FlightSearch() {
                                 airports={fromCountries}
                                 value={city.from}
                                 onChange={(iata) => updateCity(index, "from", iata)}
-                                placeholder="From Airport"
+                                placeholder={lang === "en" ? "From Airport" : "المطار المصدر"}
                             />
                         </div>
 
@@ -928,7 +949,7 @@ function FlightSearch() {
                                 airports={fromCountries}
                                 value={city.to}
                                 onChange={(iata) => updateCity(index, "to", iata)}
-                                placeholder="To Airport"
+                                placeholder={lang === "en" ? "To Airport" : "المطار الهدف"}
                             />
                         </div>
 
@@ -952,7 +973,7 @@ function FlightSearch() {
                         className="flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-red-700 transition-colors shadow-lg shadow-red-200"
                     >
                         <Plus className="w-4 h-4" />
-                        Add Flight
+                        {lang === "en" ? "Add Flight" : "إضافة رحلة"}
                     </button>
 
                     <button
@@ -962,7 +983,7 @@ function FlightSearch() {
                         className="flex items-center gap-2 px-6 py-3 bg-white text-red-600 border-2 border-red-200 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-red-50 transition-colors"
                     >
                         <Trash2 className="w-4 h-4" />
-                        Remove
+                        {lang === "en" ? "Remove" : "إزالة"}
                     </button>
                 </div>
 
@@ -970,14 +991,14 @@ function FlightSearch() {
                     <div className="relative">
                         <Users className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600 z-10" />
                         <span className="absolute left-10 top-1/2 -translate-y-1/2">
-                            Adults
+                            {lang === "en" ? "Adults" : "البالغون"}
                         </span>
                         <input
                             type="number"
                             min="1"
                             value={formData.numOfAdults}
                             onChange={(e) => setFormData({ ...formData, numOfAdults: parseInt(e.target.value, 10) || 0 })}
-                            placeholder="Adults"
+                            placeholder={lang === "en" ? "Adults" : "البالغون"}
                             className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-24 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
                         />
                     </div>
@@ -985,14 +1006,14 @@ function FlightSearch() {
                     <div className="relative">
                         <Baby className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600 z-10" />
                         <span className="absolute left-10 top-1/2 -translate-y-1/2">
-                            Children
+                            {lang === "en" ? "Children" : "الأطفال"}
                         </span>
                         <input
                             type="number"
                             min="0"
                             value={formData.numOfChildren}
                             onChange={(e) => setFormData({ ...formData, numOfChildren: parseInt(e.target.value, 10) || 0 })}
-                            placeholder="Children"
+                            placeholder={lang === "en" ? "Children" : "الأطفال"}
                             className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-26 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
                         />
                     </div>
@@ -1004,7 +1025,7 @@ function FlightSearch() {
                             onChange={(e) => setFormData({ ...formData, cabinClass: e.target.value })}
                             className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all appearance-none cursor-pointer"
                         >
-                            {cabinClasses.map((cabin) => (
+                            {cabinClasses[lang].map((cabin) => (
                                 <option key={cabin.value} value={cabin.value} className="bg-white">
                                     {cabin.label}
                                 </option>
@@ -1027,20 +1048,19 @@ function FlightSearch() {
                 message={lang === "en" ? "Our team will contact you shortly." : "سيتواصل معك فريقنا قريبًا."}
             />
 
-            <main className="relative z-10 flex items-center justify-center min-h-screen px-4 py-20  pt-28">
+            <main className="relative z-10 flex items-center justify-center min-h-screen px-4 py-20  pt-36">
                 <div className="w-full max-w-6xl">
                     {/* Header Card */}
                     <div className="relative mb-8 text-center">
                         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-50 border border-red-200 text-red-600 text-sm font-medium mb-4">
                             <Sparkles className="w-4 h-4" />
-                            <span>Premium Travel Experience</span>
+                            <span>{lang === "en" ? "Premium Travel Experience" : "تجربة سفر مميزة"}</span>
                         </div>
 
                         <h1 className="text-5xl md:text-6xl font-bold text-gray-800 mb-4">
-                            Flight Services
                         </h1>
                         <p className="text-gray-500 text-lg max-w-2xl mx-auto">
-                            Travel at ease, let our professional team arrange your convenient and shortest route to your destination
+                            {lang === "en" ? "Travel at ease, let our professional team arrange your convenient and shortest route to your destination" : "سافر بسهولة، دعنا فريقنا المتخصص ينظم رحلتك القادمة بأكثر الطرق وضماناً"}
                         </p>
                     </div>
 
@@ -1049,7 +1069,7 @@ function FlightSearch() {
 
                         {/* Trip Type Tabs */}
                         <div className="relative flex flex-wrap gap-2 mb-8 p-1 bg-gray-100 rounded-2xl">
-                            {tripTypes.map((type) => {
+                            {tripTypes[lang].map((type) => {
                                 const Icon = type.icon;
                                 const isActive = tripType === type.id;
                                 return (
@@ -1088,14 +1108,14 @@ function FlightSearch() {
                                 <div className="pt-6 border-t-2 border-gray-200">
                                     <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
                                         <User className="w-5 h-5 text-red-600" />
-                                        Passenger Details
+                                        {lang === "en" ? "Passenger Details" : "تفاصيل المسافر"}
                                     </h3>
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                         <div className="relative">
                                             <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600" />
                                             <input
                                                 type="text"
-                                                placeholder="Full Name"
+                                                placeholder={lang === "en" ? "Full Name" : "الاسم الكامل"}
                                                 value={formData.userName}
                                                 onChange={(e) => setFormData({ ...formData, userName: e.target.value })}
                                                 className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
@@ -1106,7 +1126,7 @@ function FlightSearch() {
                                             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600" />
                                             <input
                                                 type="email"
-                                                placeholder="Email Address"
+                                                placeholder={lang === "en" ? "Email Address" : "عنوان البريد الإلكتروني"}
                                                 value={formData.userEmail}
                                                 onChange={(e) => setFormData({ ...formData, userEmail: e.target.value })}
                                                 className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
@@ -1117,7 +1137,7 @@ function FlightSearch() {
                                             <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600" />
                                             <input
                                                 type="tel"
-                                                placeholder="Phone Number"
+                                                placeholder={lang === "en" ? "Phone Number" : "رقم الهاتف"}
                                                 value={formData.userNumber}
                                                 onChange={(e) => setFormData({ ...formData, userNumber: e.target.value })}
                                                 className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
@@ -1136,7 +1156,7 @@ function FlightSearch() {
                                         className="w-full bg-red-600 text-white py-4 rounded-xl font-semibold text-lg shadow-lg shadow-red-200 hover:bg-red-700 transition-colors"
                                     >
                                         <span className="flex items-center justify-center gap-2">
-                                            Continue to Passenger Details
+                                            {lang === "en" ? "Continue to Passenger Details" : "متابعة إلى تفاصيل المسافر"}
                                             <ArrowRight className="w-5 h-5" />
                                         </span>
                                     </button>
@@ -1147,7 +1167,7 @@ function FlightSearch() {
                                             onClick={() => setUserInfoForm(false)}
                                             className="flex-1 py-4 rounded-xl font-semibold text-lg border-2 border-gray-300 text-gray-600 hover:bg-gray-100 transition-colors"
                                         >
-                                            Back
+                                            {lang === "en" ? "Back" : "العودة"}
                                         </button>
 
                                         <button
@@ -1159,12 +1179,12 @@ function FlightSearch() {
                                                 {loading ? (
                                                     <>
                                                         <Loader2 className="w-5 h-5 animate-spin" />
-                                                        Processing...
+                                                        {lang === "en" ? "Processing..." : "جاري المعالجة..."}
                                                     </>
                                                 ) : (
                                                     <>
                                                         <Plane className="w-5 h-5" />
-                                                        Confirm Booking
+                                                        {lang === "en" ? "Confirm Booking" : "تأكيد الحجز"}
                                                     </>
                                                 )}
                                             </span>
@@ -1179,15 +1199,15 @@ function FlightSearch() {
                     <div className="mt-8 flex flex-wrap justify-center gap-8 text-gray-500 text-sm">
                         <div className="flex items-center gap-2">
                             <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                            <span>Secure Booking</span>
+                            <span>{lang === "en" ? "Secure Booking" : "حجز آمن"}</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <div className="w-2 h-2 rounded-full bg-red-500" />
-                            <span>24/7 Support</span>
+                            <span>{lang === "en" ? "24/7 Support" : "دعم 24/7"}</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <div className="w-2 h-2 rounded-full bg-amber-500" />
-                            <span>Best Price Guarantee</span>
+                            <span>{lang === "en" ? "Best Price Guarantee" : " garantee أفضل سعر"}</span>
                         </div>
                     </div>
                 </div>

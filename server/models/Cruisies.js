@@ -27,6 +27,13 @@ const CruisiesSchema = new mongoose.Schema(
       default: "Nile",
     },
 
+      subCategory: {
+  type: String,
+  enum: ["altera deluxe" , "deluxe" , "standard"],
+  required: function () {
+    return this.category === "Nile";
+  }
+},  
     durationDays: { type: Number, required: true },
     durationNights: { type: Number, required: true },
 

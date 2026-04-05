@@ -71,7 +71,7 @@ function FooterContent() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h3 className="text-xl font-bold mb-4 text-white ">
+            <h3 className="text-xl font-bold mb-4 text-white text-shadow-sm text-shadow-red-600">
               Pearl Travel Group
             </h3>
             <p className="text-gray-300 text-sm leading-relaxed">

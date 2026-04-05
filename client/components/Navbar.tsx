@@ -523,16 +523,14 @@ function NavbarContent() {
         } ${isRTL ? "font-arabic" : ""}`}
       dir='ltr'
     >
-      <div className={`flex flex-row  sm:items-center justify-around sm:justify-between sm:px-6 gap-3 py-2 text-sm text-white
-   
-      `}>
+      <div className={`flex flex-row bg-gray-600  sm:items-center justify-around sm:justify-between sm:px-6 gap-3 py-2 text-sm text-white`}>
 
         {/* LEFT SIDE */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
 
           {/* PHONE */}
-          <div className={`flex items-center gap-2 ${scrolled ? "text-black" : "text-white"}`}>
-            <svg xmlns="http://www.w3.org/2000/svg" height="18" width="18" fill={scrolled ? "#000" : "#fff"}  viewBox="0 -960 960 960">
+          <div className={`flex items-center gap-2 text-white`}>
+            <svg xmlns="http://www.w3.org/2000/svg" height="18" width="18" fill="#fff" viewBox="0 -960 960 960">
               <path d="M798-120q-125 0-247-54.5T329-329Q229-429 174.5-551T120-798q0-18 12-30t30-12h162q14 0 25 9.5t13 22.5l26 140q2 16-1 27t-11 19l-97 98q20 37 47.5 71.5T387-386q31 31 65 57.5t72 48.5l94-94q9-9 23.5-13.5T670-390l138 28q14 4 23 14.5t9 23.5v162q0 18-12 30t-30 12Z" />
             </svg>
             <a href="tel:+201067588333" className="hover:underline">
@@ -541,7 +539,7 @@ function NavbarContent() {
           </div>
 
           {/* EMAIL */}
-          <div className={` flex items-center gap-2   sm:border-l sm:pl-4 ${scrolled ? "text-black border-black" : "text-white border-white"}`}>
+          <div className={` flex items-center gap-2   sm:border-l sm:pl-4 text-white border-white`}>
             <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" fill={scrolled ? "#000" : "#fff"} viewBox="0 -960 960 960">
               <path fill="currentColor" d="M440-520 120-720v400h400v80H120q-33 0-56.5-23.5T40-320v-480q0-33 23.5-56.5T120-880h640q33 0 56.5 23.5T840-800v200h-80v-120L440-520Zm0-80 320-200H120l320 200Z" />
             </svg>
@@ -561,10 +559,10 @@ function NavbarContent() {
               className="sm:p-2 "
               aria-label="Facebook"
             >
-              <Facebook size={20} className={`text-${scrolled ? 'black' : 'white'}`} />
+              <Facebook size={20} className="text-white" />
             </a>
           </div>
-          <div className="flex items-center gap-2 border-black sm:border-l sm:pl-4">
+          <div className="flex items-center gap-2 border-white sm:border-l sm:pl-4">
             <a
               href="https://www.instagram.com/pearltravel1?igsh=MTBsaXdtMGhtcGxseg=="
               target="_blank"
@@ -572,7 +570,7 @@ function NavbarContent() {
               className="sm:p-2"
               aria-label="Instagram"
             >
-              <Instagram size={20} className={`${scrolled ? 'text-black' : 'text-white'}`} />
+              <Instagram size={20} className={`text-white`} />
             </a>
           </div>
         </div>
@@ -870,18 +868,16 @@ function NavbarContent() {
                     "text-gray-600 dark:text-gray-400" : "text-white/80"
                     }`}>
                     <Link
-                      href={`/egypt?lang=${lang}`}
-                      onClick={() => setOpen(false)}
-                      className={`block py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 ${scrolled ? "" : "text-white/70"
-                        }`}
+                      href={`/Egypt?lang=${lang}`}
+                      className="block px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+                      onClick={() => setDestinationsDropdown(false)}
                     >
                       {t.navbar.egypt}
                     </Link>
                     <Link
-                      href={`/albania?lang=${lang}`}
-                      onClick={() => setOpen(false)}
-                      className={`block py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 ${scrolled ? "" : "text-white/70"
-                        }`}
+                      href={`/Albania?lang=${lang}`}
+                      className="block px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+                      onClick={() => setDestinationsDropdown(false)}
                     >
                       {t.navbar.albania}
                     </Link>

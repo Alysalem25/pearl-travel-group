@@ -69,8 +69,8 @@
 
 //       <Navbar />
 
-  
-    
+
+
 //         {/* Background Video */}
 //         <div className="absolute inset-0 -z-10" >
 //           <video autoPlay muted loop className="w-full h-full object-cover">
@@ -90,7 +90,7 @@
 //         >
 //           {/* {country ? (lang === "ar" ? country.nameAr : country.nameEn) : data[lang][params.id as "Egypt" | "Albania"]} */}
 //         </motion.h1 >
-  
+
 //       <motion.h1
 //         className="text-3xl font-bold text-center mt-10 text-black"
 //         initial={{ opacity: 0, y: 20 }}
@@ -178,10 +178,10 @@ import {
 } from "@/lib/language";
 import Link from "next/link";
 import apiClient from "@/lib/api";
-import { 
-  Ship, 
-  MapPin, 
-  Calendar, 
+import {
+  Ship,
+  MapPin,
+  Calendar,
   ArrowRight,
   ArrowLeft,
   Sparkles,
@@ -192,6 +192,8 @@ interface Cruise {
   _id: string;
   titleEn: string;
   titleAr: string;
+  // category: 'Nile' | 'MSC' | 'Silversea' | 'Caribbean' | 'Norwegian';
+  subCategory?: "altera deluxe" | "deluxe" | "standard";
   images: string[];
   status: string;
   duration?: string;
@@ -298,6 +300,17 @@ function CruisesContent() {
     }
   };
 
+  const filterBySubCategory = async (subCategory: string) => {
+    setLoading(true);
+    if (subCategory === "all") {
+      fetchPrograms(type);
+      return;
+    }
+    const filtered = cruises.filter((cruise) => cruise.subCategory === subCategory);
+    setCruises(filtered);
+    setLoading(false);
+  };
+
   if (!mounted) return null;
 
   return (
@@ -320,7 +333,7 @@ function CruisesContent() {
             <Sparkles className="w-4 h-4" />
             <span>{isRTL ? "تجربة بحرية فاخرة" : "Luxury Cruise Experience"}</span>
           </div>
-          
+
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
             {t.title}
           </h1>
@@ -340,103 +353,114 @@ function CruisesContent() {
               <h2 className="text-2xl font-bold text-gray-800">
                 {lang === "ar" ? t.programs : `${type} ${t.programs}`}
               </h2>
-            </div>
+              {type ==="Nile" && (<select
+                // value={formData.subCategory}
+                onChange={(e) => filterBySubCategory(e.target.value)}
+                className="ml-auto border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none
+                text-black focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                >
+                <option value="all">all</option>
+                <option value="altera deluxe">Altera Deluxe</option>
+                <option value="deluxe">Deluxe</option>
+                <option value="standard">standard</option>
+              </select>)}
+          </div>
 
-            {loading ? (
-              <div className="flex items-center justify-center py-20">
-                <Loader2 className="w-8 h-8 text-red-600 animate-spin" />
-              </div>
-            ) : cruises.length === 0 ? (
-              <div className="text-center py-16">
-                <Ship className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-500 text-lg">{t.noPrograms}</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {cruises.map((cruise, index) => (
-                  <Link
-                    href={`/cruisies/${type}/${cruise._id}`}
-                    key={cruise._id}
-                    className="group"
-                  >
-                    <div className="relative bg-white border-2 border-gray-200 rounded-2xl overflow-hidden hover:border-red-500 transition-all duration-300 hover:shadow-xl hover:shadow-red-100">
-                      {/* Image */}
-                      <div className="relative h-48 overflow-hidden">
-                        <img
-                          src={cruise.images && cruise.images.length > 0 ? `${cruise.images[0]}` : '/default-image.jpg'}
-                          alt={lang === "ar" ? cruise.titleAr : cruise.titleEn}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                        
-                        {/* Status Badge */}
-                        {cruise.status && (
-                          <div className="absolute top-4 right-4 px-3 py-1 bg-red-600 text-white text-xs font-medium rounded-full">
-                            {cruise.status}
+          {loading ? (
+            <div className="flex items-center justify-center py-20">
+              <Loader2 className="w-8 h-8 text-red-600 animate-spin" />
+            </div>
+          ) : cruises.length === 0 ? (
+            <div className="text-center py-16">
+              <Ship className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <p className="text-gray-500 text-lg">{t.noPrograms}</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {cruises.map((cruise, index) => (
+                <Link
+                  href={`/cruisies/${type}/${cruise._id}`}
+                  key={cruise._id}
+                  className="group"
+                >
+                  <div className="relative bg-white border-2 border-gray-200 rounded-2xl overflow-hidden hover:border-red-500 transition-all duration-300 hover:shadow-xl hover:shadow-red-100">
+                    {/* Image */}
+                    <div className="relative h-48 overflow-hidden">
+                      <img
+                        src={cruise.images && cruise.images.length > 0 ? `${cruise.images[0]}` : '/default-image.jpg'}
+                        alt={lang === "ar" ? cruise.titleAr : cruise.titleEn}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+                      {/* Status Badge */}
+                      {cruise.status && (
+                        <div className="absolute top-4 right-4 px-3 py-1 bg-red-600 text-white text-xs font-medium rounded-full">
+                          {cruise.status}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Content */}
+                    <div className="p-6">
+                      <h3 className="text-lg font-bold text-gray-800 mb-2 line-clamp-2 group-hover:text-red-600 transition-colors">
+                        {lang === "ar" ? cruise.titleAr : cruise.titleEn}
+                      </h3>
+
+                      {/* Meta Info */}
+                      <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
+                        {cruise.duration && (
+                          <div className="flex items-center gap-1">
+                            <Calendar className="w-4 h-4 text-red-600" />
+                            <span>{cruise.duration} {t.days}</span>
                           </div>
                         )}
                       </div>
 
-                      {/* Content */}
-                      <div className="p-6">
-                        <h3 className="text-lg font-bold text-gray-800 mb-2 line-clamp-2 group-hover:text-red-600 transition-colors">
-                          {lang === "ar" ? cruise.titleAr : cruise.titleEn}
-                        </h3>
-
-                        {/* Meta Info */}
-                        <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
-                          {cruise.duration && (
-                            <div className="flex items-center gap-1">
-                              <Calendar className="w-4 h-4 text-red-600" />
-                              <span>{cruise.duration} {t.days}</span>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Price & CTA */}
-                        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                          {cruise.price && (
-                            <div className="text-sm">
-                              <span className="text-gray-500">{t.from} </span>
-                              <span className="text-lg font-bold text-red-600">${cruise.price}</span>
-                            </div>
-                          )}
-                          <div className="flex items-center gap-1 text-red-600 font-medium text-sm group-hover:gap-2 transition-all">
-                            {t.viewDetails}
-                            {isRTL ? (
-                              <ArrowLeft className="w-4 h-4" />
-                            ) : (
-                              <ArrowRight className="w-4 h-4" />
-                            )}
+                      {/* Price & CTA */}
+                      <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                        {cruise.price && (
+                          <div className="text-sm">
+                            <span className="text-gray-500">{t.from} </span>
+                            <span className="text-lg font-bold text-red-600">${cruise.price}</span>
                           </div>
+                        )}
+                        <div className="flex items-center gap-1 text-red-600 font-medium text-sm group-hover:gap-2 transition-all">
+                          {t.viewDetails}
+                          {isRTL ? (
+                            <ArrowLeft className="w-4 h-4" />
+                          ) : (
+                            <ArrowRight className="w-4 h-4" />
+                          )}
                         </div>
                       </div>
                     </div>
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
 
-          {/* Trust Badges */}
-          <div className="mt-8 flex flex-wrap justify-center gap-8 text-gray-500 text-sm">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-emerald-500" />
-              <span>{t.trust.secure}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-red-500" />
-              <span>{t.trust.support}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-amber-500" />
-              <span>{t.trust.bestPrice}</span>
-            </div>
+        {/* Trust Badges */}
+        <div className="mt-8 flex flex-wrap justify-center gap-8 text-gray-500 text-sm">
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-emerald-500" />
+            <span>{t.trust.secure}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-red-500" />
+            <span>{t.trust.support}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-amber-500" />
+            <span>{t.trust.bestPrice}</span>
           </div>
         </div>
-      </main>
-
-      <Footer />
     </div>
+      </main >
+
+    <Footer />
+    </div >
   );
 }

@@ -978,7 +978,7 @@ function VisaPageContent() {
     <div className="min-h-screen bg-gray-50" dir={direction}>
       <Navbar />
 
-      <main className="relative z-10 flex items-center justify-center min-h-screen px-4 py-20 pt-32">
+      <main className="relative z-10 flex items-center justify-center min-h-screen px-4 py-20 pt-36">
         <div className="w-full max-w-6xl">
           {/* Header */}
           <div className="relative mb-8 text-center">
