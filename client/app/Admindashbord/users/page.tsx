@@ -479,12 +479,12 @@ const UsersPageContent = () => {
                                                     </div>
                                                 </div>
                                                 <div className="mt-4 flex gap-2">
-                                                    <Link href={`/Admindashbord/users/${user._id}`}>
+                                                    {/* <Link href={`/Admindashbord/users/${user._id}`}>
                                                         <button className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 flex items-center gap-2">
                                                             View Details
                                                             <ChevronRight size={16} />
                                                         </button>
-                                                    </Link>
+                                                    </Link> */}
                                                     <button onClick={() => deleteUser(user._id)}
                                                         className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
                                                     >Delete</button>

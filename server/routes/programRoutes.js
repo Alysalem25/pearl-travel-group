@@ -664,7 +664,7 @@ router.delete("/:id", authMiddleware, authorize("delete_program"), async (req, r
 //     next(err);
 //   }
 // });
-router.delete("/:id/images/:imageName", authMiddleware, authorize("admin"), async (req, res, next) => {
+router.delete("/:id/images/:imageName", authMiddleware, authorize("edit_program"), async (req, res, next) => {
   try {
     const { id, imageName } = req.params;
     
