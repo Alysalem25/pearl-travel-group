@@ -19,7 +19,7 @@ const OurTeam = () => {
         queryKey: ['team'],
         queryFn: async () => {
             const res = await apiClient.get('/auth/team')
-            console.log(res.data.team);
+            // console.log(res.data.team);
             return res.data.team
         }
     })

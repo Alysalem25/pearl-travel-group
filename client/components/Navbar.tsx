@@ -523,7 +523,7 @@ function NavbarContent() {
         } ${isRTL ? "font-arabic" : ""}`}
       dir='ltr'
     >
-      <div className={`flex flex-row bg-gray-600  sm:items-center justify-around sm:justify-between sm:px-6 gap-3 py-2 text-sm text-white`}>
+      <div className={` flex flex-row bg-gray-600  sm:items-center justify-around sm:justify-between sm:px-6 gap-3 py-2 text-sm text-white`}>
 
         {/* LEFT SIDE */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
@@ -600,7 +600,7 @@ function NavbarContent() {
               href={`/?lang=${lang}`}
               className={`transition-colors duration-200 font-medium ${scrolled
                 ? "text-black hover:text-[var(--mainColor)]"
-                : "text-black hover:text-red-700"
+                : "text-white hover:text-red-700"
                 }`}
             >
               {t.navbar.home}
@@ -609,7 +609,7 @@ function NavbarContent() {
               href={`/Flight?lang=${lang}`}
               className={`transition-colors duration-200 font-medium ${scrolled
                 ? "text-black hover:text-[var(--mainColor)]"
-                : "text-black hover:text-red-700"
+                : "text-white hover:text-red-700"
                 }`}
             >
               {t.navbar.flight}
@@ -618,7 +618,7 @@ function NavbarContent() {
               href={`/hotel?lang=${lang}`}
               className={`transition-colors duration-200 font-medium ${scrolled
                 ? "text-black hover:text-[var(--mainColor)]"
-                : "text-black hover:text-red-700"
+                : "text-white  hover:text-red-700"
                 }`}
             >
               {t.navbar.hotel}
@@ -628,7 +628,7 @@ function NavbarContent() {
               href={`/cars?lang=${lang}`}
               className={`transition-colors duration-200 font-medium ${scrolled
                 ? "text-black hover:text-[var(--mainColor)]"
-                : "text-black hover:text-red-700"
+                : "text-white hover:text-red-700"
                 }`}
             >
               {t.navbar.cars}
@@ -638,7 +638,7 @@ function NavbarContent() {
               href={`/cruisies?lang=${lang}`}
               className={`transition-colors duration-200 font-medium ${scrolled
                 ? "text-black hover:text-[var(--mainColor)]"
-                : "text-black hover:text-red-700"
+                : "text-white hover:text-red-700"
                 }`}
             >
               {t.navbar.cruisies}
@@ -647,7 +647,7 @@ function NavbarContent() {
               href={`/visa?lang=${lang}`}
               className={`transition-colors duration-200 font-medium ${scrolled
                 ? "text-black hover:text-[var(--mainColor)]"
-                : "text-black hover:text-red-700"
+                : "text-white hover:text-red-700"
                 }`}
             >
               {t.navbar.visa}
@@ -659,7 +659,7 @@ function NavbarContent() {
                 onClick={() => setDestinationsDropdown(!destinationsDropdown)}
                 className={`flex items-center gap-1 transition-colors duration-200 font-medium ${scrolled
                   ? "text-black hover:text-[var(--mainColor)]"
-                  : "text-black hover:text-red-700"
+                  : "text-white hover:text-red-700"
                   }`}
               >
                 {t.navbar.destinations}
@@ -720,11 +720,11 @@ function NavbarContent() {
 
                 }`}>
                 <div className="text-right">
-                  <p className={`text-sm font-semibold ${scrolled ? "text-black" : "text-black"
+                  <p className={`text-sm font-semibold ${scrolled ? "text-black" : "text-white"
                     }`}>
                     {user?.name}
                   </p>
-                  <p className={`text-xs ${scrolled ? "text-gray-500 dark:text-gray-400" : "text-black"
+                  <p className={`text-xs ${scrolled ? "text-gray-500 dark:text-gray-400" : "text-white"
                     }`}>
                     {/* {user?.role === "admin" ? "Admin" : "User"} */}
                     {isAdmin() ? "Admin" : isHead() ? "Head" : "User"}
@@ -754,14 +754,15 @@ function NavbarContent() {
                 )}
               </div>
             ) : (
-              <Link
-                href={`/login?lang=${lang}`}
-                className={`ml-4 px-4 py-2 rounded-lg transition-colors duration-200 font-medium shadow-md
-                   bg-blue-600 hover:bg-blue-700 text-white"
-                 `}
-              >
-                Login
-              </Link>
+              // <Link
+              //   href={`/login?lang=${lang}`}
+              //   className={`ml-4 px-4 py-2 rounded-lg transition-colors duration-200 font-medium shadow-md
+              //      bg-blue-600 hover:bg-blue-700 text-white"
+              //    `}
+              // >
+              //   Login
+              // </Link>
+              <div></div>
             )}
           </div>
 

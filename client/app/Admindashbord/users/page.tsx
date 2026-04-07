@@ -56,7 +56,8 @@ const UsersPageContent = () => {
     const [clientInfo, setClientInfo] = React.useState({
         nationalId: '',
         passportNumber: '',
-        address: ''
+        address: '',
+        note: ''
     })
     const [permissions, setPermissions] = React.useState<string[]>([])
 
@@ -69,7 +70,7 @@ const UsersPageContent = () => {
         queryKey: ['users'],
         queryFn: async () => {
             const response = await apiClient.get('/auth/users')
-            console.log('Fetched users:', response.data)
+            // console.log('Fetched users:', response.data)
             return response.data.users || response.data
         }
     })
@@ -129,7 +130,7 @@ const UsersPageContent = () => {
             roleInTeam: '',
             workStatus: 'active',
         })
-        setClientInfo({ nationalId: '', passportNumber: '', address: '' })
+        setClientInfo({ nationalId: '', passportNumber: '', address: '', note: '' })
         setPermissions([])
         setPreviewImages([])
         setEditingUser(null)
@@ -154,10 +155,10 @@ const UsersPageContent = () => {
 
     // Filter users based on search term and workStatus
     const filteredUsers = drivers.filter((User: User) =>
-        (searchTerm === '' || 
-         User.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-         User.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-         (User.number || '').toLowerCase().includes(searchTerm.toLowerCase())) &&
+        (searchTerm === '' ||
+            User.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            User.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (User.number || '').toLowerCase().includes(searchTerm.toLowerCase())) &&
         (workStatusFilter === '' || User.workStatus === workStatusFilter)
     )
 
@@ -275,18 +276,19 @@ const UsersPageContent = () => {
                                 <select
                                     required
                                     value={formData.role}
-                                    onChange={e => {setFormData({ ...formData, role: e.target.value }), 
-                                    setPermissions(['add_program','edit_program','delete_program',
-                                        'add_country','edit_country','delete_country',
-                                        'add_category','edit_category','delete_category',
-                                        'add_cruise','edit_cruise','delete_cruise',
-                                        'manage_users','manage_visa',
-                                        'manage_booked_flights',
-                                        'manage_booked_programs',
-                                        'manage_booked_transportation',
-                                        'manage_booked_hotels',
-                                        'manage_booked_cruises'])
-                                }}
+                                    onChange={e => {
+                                        setFormData({ ...formData, role: e.target.value }),
+                                        setPermissions(['add_program', 'edit_program', 'delete_program',
+                                            'add_country', 'edit_country', 'delete_country',
+                                            'add_category', 'edit_category', 'delete_category',
+                                            'add_cruise', 'edit_cruise', 'delete_cruise',
+                                            'manage_users', 'manage_visa',
+                                            'manage_booked_flights',
+                                            'manage_booked_programs',
+                                            'manage_booked_transportation',
+                                            'manage_booked_hotels',
+                                            'manage_booked_cruises'])
+                                    }}
                                     className="border p-2 rounded bg-white text-black"
                                 >
                                     <option value="" disabled>Select Role</option>
@@ -313,6 +315,12 @@ const UsersPageContent = () => {
                                         <input type="text" placeholder="National ID" value={clientInfo.nationalId} onChange={e => setClientInfo({ ...clientInfo, nationalId: e.target.value })} className="border border-gray-400 p-2 rounded bg-white text-black" />
                                         <input type="text" placeholder="Passport Number" value={clientInfo.passportNumber} onChange={e => setClientInfo({ ...clientInfo, passportNumber: e.target.value })} className="border border-gray-400 p-2 rounded bg-white text-black" />
                                         <input type="text" placeholder="Address" value={clientInfo.address} onChange={e => setClientInfo({ ...clientInfo, address: e.target.value })} className="border border-gray-400 p-2 rounded bg-white text-black" />
+                                        {/* <input type="textarr" placeholder="Add details" value={clientInfo.note} onChange={e => setClientInfo({ ...clientInfo, note: e.target.value })}
+                                         className="border border-gray-400 p-2 rounded bg-white text-black" /> */}
+                                        <textarea placeholder="Add details" value={clientInfo.note} onChange={e => setClientInfo({ ...clientInfo, note: e.target.value })} className="border border-gray-400 p-2 rounded bg-white text-black">
+
+
+                                        </textarea>
                                     </div>
                                 )}
 
@@ -342,8 +350,8 @@ const UsersPageContent = () => {
                                                 { label: 'Manage Booked Cruises', value: 'manage_booked_cruises' }
                                             ].map(perm => (
                                                 <label key={perm.value} className="flex items-center gap-2 text-black cursor-pointer hover:bg-gray-200 p-1 rounded">
-                                                    <input 
-                                                        type="checkbox" 
+                                                    <input
+                                                        type="checkbox"
                                                         className="form-checkbox h-4 w-4 text-blue-600"
                                                         checked={permissions.includes(perm.value)}
                                                         onChange={(e) => {
@@ -368,9 +376,9 @@ const UsersPageContent = () => {
                                     />
                                     In Team
                                 </label>
-                                
+
                                 {/* roleInTeam  */}
-                            {formData.inTeam &&    <label className="flex items-center gap-2 text-black">
+                                {formData.inTeam && <label className="flex items-center gap-2 text-black">
                                     <input
                                         type="text"
                                         value={formData.roleInTeam}
@@ -460,13 +468,12 @@ const UsersPageContent = () => {
                                                     )}
                                                     {/* Work Status Badge */}
                                                     <div className="mt-2">
-                                                        <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
-                                                            user.workStatus === 'active' ? 'bg-green-200 text-green-800' :
-                                                            user.workStatus === 'inactive' ? 'bg-gray-200 text-gray-800' :
-                                                            user.workStatus === 'pending' ? 'bg-yellow-200 text-yellow-800' :
-                                                            user.workStatus === 'suspended' ? 'bg-red-200 text-red-800' :
-                                                            'bg-gray-200 text-gray-800'
-                                                        }`}>
+                                                        <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${user.workStatus === 'active' ? 'bg-green-200 text-green-800' :
+                                                                user.workStatus === 'inactive' ? 'bg-gray-200 text-gray-800' :
+                                                                    user.workStatus === 'pending' ? 'bg-yellow-200 text-yellow-800' :
+                                                                        user.workStatus === 'suspended' ? 'bg-red-200 text-red-800' :
+                                                                            'bg-gray-200 text-gray-800'
+                                                            }`}>
                                                             {user.workStatus || 'active'}
                                                         </span>
                                                     </div>

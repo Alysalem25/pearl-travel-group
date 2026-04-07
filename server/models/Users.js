@@ -136,8 +136,11 @@ const UserSchema = new mongoose.Schema(
     clientInfo: {
       nationalId: String,
       passportNumber: String,
-      address: String
+      address: String,
+      note: String
     },
+
+
 
     // 📊 Work Status for filtering users
     workStatus: {

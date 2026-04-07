@@ -585,7 +585,7 @@ const CategoriesPageContent = () => {
             queryClient.invalidateQueries({ queryKey: ['categories'] });
             resetForm();
         } catch (err: any) {
-            console.log(err)
+            // console.log(err)
             setError(err.response?.data?.error || 'Error');
         }
     }

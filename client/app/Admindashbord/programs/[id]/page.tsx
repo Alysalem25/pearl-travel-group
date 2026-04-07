@@ -53,7 +53,7 @@ const ProgramPageContent = () => {
                 setError(null);
                 const response = await apiClient.get(`/programs/${params.id}`);
                 setProgram(response.data);
-                console.log(response.data);
+                // console.log(response.data);
             } catch (err) {
                 setError('Failed to load program details');
                 console.error(err);

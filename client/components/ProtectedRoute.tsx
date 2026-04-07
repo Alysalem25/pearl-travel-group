@@ -54,7 +54,7 @@ export function ProtectedRoute({
 
     // Redirect to login if not authenticated
     if (!isAuthenticated) {
-      console.log("[ProtectedRoute] Not authenticated, redirecting to login");
+      // console.log("[ProtectedRoute] Not authenticated, redirecting to login");
       router.push("/login");
       return;
     }
@@ -62,7 +62,7 @@ export function ProtectedRoute({
     // ✅ Check permission if required (MAIN FIX: call hasPermission here, not in dependency array)
     if (requiredPermission) {
       const hasRequiredPermission = hasPermission(requiredPermission);
-      console.log("[ProtectedRoute] Permission result:", hasRequiredPermission);
+      // console.log("[ProtectedRoute] Permission result:", hasRequiredPermission);
       if (!hasRequiredPermission) {
         alert("[ProtectedRoute] No permission, redirecting to /");
         router.push("/");

@@ -102,7 +102,7 @@ const UserSummaryPage = () => {
   ];
 
   // returned summary data structure example:
-  console.log("User Summary Data:", data);
+  // console.log("User Summary Data:", data);
 
   return (
     <div className="min-h-screen flex bg-slate-50 text-slate-900">

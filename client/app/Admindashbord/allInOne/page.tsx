@@ -198,7 +198,7 @@ const UnifiedSearchPageContent = () => {
         queryKey: ['visaApplications'],
         queryFn: async () => {
             const res = await apiClient.get('/visa')
-            console.log("Visa API response:", res.data)
+            // console.log("Visa API response:", res.data)
             // Handle nested response: { data: [...], total: number }
             const visaData = res.data?.data || res.data || []
             return visaData.map((item: any) => ({ ...item, type: 'visa' as const }))

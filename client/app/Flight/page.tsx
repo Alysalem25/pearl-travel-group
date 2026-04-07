@@ -596,7 +596,7 @@ function FlightSearch() {
             setLoading(true);
             const res = await axios.get(`https://www.airportroutes.com/api/all-airports/`);
             setFromCountriess(res.data);
-            console.log("From Countries:", res.data);
+            // console.log("From Countries:", res.data);
         } catch (err) {
             console.error("Error fetching from countries:", err);
         } finally {
@@ -642,7 +642,7 @@ function FlightSearch() {
         e.preventDefault();
         if (!handelValidation()) return;
         setLoading(true);
-        console.log(formData);
+        // console.log(formData);
         setError("");
 
         try {

@@ -43,7 +43,7 @@ const Page = () => {
 
   /* fetch programs */
   useEffect(() => {
-    console.log(category)
+    // console.log(category)
     if (!category) return;
     fetchPrograms(category);
   }, [category]);
@@ -53,7 +53,7 @@ const Page = () => {
       const res = await apiClient.get(`/programs/category/${categoryId}`)
 
       if (Array.isArray(res.data)) {
-        console.log(res)
+        // console.log(res)
         setPrograms(res.data);
       } else {
         setPrograms([]);

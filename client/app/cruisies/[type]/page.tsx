@@ -419,12 +419,12 @@ function CruisesContent() {
 
                       {/* Price & CTA */}
                       <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                        {cruise.price && (
+                        {/* {cruise.price && (
                           <div className="text-sm">
                             <span className="text-gray-500">{t.from} </span>
                             <span className="text-lg font-bold text-red-600">${cruise.price}</span>
                           </div>
-                        )}
+                        )} */}
                         <div className="flex items-center gap-1 text-red-600 font-medium text-sm group-hover:gap-2 transition-all">
                           {t.viewDetails}
                           {isRTL ? (

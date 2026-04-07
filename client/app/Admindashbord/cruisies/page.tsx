@@ -695,7 +695,7 @@ function CruisiesPageContent() {
         setDays((prev) => [
             ...prev,
             {
-                dayNumber: prev.length + 1,
+                dayNumber: 1 + prev.length,
                 titleEn: '',
                 titleAr: '',
                 descriptionEn: '',
@@ -717,7 +717,7 @@ function CruisiesPageContent() {
             titleEn: '',
             titleAr: '',
             category: 'Nile',
-            subCategory:"",
+            subCategory: "",
             durationDays: 1,
             durationNights: 0,
             price: 0,
@@ -928,7 +928,9 @@ function CruisiesPageContent() {
 
                         {days.map((day, i) => (
                             <div key={i} className="border p-4 rounded space-y-2 align-middle bg-white">
-                                <h4>Day {day.dayNumber}</h4>
+                                <h4>Day
+                                    <input type="text" value={day.dayNumber} onChange={e => updateDay(i, 'dayNumber', e.target.value)} className="w-16 inline-block bg-gray-50 p-1 rounded border border-gray-600" />
+                                </h4>
 
                                 <div className="flex w-full gap-6">
                                     <input

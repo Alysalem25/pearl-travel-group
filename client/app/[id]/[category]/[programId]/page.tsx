@@ -105,7 +105,7 @@ const ProgramPage = () => {
                 setError(null);
                 const response = await api.programs.getOne(programId);
                 setProgram(response.data);
-                console.log(response.data);
+                // console.log(response.data);
             } catch (err) {
                 setError('Failed to load program details');
                 console.error(err);

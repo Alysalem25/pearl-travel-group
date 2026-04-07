@@ -158,20 +158,27 @@ router.post("/login", validateLogin, handleValidationErrors, async (req, res, ne
   try {
     const { email, password } = req.body;
 
-    console.log("Login attempt for email:", email);
+    // console.log("Login attempt for email:", email);
 
     // Find user and explicitly select password field (normally excluded)
     const user = await User.findOne({ email }).select("+password");
 
-    console.log("User found:", !!user);
+    // console.log("User found:", !!user);/
 
     // Validate email exists
     if (!user) {
-      console.log("User not found");
+      // console.log("User not found");
       return res.status(401).json({
         error: "Invalid email or password"
       });
     }
+
+    if(user.role === "user"){
+       return res.status(500).json({
+        error: "Account configuration error"
+      });
+    }
+
 
     // Check if password field exists
     if (!user.password) {
@@ -181,12 +188,14 @@ router.post("/login", validateLogin, handleValidationErrors, async (req, res, ne
       });
     }
 
-    console.log("Comparing passwords");
+
+
+    // console.log("Comparing passwords");
 
     // Compare passwords using bcrypt
     const isPasswordValid = await user.comparePassword(password);
 
-    console.log("Password valid:", isPasswordValid);
+    // console.log("Password valid:", isPasswordValid);
 
     if (!isPasswordValid) {
       return res.status(401).json({
@@ -202,7 +211,7 @@ router.post("/login", validateLogin, handleValidationErrors, async (req, res, ne
       });
     }
 
-    console.log("Generating JWT token");
+    // console.log("Generating JWT token");
 
     // Generate JWT token
     let token;
@@ -222,7 +231,7 @@ router.post("/login", validateLogin, handleValidationErrors, async (req, res, ne
       });
     }
 
-    console.log("Login successful");
+    // console.log("Login successful");
     
     const responseUser = {
       id: user._id,
@@ -232,7 +241,7 @@ router.post("/login", validateLogin, handleValidationErrors, async (req, res, ne
       permissions: user.permissions
     };
     
-    console.log("[Login Response] User data being sent to frontend:", responseUser);
+    // console.log("[Login Response] User data being sent to frontend:", responseUser);
 
     // Return success without exposing password
     res.json({

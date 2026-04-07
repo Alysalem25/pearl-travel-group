@@ -72,15 +72,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (token && storedUser) {
         // Check if token has expired
         if (isTokenExpired()) {
-          console.log("[AuthContext] Token expired, clearing auth");
+          // console.log("[AuthContext] Token expired, clearing auth");
           clearAuthData();
           setUser(null);
         } else {
-          console.log("[AuthContext] Token valid, restoring user:", storedUser);
+          // console.log("[AuthContext] Token valid, restoring user:", storedUser);
           setUser(storedUser);
         }
       } else {
-        console.log("[AuthContext] No token or user found");
+        // console.log("[AuthContext] No token or user found");
         setUser(null);
       }
       setLoading(false);
@@ -97,18 +97,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const response = await api.auth.login({ email, password });
       const { token, user: userData } = response.data;
       
-      console.log("[AuthContext] Login successful, user data:", userData);
+      // console.log("[AuthContext] Login successful, user data:", userData);
       
       // Save to localStorage
       saveAuthData(token, userData);
       setUser(userData);
       
-      console.log("[AuthContext] User saved to context:", userData);
+      // console.log("[AuthContext] User saved to context:", userData);
 
       return { token, user: userData, message: "Login successful" };
     } catch (error: any) {
       const message = error.response?.data?.error || "Login failed";
-      console.error("[AuthContext] Login error:", message);
+      // console.error("[AuthContext] Login error:", message);
       throw new Error(message);
     }
   };
@@ -126,18 +126,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const response = await api.auth.register({ name, email, password, number });
       const { token, user: userData } = response.data;
       
-      console.log("[AuthContext] Register successful, user data:", userData);
+      // console.log("[AuthContext] Register successful, user data:", userData);
       
       // Save to localStorage
       saveAuthData(token, userData);
       setUser(userData);
       
-      console.log("[AuthContext] User saved to context:", userData);
+      // console.log("[AuthContext] User saved to context:", userData);
 
       return { token, user: userData, message: "Registration successful" };
     } catch (error: any) {
       const message = error.response?.data?.error || "Registration failed";
-      console.error("[AuthContext] Register error:", message);
+      // console.error("[AuthContext] Register error:", message);
       throw new Error(message);
     }
   };
@@ -162,12 +162,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
    */
 const hasPermission = (permission: string): boolean => {
   if (!user) {
-    alert(`[hasPermission] No user`);
+    // alert(`[hasPermission] No user`);
     return false;
   }
 
   if (user.permissions?.includes("*")) {
-    console.log(`[hasPermission] User has wildcard access`, { permission });
+    // console.log(`[hasPermission] User has wildcard access`, { permission });
     return true;
   }
 

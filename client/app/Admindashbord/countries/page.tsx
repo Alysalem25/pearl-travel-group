@@ -437,7 +437,7 @@ const CountryPageContent = () => {
             queryClient.invalidateQueries({ queryKey: ['countries'] });
             resetForm();
         } catch (err: any) {
-            console.log(err)
+            // console.log(err)
             setError(err.response?.data?.error || 'Error');
         }
     }
