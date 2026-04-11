@@ -6,6 +6,7 @@ const authorize = require("../middlewares/authorizeMiddleware");
 const { validateRegister, validateLogin, handleValidationErrors } = require("../middlewares/validators");
 const User = require("../models/Users");
 const jwt = require("jsonwebtoken");
+const { logSuccess, logError, checkSuspiciousActivity, getIPAddress } = require("../utils/loggerService");
 
 const router = express.Router();
 
@@ -45,6 +46,8 @@ router.post(
       // Check if user already exists
       const existingUser = await User.findOne({ email });
       if (existingUser) {
+        // 🔹 Log failed registration attempt
+        await logError(null, "REGISTER_FAILED", "User", req, "Email already registered", { email });
         return res.status(400).json({
           error: "Email already registered"
         });
@@ -134,12 +137,17 @@ router.post(
         permissions: user.permissions
       });
 
+      // 🔹 Log successful registration
+      await logSuccess(user._id, "REGISTER_SUCCESS", "User", user._id, req, { email: user.email, role: user.role });
+
       res.status(201).json({
         message: "User registered successfully",
         token,
         user: response
       });
     } catch (err) {
+      // 🔹 Log registration error
+      await logError(null, "REGISTER_FAILED", "User", req, err.message);
       next(err);
     }
   }
@@ -158,6 +166,18 @@ router.post("/login", validateLogin, handleValidationErrors, async (req, res, ne
   try {
     const { email, password } = req.body;
 
+    // 🔹 Check for brute force attempts
+    const suspiciousCheck = await checkSuspiciousActivity(
+      getIPAddress(req),
+      "LOGIN_FAILED",
+      5,
+      15
+    );
+    if (suspiciousCheck.isSuspicious) {
+      await logError(null, "LOGIN_FAILED", "User", req, "Too many failed attempts", { email, attempt: suspiciousCheck.failedAttempts });
+      return res.status(429).json({ error: "Too many failed login attempts. Try again later." });
+    }
+
     // console.log("Login attempt for email:", email);
 
     // Find user and explicitly select password field (normally excluded)
@@ -167,6 +187,8 @@ router.post("/login", validateLogin, handleValidationErrors, async (req, res, ne
 
     // Validate email exists
     if (!user) {
+      // 🔹 Log failed login (user not found)
+      await logError(null, "LOGIN_FAILED", "User", req, "User not found", { email });
       // console.log("User not found");
       return res.status(401).json({
         error: "Invalid email or password"
@@ -174,6 +196,8 @@ router.post("/login", validateLogin, handleValidationErrors, async (req, res, ne
     }
 
     if(user.role === "user"){
+       // 🔹 Log unauthorized role access
+       await logError(user._id, "LOGIN_FAILED", "User", req, "Unauthorized role", { role: user.role });
        return res.status(500).json({
         error: "Account configuration error"
       });
@@ -198,6 +222,8 @@ router.post("/login", validateLogin, handleValidationErrors, async (req, res, ne
     // console.log("Password valid:", isPasswordValid);
 
     if (!isPasswordValid) {
+      // 🔹 Log failed login (wrong password)
+      await logError(user._id, "LOGIN_FAILED", "User", req, "Invalid password", { email });
       return res.status(401).json({
         error: "Invalid email or password"
       });
@@ -243,6 +269,9 @@ router.post("/login", validateLogin, handleValidationErrors, async (req, res, ne
     
     // console.log("[Login Response] User data being sent to frontend:", responseUser);
 
+    // 🔹 Log successful login
+    await logSuccess(user._id, "LOGIN_SUCCESS", "User", user._id, req, { email: user.email, role: user.role });
+
     // Return success without exposing password
     res.json({
       message: "Login successful",
@@ -250,6 +279,8 @@ router.post("/login", validateLogin, handleValidationErrors, async (req, res, ne
       user: responseUser
     });
   } catch (err) {
+    // 🔹 Log server error
+    await logError(null, "LOGIN_FAILED", "User", req, `Server error: ${err.message}`);
     console.error("Login error:", err);
     next(err);
   }
@@ -304,11 +335,18 @@ router.delete("/deleteUser/:id", authMiddleware, authorize("admin", "manage_user
     const user = await User.findByIdAndDelete(req.params.id);
 
     if (!user) {
+      // 🔹 Log failed delete
+      await logError(req.user._id, "DELETE_USER", "User", req, "User not found", { targetUserId: req.params.id });
       return res.status(404).json({ error: "User not found" });
     }
 
+    // 🔹 Log successful delete
+    await logSuccess(req.user._id, "DELETE_USER", "User", req.params.id, req, { deletedUserEmail: user.email });
+
     res.json({ message: "User deleted successfully" });
   } catch (err) {
+    // 🔹 Log error
+    await logError(req.user._id, "DELETE_USER", "User", req, err.message);
     next(err);
   }
 });
@@ -493,14 +531,21 @@ router.put("/profile/:id/password", authMiddleware, async (req, res, next) => {
 
     const isMatch = await user.comparePassword(currentPassword);
     if (!isMatch) {
+      // 🔹 Log failed password change (wrong current password)
+      await logError(user._id, "PASSWORD_RESET", "User", req, "Current password incorrect");
       return res.status(401).json({ error: "Current password is incorrect" });
     }
 
     user.password = newPassword;
     await user.save();
 
+    // 🔹 Log successful password change
+    await logSuccess(user._id, "PASSWORD_RESET", "User", user._id, req);
+
     res.json({ message: "Password updated successfully" });
   } catch (err) {
+    // 🔹 Log error
+    await logError(req.user._id, "PASSWORD_RESET", "User", req, err.message);
     next(err);
   }
 });

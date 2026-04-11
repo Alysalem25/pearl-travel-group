@@ -78,6 +78,7 @@ const hotelRoute = require("./routes/hotel");
 const userRoutes = require("./routes/userRoutes");
 const cruiseRoutes = require("./routes/cruiseRoutes");
 const eventRouter = require('./routes/eventRouter');
+const logsRoutes = require('./routes/logsRoutes');
 
 // ============================================
 // 🗄️ DATABASE CONNECTION 
@@ -178,6 +179,7 @@ app.use("/api/carTrip", carTripsRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/cruisies", cruiseRoutes);
 app.use('/api/events', eventRouter);
+app.use('/api/logs', logsRoutes);
 // ============================================
 // 📊 STATS ENDPOINT (PUBLIC)
 // ============================================

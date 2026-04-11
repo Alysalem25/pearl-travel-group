@@ -404,10 +404,6 @@
 //   );
 // }
 
-
-
-"use client";
-
 /**
  * Responsive Navbar component with language switcher and authentication
  * Supports RTL/LTR layout based on selected language
@@ -415,6 +411,10 @@
  * 
  * Security: Logout clears all auth data and redirects to home
  */
+
+
+"use client";
+
 
 import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
@@ -511,6 +511,17 @@ function NavbarContent() {
   const isRTL = lang === "ar";
   const direction = getDirection(lang);
 
+
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => { document.body.style.overflow = "unset"; };
+  }, [open]);
+
+
   if (!mounted) {
     return null; // Prevent hydration mismatch
   }
@@ -523,7 +534,14 @@ function NavbarContent() {
         } ${isRTL ? "font-arabic" : ""}`}
       dir='ltr'
     >
-      <div className={` flex flex-row bg-gray-600  sm:items-center justify-around sm:justify-between sm:px-6 gap-3 py-2 text-sm text-white`}>
+      <div className={`
+  flex flex-row bg-gray-600 sm:items-center justify-around sm:justify-between sm:px-6 gap-3 text-sm text-white
+  transition-all duration-5000 ease-in-out overflow-hidden
+  ${scrolled
+          ? "opacity-0 max-h-0 py-0 pointer-events-none"
+          : "opacity-100 max-h-20 py-2"
+        }
+`}>
 
         {/* LEFT SIDE */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
@@ -770,7 +788,7 @@ function NavbarContent() {
           <button
             className={`md:hidden p-2 transition-colors duration-200 ${scrolled
               ? "text-black hover:text-blue-600 dark:hover:text-blue-400"
-              : "text-white hover:text-white/80"
+              : "text-black hover:text-black/80"
               }`}
             onClick={() => setOpen(!open)}
             aria-label="Toggle menu"
@@ -782,6 +800,14 @@ function NavbarContent() {
         {/* Mobile Menu */}
         <AnimatePresence>
           {open && (
+            // <motion.div
+            //   initial={{ opacity: 0, height: 0 }}
+            //   animate={{ opacity: 1, height: "auto" }}
+            //   exit={{ opacity: 0, height: 0 }}
+            //   transition={{ duration: 0.2 }}
+            //   className={`md:hidden backdrop-blur-xl shadow-lg rounded-lg mt-2 mb-4 overflow-hidden overflow-y-scroll ${scrolled ? "bg-gray-900/95" : "bg-black/80"
+            //     }`}
+            // >
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
@@ -790,7 +816,8 @@ function NavbarContent() {
               className={`md:hidden backdrop-blur-xl shadow-lg rounded-lg mt-2 mb-4 overflow-hidden ${scrolled ? "bg-gray-900/95" : "bg-black/80"
                 }`}
             >
-              <div className="px-4 py-4 space-y-3">
+              {/* <div className="px-4 py-4 space-y-3"> */}
+              <div className="px-4 py-4 space-y-3 max-h-[70vh] overflow-y-auto">
                 <Link
                   href={`/?lang=${lang}`}
                   onClick={() => setOpen(false)}
