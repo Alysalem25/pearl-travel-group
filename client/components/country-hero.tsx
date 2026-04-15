@@ -11,7 +11,7 @@ export default function Hero({ country }: { country?: { nameEn: string; nameAr: 
 
   const [lang, setLang] = useState<Language>("en");
   const [mounted, setMounted] = useState(false);
-  const [urlVideo, setUrlVideo] = useState("/egypt-bg-video.mp4");
+  const [urlVideo, setUrlVideo] = useState("https://res.cloudinary.com/dyissekq4/video/upload/q_auto/f_auto/v1776203233/egypt_jhlo4a.mp4");
 
   // ✅ Effect 1: mounting + language
   useEffect(() => {
@@ -34,9 +34,9 @@ export default function Hero({ country }: { country?: { nameEn: string; nameAr: 
   // ✅ Effect 2: video based on params
   useEffect(() => {
     if (params.id === "Egypt") {
-      setUrlVideo("/egypt-bg-video.mp4");
+      setUrlVideo("https://res.cloudinary.com/dyissekq4/video/upload/q_auto/f_auto/v1776203233/egypt_jhlo4a.mp4");
     } else if (params.id === "Albania") {
-      setUrlVideo("/albania-bg-video.mp4");
+      setUrlVideo("https://res.cloudinary.com/dyissekq4/video/upload/q_auto/f_auto/v1776203467/11927042_3840_2160_30fps_dcqbce.mp4");
     }
   }, [params.id]);
 

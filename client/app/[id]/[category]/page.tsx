@@ -80,9 +80,9 @@ const Page = () => {
         {lang === "ar" ? "البرامج" : "Programs"}
       </motion.h1>
 
-      <div className="max-w-full mx-16 m-10 flex flex-wrap justify-center gap-10">
+      <div className="max-w-full mx-auto m-10 flex flex-wrap justify-center gap-10">
         {programs.length === 0 && (
-          <p className="text-gray-400">No programs found</p>
+          <p className="text-gray-400 text-center">No programs found</p>
         )}
 
         {programs.map(program => (
