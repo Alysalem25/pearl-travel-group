@@ -1,0 +1,552 @@
+const express = require("express");
+const path = require("path");
+const uploadUser = require("../middlewares/uploadUser");
+const authMiddleware = require("../middlewares/authMiddleware");
+const authorize = require("../middlewares/authorizeMiddleware");
+const { validateRegister, validateLogin, handleValidationErrors } = require("../middlewares/validators");
+const User = require("../models/Users");
+const jwt = require("jsonwebtoken");
+const { logSuccess, logError, checkSuspiciousActivity, getIPAddress } = require("../utils/loggerService");
+
+const router = express.Router();
+
+
+// function normalizeImagePath(filename) {
+//   return `/uploads/users/${filename}`;
+// }
+
+function normalizeImagePath(imagePath) {
+  // Check if already normalized
+  if (imagePath.startsWith('/uploads/')) {
+    return imagePath;
+  }
+  return `/uploads/users/${imagePath}`;
+}
+
+/**
+ * POST /auth/register
+ * Register a new user
+ * 
+ * Security:
+ * - Password is validated for strength
+ * - Email is normalized and checked for uniqueness
+ * - Password is hashed via User model pre-save hook
+ * - No sensitive data in response
+ */
+router.post(
+  "/register",
+  // Run multer first to populate req.body and req.files for validation
+  uploadUser.array("images", 1),
+  validateRegister,
+  handleValidationErrors,
+  async (req, res, next) => {
+    try {
+      const { name, email, password, number, role, inTeam, roleInTeam, permissions, clientInfo, workStatus } = req.body;
+
+      // Check if user already exists
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        // 🔹 Log failed registration attempt
+        await logError(null, "REGISTER_FAILED", "User", req, "Email already registered", { email });
+        return res.status(400).json({
+          error: "Email already registered"
+        });
+      }
+
+      const images = (req.files || []).map(f => "/uploads/users/" + f.filename);
+      
+      // Assign default permissions based on role
+      let defaultPermissions = [];
+      if (role === 'admin') {
+        defaultPermissions = [
+          'add_program', 'edit_program', 'delete_program',
+          'add_country', 'edit_country', 'delete_country',
+          'add_category', 'edit_category', 'delete_category',
+          'add_cruise', 'edit_cruise', 'delete_cruise',
+          'manage_users', 'manage_visa',
+          'manage_booked_flights', 'manage_booked_programs',
+          'manage_booked_transportation', 'manage_booked_hotels', 'manage_booked_cruises',
+          '*'
+        ];
+      } else if (role === 'head') {
+        defaultPermissions = [
+          'add_program', 'edit_program', 'delete_program',
+          'add_country', 'edit_country', 'delete_country',
+          'add_category', 'edit_category', 'delete_category',
+          'add_cruise', 'edit_cruise', 'delete_cruise',
+          'manage_visa',
+          'manage_booked_flights', 'manage_booked_programs',
+          'manage_booked_transportation', 'manage_booked_hotels', 'manage_booked_cruises',
+        ];
+      }
+      
+      // Parse permissions if sent as a string (from FormData)
+      let parsedPermissions = defaultPermissions;
+      if (permissions) {
+        try {
+          parsedPermissions = typeof permissions === 'string' ? JSON.parse(permissions) : permissions;
+        } catch (e) {
+          parsedPermissions = permissions;
+        }
+      } else {
+        parsedPermissions = defaultPermissions;
+      }
+
+      const user = new User({
+        name,
+        email,
+        password,
+        number,
+        role,
+        inTeam,
+        roleInTeam,
+        images,
+        permissions: parsedPermissions,
+        clientInfo: clientInfo ? JSON.parse(clientInfo) : {},
+        workStatus: workStatus || 'active'
+      });
+
+      await user.save();
+
+      // Generate JWT
+      const token = jwt.sign(
+        {
+          id: user._id,
+          role: user.role
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: process.env.JWT_EXPIRE || "7d" }
+      );
+      // console.log("Registered user:", {
+      //   id: user._id,
+      //   name: user.name,
+      //   email:user.email,
+      //   image: user.image ? normalizeImagePath(user.image) : null
+      // });
+
+      const response = {
+        ...user.toObject(),
+        images: user.images.map(normalizeImagePath)
+      };
+
+      console.log("[Register Response] User registered successfully:", {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        permissions: user.permissions
+      });
+
+      // 🔹 Log successful registration
+      await logSuccess(user._id, "REGISTER_SUCCESS", "User", user._id, req, { email: user.email, role: user.role });
+
+      res.status(201).json({
+        message: "User registered successfully",
+        token,
+        user: response
+      });
+    } catch (err) {
+      // 🔹 Log registration error
+      await logError(null, "REGISTER_FAILED", "User", req, err.message);
+      next(err);
+    }
+  }
+);
+
+/**
+ * POST /auth/login
+ * Authenticate user and return JWT
+ * 
+ * Security:
+ * - Password comparison uses bcrypt
+ * - JWT expires in 7 days
+ * - No sensitive data in response
+ */
+router.post("/login", validateLogin, handleValidationErrors, async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    // 🔹 Check for brute force attempts
+    const suspiciousCheck = await checkSuspiciousActivity(
+      getIPAddress(req),
+      "LOGIN_FAILED",
+      5,
+      15
+    );
+    if (suspiciousCheck.isSuspicious) {
+      await logError(null, "LOGIN_FAILED", "User", req, "Too many failed attempts", { email, attempt: suspiciousCheck.failedAttempts });
+      return res.status(429).json({ error: "Too many failed login attempts. Try again later." });
+    }
+
+    // console.log("Login attempt for email:", email);
+
+    // Find user and explicitly select password field (normally excluded)
+    const user = await User.findOne({ email }).select("+password");
+
+    // console.log("User found:", !!user);/
+
+    // Validate email exists
+    if (!user) {
+      // 🔹 Log failed login (user not found)
+      await logError(null, "LOGIN_FAILED", "User", req, "User not found", { email });
+      // console.log("User not found");
+      return res.status(401).json({
+        error: "Invalid email or password"
+      });
+    }
+
+    if(user.role === "user"){
+       // 🔹 Log unauthorized role access
+       await logError(user._id, "LOGIN_FAILED", "User", req, "Unauthorized role", { role: user.role });
+       return res.status(500).json({
+        error: "Account configuration error"
+      });
+    }
+
+
+    // Check if password field exists
+    if (!user.password) {
+      console.error("User password field is missing");
+      return res.status(500).json({
+        error: "Account configuration error"
+      });
+    }
+
+
+
+    // console.log("Comparing passwords");
+
+    // Compare passwords using bcrypt
+    const isPasswordValid = await user.comparePassword(password);
+
+    // console.log("Password valid:", isPasswordValid);
+
+    if (!isPasswordValid) {
+      // 🔹 Log failed login (wrong password)
+      await logError(user._id, "LOGIN_FAILED", "User", req, "Invalid password", { email });
+      return res.status(401).json({
+        error: "Invalid email or password"
+      });
+    }
+
+    // Check JWT_SECRET
+    if (!process.env.JWT_SECRET) {
+      console.error("JWT_SECRET not configured");
+      return res.status(500).json({
+        error: "Server configuration error"
+      });
+    }
+
+    // console.log("Generating JWT token");
+
+    // Generate JWT token
+    let token;
+    try {
+      token = jwt.sign(
+        {
+          id: user._id.toString(),
+          role: user.role
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: process.env.JWT_EXPIRE || "7d" }
+      );
+    } catch (jwtErr) {
+      console.error("JWT signing error:", jwtErr);
+      return res.status(500).json({
+        error: "Token generation failed"
+      });
+    }
+
+    // console.log("Login successful");
+    
+    const responseUser = {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      permissions: user.permissions
+    };
+    
+    // console.log("[Login Response] User data being sent to frontend:", responseUser);
+
+    // 🔹 Log successful login
+    await logSuccess(user._id, "LOGIN_SUCCESS", "User", user._id, req, { email: user.email, role: user.role });
+
+    // Return success without exposing password
+    res.json({
+      message: "Login successful",
+      token,
+      user: responseUser
+    });
+  } catch (err) {
+    // 🔹 Log server error
+    await logError(null, "LOGIN_FAILED", "User", req, `Server error: ${err.message}`);
+    console.error("Login error:", err);
+    next(err);
+  }
+});
+
+/**
+ * GET /auth/me
+ * Get current user info (protected route)
+ * Requires valid JWT in Authorization header
+ */
+router.get("/me", authMiddleware, async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json({
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        number: user.number,
+        permissions: user.permissions
+      }
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// get all users (admin or manage_users permission)
+// GET /auth/users
+router.get("/users", authMiddleware, authorize("admin", "manage_users"), async (req, res, next) => {
+  try {
+    const users = await User.find({ _id: { $ne: req.user.id } }).select("-password");
+    const normalizedUsers = users.map(user => ({
+      ...user.toObject(),
+      images: user.images ? user.images.map(normalizeImagePath) : []
+    }));
+    res.json({ users: normalizedUsers });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// delete user (admin or manage_users permission)
+router.delete("/deleteUser/:id", authMiddleware, authorize("admin", "manage_users"), async (req, res, next) => {
+  try {
+    const user = await User.findByIdAndDelete(req.params.id);
+
+    if (!user) {
+      // 🔹 Log failed delete
+      await logError(req.user._id, "DELETE_USER", "User", req, "User not found", { targetUserId: req.params.id });
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // 🔹 Log successful delete
+    await logSuccess(req.user._id, "DELETE_USER", "User", req.params.id, req, { deletedUserEmail: user.email });
+
+    res.json({ message: "User deleted successfully" });
+  } catch (err) {
+    // 🔹 Log error
+    await logError(req.user._id, "DELETE_USER", "User", req, err.message);
+    next(err);
+  }
+});
+
+// get users in team for all
+router.get("/team", async (req, res, next) => {
+  try {
+    const teamMembers = await User.find({ inTeam: true }).select("-password");
+    const normalizedUsers = teamMembers.map(user => ({
+      ...user.toObject(),
+      images: user.images ? user.images.map(normalizeImagePath) : []
+    }));
+    res.json({ team: normalizedUsers });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * GET /auth/profile/:id
+ * Get user profile by ID (protected route)
+ * Returns full user details including images
+ */
+router.get("/profile/:id", authMiddleware, async (req, res, next) => {
+  try {
+    // Users can only view their own profile unless they're admin or have manage_users permission
+    const { hasPermission } = require("../utils/permission");
+    if (req.user.id !== req.params.id && req.user.role !== "admin" && !hasPermission(req.user, "manage_users")) {
+      return res.status(403).json({ error: "Access denied" });
+    }
+
+    const user = await User.findById(req.params.id).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json({
+      user: {
+        ...user.toObject(),
+        images: user.images ? user.images.map(normalizeImagePath) : []
+      }
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * PUT /auth/profile/:id
+ * Update user profile (protected route)
+ * Supports partial updates and image uploads
+ */
+router.put(
+  "/profile/:id",
+  authMiddleware,
+  uploadUser.array("images", 5), // Allow up to 5 images
+  async (req, res, next) => {
+    try {
+      // Users can only update their own profile unless they're admin or have manage_users permission
+      const { hasPermission } = require("../utils/permission");
+      if (req.user.id !== req.params.id && req.user.role !== "admin" && !hasPermission(req.user, "manage_users")) {
+        return res.status(403).json({ error: "Access denied" });
+      }
+
+      const { name, email, number, inTeam, roleInTeam } = req.body;
+      const updateData = {};
+
+      // Only include fields that are provided
+      if (name) updateData.name = name;
+      if (email) updateData.email = email.toLowerCase();
+      if (number) updateData.number = number;
+      if (inTeam !== undefined) updateData.inTeam = inTeam === 'true' || inTeam === true;
+      if (roleInTeam !== undefined) updateData.roleInTeam = roleInTeam;
+
+      // Handle new images if uploaded
+      if (req.files && req.files.length > 0) {
+        const newImages = req.files.map(f => "/uploads/users/" + f.filename);
+        // Add to existing images or create new array
+        const user = await User.findById(req.params.id);
+        updateData.images = [...(user.images || []), ...newImages];
+      }
+
+      // Check email uniqueness if email is being updated
+      if (email) {
+        const existingUser = await User.findOne({
+          email: email.toLowerCase(),
+          _id: { $ne: req.params.id }
+        });
+        if (existingUser) {
+          return res.status(400).json({ error: "Email already in use" });
+        }
+      }
+
+      const updatedUser = await User.findByIdAndUpdate(
+        req.params.id,
+        updateData,
+        { new: true, runValidators: true }
+      ).select("-password");
+
+      if (!updatedUser) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      res.json({
+        message: "Profile updated successfully",
+        user: {
+          ...updatedUser.toObject(),
+          images: updatedUser.images ? updatedUser.images.map(normalizeImagePath) : []
+        }
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+/**
+ * DELETE /auth/profile/:id/images/:imageName
+ * Delete specific user image (protected route)
+ */
+router.delete("/profile/:id/images/:imageName", authMiddleware, async (req, res, next) => {
+  try {
+    const { hasPermission } = require("../utils/permission");
+    if (req.user.id !== req.params.id && req.user.role !== "admin" && !hasPermission(req.user, "manage_users")) {
+      return res.status(403).json({ error: "Access denied" });
+    }
+
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Remove image from array
+    user.images = user.images.filter(img => {
+      return img !== req.params.imageName && img !== `/uploads/users/${req.params.imageName}`;
+    });
+    await user.save();
+
+    // Optionally delete file from filesystem here
+    const fs = require('fs');
+    const path = require('path');
+    const imagePath = path.join("/app/uploads/users", path.basename(req.params.imageName));
+    
+    if (fs.existsSync(imagePath)) {
+      fs.unlinkSync(imagePath);
+    }
+
+    res.json({
+      message: "Image deleted successfully",
+      images: user.images.map(normalizeImagePath)
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * PUT /auth/profile/:id/password
+ * Change password (protected route)
+ */
+router.put("/profile/:id/password", authMiddleware, async (req, res, next) => {
+  try {
+    if (req.user.id !== req.params.id) {
+      return res.status(403).json({ error: "Can only change your own password" });
+    }
+
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ error: "Current and new password required" });
+    }
+
+    if (newPassword.length < 8) {
+      return res.status(400).json({ error: "Password must be at least 8 characters" });
+    }
+
+    const user = await User.findById(req.params.id).select("+password");
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch) {
+      // 🔹 Log failed password change (wrong current password)
+      await logError(user._id, "PASSWORD_RESET", "User", req, "Current password incorrect");
+      return res.status(401).json({ error: "Current password is incorrect" });
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    // 🔹 Log successful password change
+    await logSuccess(user._id, "PASSWORD_RESET", "User", user._id, req);
+
+    res.json({ message: "Password updated successfully" });
+  } catch (err) {
+    // 🔹 Log error
+    await logError(req.user._id, "PASSWORD_RESET", "User", req, err.message);
+    next(err);
+  }
+});
+module.exports = router;

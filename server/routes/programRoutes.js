@@ -1,0 +1,834 @@
+// const express = require("express");
+// const upload = require("../middlewares/upload");
+// const authMiddleware = require("../middlewares/authMiddleware");
+// const authorize = require("../middlewares/authorizeMiddleware");
+// const Program = require("../models/Programs");
+// const BookedPrograms = require("../models/BookedPrograms");
+// const router = express.Router();
+
+// /**
+//  * Image path normalization helper
+//  */
+// function normalizeImagePath(imagePath) {
+//   return `/uploads/programs/${imagePath}`;
+// }
+
+// /**
+//  * GET /programs
+//  * Get all programs - PUBLIC ROUTE
+//  */
+// router.get("/", async (req, res, next) => {
+//   try {
+//     const programs = await Program.find().populate("category");
+//     const normalizedPrograms = programs.map(program => ({
+//       ...program.toObject(),
+//       images: program.images ? program.images.map(normalizeImagePath) : []
+//     }));
+//     res.json(normalizedPrograms);
+//   } catch (err) {
+//     next(err);
+//   }
+// });
+
+// /**
+//  * GET /programs/category/:categoryId
+//  * Get programs by category - PUBLIC ROUTE
+//  */
+// router.get("/category/:categoryId", async (req, res, next) => {
+//   try {
+//     const { categoryId } = req.params;
+
+//     const programs = await Program.find({
+//       category: categoryId,
+//       status: "active",
+//     }).populate("category", "nameEn nameAr");
+
+//     if (!programs.length) {
+//       return res.status(404).json({
+//         message: "No programs found for this category"
+//       });
+//     }
+
+//     const normalizedPrograms = programs.map(program => ({
+//       ...program.toObject(),
+//       images: program.images ? program.images.map(normalizeImagePath) : []
+//     }));
+
+//     res.json(normalizedPrograms);
+//   } catch (err) {
+//     next(err);
+//   }
+// });
+
+// // Admin route to get all booked programs
+// router.get("/booked", authMiddleware, authorize("admin"), async (req, res, next) => {
+//   try {
+//     const bookedPrograms = await BookedPrograms.find().populate("program");
+//     res.json(bookedPrograms);
+//   } catch (err) {
+//     next(err);
+//   }
+// });
+
+// // admin update booking status
+// router.put("/booked/:id/status", authMiddleware, authorize("admin"), async (req, res, next) => {
+//   try {
+//     const { status } = req.body;
+//     if (!["pending", "reviewed"].includes(status)) {
+//       return res.status(400).json({ error: "Invalid status value" });
+//     }
+//     const bookedProgram = await BookedPrograms.findByIdAndUpdate(
+//       req.params.id,
+//       { status: status === "pending" ? "pending" : "reviewed" },
+//       { new: true, runValidators: true }
+//     ).populate("program");
+//     if (!bookedProgram) return res.status(404).json({ error: "Booking not found" });
+//     res.json(bookedProgram);
+//   } catch (err) {
+//     next(err);
+//   }
+// });
+
+// // User route to book a program
+// router.post("/book", async (req, res, next) => {
+//   try {
+//     const { userEmail, userName, userNumber, programId, message } = req.body;
+//     const program = await Program.findById(programId);
+//     if (!program) {
+//       return res.status(404).json({ error: "Program not found" });
+//     }
+//     const bookedProgram = new BookedPrograms({
+//       userEmail,
+//       userName,
+//       userNumber,
+//       program: programId,
+//       message
+//     });
+//     await bookedProgram.save();
+//     res.status(201).json(bookedProgram);
+//   }
+//   catch (err) {
+//     next(err);
+//   }
+// });
+
+// //  admin delete a booking
+// router.delete("/booked/:id", authMiddleware, authorize("admin"), async (req, res, next) => {
+//   try {
+//     const bookedProgram = await BookedPrograms.findByIdAndDelete(req.params.id);
+//     if (!bookedProgram) return res.status(404).json({ error: "Booking not found" });
+//     res.json({ message: "Booking deleted" });
+//   } catch (err) {
+//     next(err);
+//   }
+// });
+
+// /**
+//  * GET /programs/:id
+//  * Get single program by ID - PUBLIC ROUTE
+//  */
+// router.get("/:id", async (req, res, next) => {
+//   try {
+//     const program = await Program.findById(req.params.id).populate("category");
+
+//     if (!program) {
+//       return res.status(404).json({ error: "Program not found" });
+//     }
+
+//     const normalizedProgram = {
+//       ...program.toObject(),
+//       images: program.images ? program.images.map(normalizeImagePath) : []
+//     };
+
+//     res.json(normalizedProgram);
+//   } catch (err) {
+//     next(err);
+//   }
+// });
+
+// /**
+//  * POST /programs
+//  * Create new program - ADMIN ONLY
+//  * 
+//  * Security:
+//  * - Requires authentication and admin role
+//  * - File uploads restricted to 5 images
+//  */
+// router.post(
+//   "/",
+//   authMiddleware,
+//   // authorize("admin"),
+//   upload.array("images", 5),
+//   async (req, res, next) => {
+//     try {
+//       const {
+//         titleEn,
+//         titleAr,
+//         descriptionEn,
+//         descriptionAr,
+//         category,
+//         country,
+//         durationDays,
+//         durationNights,
+//         price,
+//         status,
+//         days
+//       } = req.body;
+
+//       // Extract uploaded image filenames
+//       const images = (req.files || []).map(f => f.filename);
+
+//       const program = new Program({
+//         titleEn,
+//         titleAr,
+//         descriptionEn,
+//         descriptionAr,
+//         category,
+//         country,
+//         durationDays,
+//         durationNights,
+//         price,
+//         status,
+//         images,
+//         days: days ? JSON.parse(days) : []
+//       });
+
+//       await program.save();
+//       await program.populate("category");
+
+//       // Normalize response
+//       const response = {
+//         ...program.toObject(),
+//         images: program.images.map(normalizeImagePath)
+//       };
+
+//       res.status(201).json(response);
+//     } catch (err) {
+//       next(err);
+//     }
+//   }
+// );
+
+// /**
+//  * PUT /programs/:id
+//  * Update program - ADMIN ONLY
+//  */
+// router.put(
+//   "/:id",
+//   authMiddleware,
+//   authorize("admin"),
+//   async (req, res, next) => {
+//     try {
+//       const {
+//         titleEn,
+//         titleAr,
+//         descriptionEn,
+//         descriptionAr,
+//         category,
+//         country,
+//         durationDays,
+//         durationNights,
+//         price,
+//         status,
+//         days
+//       } = req.body;
+
+//       const updateData = {
+//         titleEn,
+//         titleAr,
+//         descriptionEn,
+//         descriptionAr,
+//         category,
+//         country,
+//         durationDays,
+//         durationNights,
+//         price,
+//         status,
+//         days: days ? JSON.parse(days) : undefined
+//       };
+
+//       const program = await Program.findByIdAndUpdate(
+//         req.params.id,
+//         updateData,
+//         { new: true, runValidators: true }
+//       ).populate("category");
+
+//       if (!program) {
+//         return res.status(404).json({ error: "Program not found" });
+//       }
+
+//       // Normalize response
+//       const response = {
+//         ...program.toObject(),
+//         images: program.images.map(normalizeImagePath)
+//       };
+
+//       res.json(response);
+//     } catch (err) {
+//       next(err);
+//     }
+//   }
+// );
+
+// /**
+//  * DELETE /programs/:id
+//  * Delete program - ADMIN ONLY
+//  */
+// router.delete("/:id", authMiddleware, authorize("admin"), async (req, res, next) => {
+//   try {
+//     const program = await Program.findByIdAndDelete(req.params.id);
+
+//     if (!program) {
+//       return res.status(404).json({ error: "Program not found" });
+//     }
+
+//     res.json({ message: "Program deleted successfully" });
+//   } catch (err) {
+//     next(err);
+//   }
+// });
+
+
+
+
+// module.exports = router;
+
+
+
+const express = require("express");
+const upload = require("../middlewares/upload");
+const authMiddleware = require("../middlewares/authMiddleware");
+const authorize = require("../middlewares/authorize");
+const { logSuccess, logError } = require("../utils/loggerService");
+const Program = require("../models/Programs");
+const BookedPrograms = require("../models/BookedPrograms");
+const User = require("../models/Users");
+const router = express.Router();
+
+/**
+ * Image path normalization helper
+ */
+function normalizeImagePath(imagePath) {
+  // Check if already normalized
+  if (imagePath.startsWith('/uploads/')) {
+    return imagePath;
+  }
+  return `/uploads/programs/${imagePath}`;
+}
+
+/**
+ * GET /programs
+ * Get all programs - PUBLIC ROUTE
+ */
+router.get("/", async (req, res, next) => {
+  try {
+    const programs = await Program.find().populate("category");
+    const normalizedPrograms = programs.map(program => ({
+      ...program.toObject(),
+      images: program.images ? program.images.map(normalizeImagePath) : []
+    }));
+    
+    // 🔹 Log search action
+    if (req.user) {
+      await logSuccess(req.user._id, "SEARCH_PROGRAM", "Program", null, req, {
+        resultCount: normalizedPrograms.length
+      });
+    }
+    
+    res.json(normalizedPrograms);
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * GET /programs/category/:categoryId
+ * Get programs by category - PUBLIC ROUTE
+ */
+router.get("/category/:categoryId", async (req, res, next) => {
+  try {
+    const { categoryId } = req.params;
+
+    const programs = await Program.find({
+      category: categoryId,
+      status: "active",
+    }).populate("category", "nameEn nameAr");
+
+    if (!programs.length) {
+      if (req.user) {
+        await logError(req.user._id, "SEARCH_PROGRAM", "Program", req, "No programs found", {
+          categoryId
+        });
+      }
+      return res.status(404).json({
+        message: "No programs found for this category"
+      });
+    }
+
+    const normalizedPrograms = programs.map(program => ({
+      ...program.toObject(),
+      images: program.images ? program.images.map(normalizeImagePath) : []
+    }));
+    
+    // 🔹 Log search action
+    if (req.user) {
+      await logSuccess(req.user._id, "SEARCH_PROGRAM", "Program", null, req, {
+        categoryId,
+        resultCount: normalizedPrograms.length
+      });
+    }
+
+    res.json(normalizedPrograms);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Admin route to get all booked programs
+router.get("/booked", authMiddleware, authorize("manage_booked_programs"), async (req, res, next) => {
+  try {
+    const bookedPrograms = await BookedPrograms.find().populate("program").populate("reviewedBy", "name");
+    
+    // 🔹 Log search action
+    await logSuccess(req.user._id, "SEARCH_BOOKED_PROGRAM", "BookedProgram", null, req, {
+      resultCount: bookedPrograms.length
+    });
+    
+    res.json(bookedPrograms);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// admin update booking status
+// admin update booking status
+router.put("/booked/:id/status", authMiddleware, authorize("manage_booked_programs"), async (req, res, next) => {
+  try {
+    const { status } = req.body;
+    if (!["pending", "reviewed"].includes(status)) {
+      return res.status(400).json({ error: "Invalid status value" });
+    }
+    
+    // Update and then fetch with populate to get full data
+    await BookedPrograms.findByIdAndUpdate(
+      req.params.id,
+      { 
+        status: status === "pending" ? "pending" : "reviewed",
+        reviewedBy: req.user.id 
+      },
+      { new: true, runValidators: true }
+    );
+    
+    // Fetch the updated document with populated fields
+    const bookedProgram = await BookedPrograms.findById(req.params.id)
+      .populate("program")
+      .populate("reviewedBy", "name");
+      
+    if (!bookedProgram) {
+      await logError(req.user._id, "EDIT_BOOKED_PROGRAM", "BookedProgram", req, "Booking not found", {
+        bookingId: req.params.id
+      });
+      return res.status(404).json({ error: "Booking not found" });
+    }
+    
+    // 🔹 Log edit action
+    await logSuccess(req.user._id, "EDIT_BOOKED_PROGRAM", "BookedProgram", bookedProgram._id, req, {
+      newStatus: status
+    });
+    
+    res.json(bookedProgram);
+  } catch (err) {
+    // 🔹 Log error
+    await logError(req.user._id, "EDIT_BOOKED_PROGRAM", "BookedProgram", req, err.message, {
+      bookingId: req.params.id
+    });
+    next(err);
+  }
+});
+
+// User route to book a program
+router.post("/book", async (req, res, next) => {
+  try {
+    const { userEmail, userName, userNumber, programId, message } = req.body;
+    
+    // Find user by email to get userId
+    const user = await User.findOne({ email: userEmail });
+    if (!user) {
+      return res.status(400).json({ error: "User not found" });
+    }
+
+    const program = await Program.findById(programId);
+    if (!program) {
+      return res.status(404).json({ error: "Program not found" });
+    }
+    const bookedProgram = new BookedPrograms({
+      userId: user._id,
+      userEmail,
+      userName,
+      userNumber,
+      program: programId,
+      message
+    });
+    await bookedProgram.save();
+    
+    // 🔹 Log create booking action
+    if (user._id) {
+      await logSuccess(user._id, "CREATE_BOOKED_PROGRAM", "BookedProgram", bookedProgram._id, req, {
+        programId,
+        programTitle: program.titleEn
+      });
+    }
+    
+    res.status(201).json(bookedProgram);
+  }
+  catch (err) {
+    await logError(null, "CREATE_BOOKED_PROGRAM", "BookedProgram", req, err.message, {
+      programId: req.body.programId,
+      userEmail: req.body.userEmail
+    });
+    next(err);
+  }
+});
+
+//  admin delete a booking
+router.delete("/booked/:id", authMiddleware, authorize("manage_booked_programs"), async (req, res, next) => {
+  try {
+    const bookedProgram = await BookedPrograms.findByIdAndDelete(req.params.id);
+    if (!bookedProgram) {
+      await logError(req.user._id, "DELETE_BOOKED_PROGRAM", "BookedProgram", req, "Booking not found", {
+        bookingId: req.params.id
+      });
+      return res.status(404).json({ error: "Booking not found" });
+    }
+    
+    // 🔹 Log delete action
+    await logSuccess(req.user._id, "DELETE_BOOKED_PROGRAM", "BookedProgram", req.params.id, req);
+    
+    res.json({ message: "Booking deleted" });
+  } catch (err) {
+    await logError(req.user._id, "DELETE_BOOKED_PROGRAM", "BookedProgram", req, err.message, {
+      bookingId: req.params.id
+    });
+    next(err);
+  }
+});
+
+/**
+ * GET /programs/:id
+ * Get single program by ID - PUBLIC ROUTE
+ */
+router.get("/:id", async (req, res, next) => {
+  try {
+    const program = await Program.findById(req.params.id).populate("category");
+
+    if (!program) {
+      if (req.user) {
+        await logError(req.user._id, "SEARCH_PROGRAM", "Program", req, "Program not found", {
+          programId: req.params.id
+        });
+      }
+      return res.status(404).json({ error: "Program not found" });
+    }
+
+    const normalizedProgram = {
+      ...program.toObject(),
+      images: program.images ? program.images.map(normalizeImagePath) : []
+    };
+    
+    // 🔹 Log search action
+    if (req.user) {
+      await logSuccess(req.user._id, "SEARCH_PROGRAM", "Program", program._id, req);
+    }
+
+    res.json(normalizedProgram);
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * POST /programs
+ * Create new program - ADMIN ONLY
+ * 
+ * Security:
+ * - Requires authentication and admin role
+ * - File uploads restricted to 5 images
+ */
+router.post(
+  "/",
+  authMiddleware,
+  authorize("add_program"),
+  upload.array("images", 5),
+  async (req, res, next) => {
+    try {
+      const {
+        titleEn,
+        titleAr,
+        descriptionEn,
+        descriptionAr,
+        category,
+        country,
+        durationDays,
+        durationNights,
+        price,
+        status,
+        days
+      } = req.body;
+
+      // Extract uploaded image filenames
+      const images = (req.files || []).map(f => "/uploads/programs/" + f.filename);
+
+      const program = new Program({
+        titleEn,
+        titleAr,
+        descriptionEn,
+        descriptionAr,
+        category,
+        country,
+        durationDays,
+        durationNights,
+        price,
+        status,
+        images,
+        days: days ? JSON.parse(days) : []
+      });
+
+      await program.save();
+      await program.populate("category");
+
+      // Normalize response
+      const response = {
+        ...program.toObject(),
+        images: program.images.map(normalizeImagePath)
+      };
+      
+      // 🔹 Log create action
+      await logSuccess(req.user._id, "CREATE_PROGRAM", "Program", program._id, req, {
+        programTitle: titleEn,
+        category,
+        price,
+        imageCount: images.length
+      });
+
+      res.status(201).json(response);
+    } catch (err) {
+      // 🔹 Log error
+      await logError(req.user._id, "CREATE_PROGRAM", "Program", req, err.message, {
+        programTitle: req.body.titleEn
+      });
+      next(err);
+    }
+  }
+);
+
+/**
+ * PUT /programs/:id
+ * Update program - ADMIN ONLY
+ * FIXED: Added upload.array("images") to handle image uploads
+ */
+router.put(
+  "/:id",
+  authMiddleware,
+  authorize("edit_program"),
+  upload.array("images", 5), // FIXED: Added multer middleware for image uploads
+  async (req, res, next) => {
+    try {
+      const {
+        titleEn,
+        titleAr,
+        descriptionEn,
+        descriptionAr,
+        category,
+        country,
+        durationDays,
+        durationNights,
+        price,
+        status,
+        days
+      } = req.body;
+
+      // Get existing program to merge images
+      const existingProgram = await Program.findById(req.params.id);
+      if (!existingProgram) {
+        return res.status(404).json({ error: "Program not found" });
+      }
+
+      // Handle images: keep existing + add new ones
+      let images = existingProgram.images || [];
+      
+      // Add new uploaded images
+      if (req.files && req.files.length > 0) {
+        const newImages = req.files.map(f => "/uploads/programs/" + f.filename);
+        images = [...images, ...newImages];
+      }
+
+      const updateData = {
+        titleEn,
+        titleAr,
+        descriptionEn,
+        descriptionAr,
+        category,
+        country,
+        durationDays,
+        durationNights,
+        price,
+        status,
+        images,
+        days: days ? JSON.parse(days) : undefined
+      };
+
+      const program = await Program.findByIdAndUpdate(
+        req.params.id,
+        updateData,
+        { new: true, runValidators: true }
+      ).populate("category");
+
+      if (!program) {
+        await logError(req.user._id, "EDIT_PROGRAM", "Program", req, "Program not found", {
+          programId: req.params.id
+        });
+        return res.status(404).json({ error: "Program not found" });
+      }
+
+      // Normalize response
+      const response = {
+        ...program.toObject(),
+        images: program.images.map(normalizeImagePath)
+      };
+      
+      // 🔹 Log edit action
+      await logSuccess(req.user._id, "EDIT_PROGRAM", "Program", program._id, req, {
+        programTitle: titleEn,
+        price,
+        imageCount: program.images.length
+      });
+
+      res.json(response);
+    } catch (err) {
+      // 🔹 Log error
+      await logError(req.user._id, "EDIT_PROGRAM", "Program", req, err.message, {
+        programId: req.params.id,
+        programTitle: req.body.titleEn
+      });
+      next(err);
+    }
+  }
+);
+
+/**
+ * DELETE /programs/:id
+ * Delete program - ADMIN ONLY
+ */
+router.delete("/:id", authMiddleware, authorize("delete_program"), async (req, res, next) => {
+  try {
+    const program = await Program.findByIdAndDelete(req.params.id);
+
+    if (!program) {
+      await logError(req.user._id, "DELETE_PROGRAM", "Program", req, "Program not found", {
+        programId: req.params.id
+      });
+      return res.status(404).json({ error: "Program not found" });
+    }
+    
+    // 🔹 Log delete action
+    await logSuccess(req.user._id, "DELETE_PROGRAM", "Program", req.params.id, req, {
+      programTitle: program.titleEn
+    });
+
+    res.json({ message: "Program deleted successfully" });
+  } catch (err) {
+    // 🔹 Log error
+    await logError(req.user._id, "DELETE_PROGRAM", "Program", req, err.message, {
+      programId: req.params.id
+    });
+    next(err);
+  }
+});
+
+// Delete img
+/**
+ * DELETE /programs/:id/images/:imageName
+ * Delete a specific image from a program - ADMIN ONLY
+ */
+// router.delete("/:id/images/:imageName", authMiddleware, authorize("admin"), async (req, res, next) => {
+//   try {
+//     const { id, imageName } = req.params;
+    
+//     const program = await Program.findById(id);
+//     if (!program) {
+//       return res.status(404).json({ error: "Program not found" });
+//     }
+
+//     // Remove image from array
+//     program.images = program.images.filter(img => img !== imageName);
+//     await program.save();
+
+//     // Optionally: Delete file from filesystem
+//     const fs = require('fs');
+//     const path = require('path');
+//     const imagePath = path.join(__dirname, '../uploads/programs', imageName);
+    
+//     if (fs.existsSync(imagePath)) {
+//       fs.unlinkSync(imagePath);
+//     }
+
+//     res.json({ 
+//       message: "Image deleted successfully",
+//       images: program.images.map(normalizeImagePath)
+//     });
+//   } catch (err) {
+//     next(err);
+//   }
+// });
+router.delete("/:id/images/:imageName", authMiddleware, authorize("edit_program"), async (req, res, next) => {
+  try {
+    const { id, imageName } = req.params;
+    
+    const program = await Program.findById(id);
+    if (!program) {
+      await logError(req.user._id, "EDIT_PROGRAM", "Program", req, "Program not found", {
+        programId: id
+      });
+      return res.status(404).json({ error: "Program not found" });
+    }
+
+    // ✅ FIX: handle both cases
+    program.images = program.images.filter(img => {
+      return img !== imageName && img !== `/uploads/programs/${imageName}`;
+    });
+
+    await program.save();
+
+    const fs = require('fs');
+    const path = require('path');
+    const imagePath = path.join('/app/uploads/programs', path.basename(imageName));
+    
+    if (fs.existsSync(imagePath)) {
+      fs.unlinkSync(imagePath);
+    }
+    
+    // 🔹 Log image deletion as edit action
+    await logSuccess(req.user._id, "EDIT_PROGRAM", "Program", id, req, {
+      action: "delete_image",
+      imageName
+    });
+
+    res.json({ 
+      message: "Image deleted successfully",
+      images: program.images
+    });
+  } catch (err) {
+    // 🔹 Log error
+    await logError(req.user._id, "EDIT_PROGRAM", "Program", req, err.message, {
+      programId: id,
+      imageName,
+      action: "delete_image"
+    });
+    next(err);
+  }
+});
+
+
+
+
+module.exports = router;

@@ -1,0 +1,91 @@
+### Create new user
+# GET  http://localhost:5000/api/countries
+# Content-Type: application/json
+
+###
+
+# GET  http://localhost:5000/api/categories/6981fe7ed188377ff3917b6c
+# Content-Type: application/json
+
+###
+
+# GET http://localhost:5000/api/users
+# Content-Type: application/json
+
+### 
+
+POST http://147.93.126.15/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "headFromPostman8",
+  "email": "headFromPostman8@gmail.com",
+  "password": "hH123456",
+  "number": "432235234",
+  "role":"head",
+  "images": [
+  ],
+  "permissions": [
+    "manage_booked_flights",
+    "manage_booked_transportation",
+    "manage_booked_hotels",
+    "manage_booked_cruises",
+    "manage_users"
+  ]
+}
+
+###
+
+POST http://localhost:5000/api/flights
+Content-Type: application/json
+
+{
+  "userEmail": "test@gmail.com",
+  "userName": "Ahmed",
+  "userNumber": "0100000000",
+  "tripType": "round",
+  "from": "Cairo",
+  "to": "London",
+  "date": "2026-03-10",
+  "returnDate": "2026-03-20",
+  "numOfAdults": 2,
+  "numOfChildren": 1,
+  "cabinClass": "economy"
+}
+
+###
+
+POST http://localhost:5000/api/flights
+Content-Type: application/json
+
+{
+  "userEmail": "test@gmail.com",
+  "userName": "Ahmed",
+  "userNumber": "0100000000",
+  "tripType": "multi",
+  "multiCities": [
+    { "from": "Cairo", "to": "Dubai", "date": "2026-05-01" },
+    { "from": "Dubai", "to": "Tokyo", "date": "2026-05-05" }
+  ],
+  "numOfAdults": 2,
+  "numOfChildren": 0,
+  "cabinClass": "first"
+}
+
+###
+
+POST http://localhost:5000/api/flights
+Content-Type: application/json
+
+{
+  "userEmail": "test@gmail.com",
+  "userName": "Ahmed",
+  "userNumber": "0100000000",
+  "tripType": "oneway",
+  "from": "Cairo",
+  "to": "Paris",
+  "date": "2026-04-01",
+  "numOfAdults": 1,
+  "numOfChildren": 0,
+  "cabinClass": "business"
+}

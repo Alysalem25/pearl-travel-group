@@ -1,0 +1,397 @@
+const express = require("express");
+const path = require("path");
+const uploadCategory = require("../middlewares/uploadCategory");
+const authMiddleware = require("../middlewares/authMiddleware");
+const authorize = require("../middlewares/authorize");
+const { validateCategory, handleValidationErrors } = require("../middlewares/validators");
+const { logSuccess, logError } = require("../utils/loggerService");
+const Category = require("../models/Category");
+
+const router = express.Router();
+
+/**
+ * Image path normalization helper
+ * ✅ Returns: /uploads/categories/filename.jpg
+ * Used by API to return absolute paths that work in browser
+ */
+// function normalizeImagePath(imagePath) {
+//   return `/uploads/categories/${imagePath}`; 
+// }
+
+function normalizeImagePath(imagePath) {
+  // Check if already normalized
+  if (imagePath.startsWith('/uploads/')) {
+    return imagePath;
+  }
+  return `/uploads/categories/${imagePath}`;
+}
+
+
+/**
+ * GET /categories
+ * Get all categories - PUBLIC ROUTE
+ */
+router.get("/", async (req, res, next) => {
+  try {
+    const categories = await Category.find();
+    const normalizedCategories = categories.map(category => ({
+      ...category.toObject(),
+      images: category.images ? category.images.map(normalizeImagePath) : []
+    }));
+    
+    // 🔹 Log search action
+    if (req.user) {
+      await logSuccess(req.user._id, "SEARCH_CATEGORY", "Category", null, req, {
+        resultCount: normalizedCategories.length
+      });
+    }
+    
+    res.json(normalizedCategories);
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * GET /categories/country/:country
+ * Get categories by country - PUBLIC ROUTE
+ * Must be defined BEFORE /:id to avoid route collision
+ */
+router.get("/country/:country", async (req, res, next) => {
+  try {
+    const { country } = req.params;
+
+    const categories = await Category.find({
+      country,
+      isActive: true
+    });
+
+    if (!categories || categories.length === 0) {
+      if (req.user) {
+        await logError(req.user._id, "SEARCH_CATEGORY", "Category", req, "No categories found", {
+          country
+        });
+      }
+      return res.status(404).json({ error: "No categories found for this country" });
+    }
+
+    const normalizedCategories = categories.map(category => ({
+      ...category.toObject(),
+      images: category.images ? category.images.map(normalizeImagePath) : []
+    }));
+    
+    // 🔹 Log search action
+    if (req.user) {
+      await logSuccess(req.user._id, "SEARCH_CATEGORY", "Category", null, req, {
+        country,
+        resultCount: normalizedCategories.length
+      });
+    }
+
+    res.json(normalizedCategories);
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * GET /categories/:id
+ * Get single category by ID - PUBLIC ROUTE
+ */
+router.get("/:id", async (req, res, next) => {
+  try {
+    const category = await Category.findById(req.params.id);
+
+    if (!category) {
+      if (req.user) {
+        await logError(req.user._id, "SEARCH_CATEGORY", "Category", req, "Category not found", {
+          categoryId: req.params.id
+        });
+      }
+      return res.status(404).json({ error: "Category not found" });
+    }
+
+    const normalizedCategory = {
+      ...category.toObject(),
+      images: category.images ? category.images.map(normalizeImagePath) : []
+    };
+    
+    // 🔹 Log search action
+    if (req.user) {
+      await logSuccess(req.user._id, "SEARCH_CATEGORY", "Category", category._id, req);
+    }
+
+    res.json(normalizedCategory);
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * POST /categories
+ * Create new category - ADMIN ONLY
+ * 
+ * Security:
+ * - Requires authentication (authMiddleware)
+ * - Requires admin role (authorize)
+ * - Validates input (validateCategory)
+ * - File uploads restricted to 1 image
+ */
+router.post(
+  "/",
+  authMiddleware,
+  authorize("add_category"),
+  uploadCategory.array("images", 1),
+  validateCategory,
+  handleValidationErrors,
+  async (req, res, next) => {
+    try {
+      const {
+        nameEn,
+        nameAr,
+        type,
+        descriptionEn,
+        descriptionAr,
+        country,
+        isActive
+      } = req.body;
+
+      const images = (req.files || []).map(f => "/uploads/categories/" + f.filename);
+
+      const category = new Category({
+        nameEn,
+        nameAr,
+        type,
+        descriptionEn,
+        descriptionAr,
+        country,
+        images,
+        isActive
+      });
+
+      await category.save();
+
+      const response = {
+        ...category.toObject(),
+        images: category.images.map(normalizeImagePath)
+      };
+      
+      // 🔹 Log CREATE action
+      await logSuccess(req.user._id, "CREATE_CATEGORY", "Category", category._id, req, {
+        categoryName: nameEn,
+        type,
+        country,
+        imageCount: images.length
+      });
+
+      res.status(201).json(response);
+    } catch (err) {
+      // 🔹 Log error
+      await logError(req.user._id, "CREATE_CATEGORY", "Category", req, err.message, {
+        categoryName: req.body.nameEn,
+        type: req.body.type
+      });
+      next(err);
+    }
+  }
+);
+
+/**
+ * PUT /categories/:id
+ * Update category - ADMIN ONLY
+ */
+router.put(
+  "/:id",
+  authMiddleware,
+  authorize("edit_category"),
+  uploadCategory.array("images", 5),
+  validateCategory,
+  handleValidationErrors,
+  async (req, res, next) => {
+    try {
+      const { nameEn, nameAr, type, descriptionEn, descriptionAr, country, isActive } = req.body;
+
+      const existingCategory = await Category.findById(req.params.id);
+      if (!existingCategory) {
+        await logError(req.user._id, "EDIT_CATEGORY", "Category", req, "Category not found", {
+          categoryId: req.params.id
+        });
+        return res.status(404).json({ error: "Category not found" });
+      }
+
+      let images = existingCategory.images || [];
+
+      if (req.files && req.files.length > 0) {
+        const newImages = req.files.map(f => "/uploads/categories/" + f.filename);
+        images = [...images, ...newImages];
+      }
+
+      const category = await Category.findByIdAndUpdate(
+        req.params.id,
+        { nameEn, nameAr, type, descriptionEn, descriptionAr, country, isActive, images },
+        { new: true, runValidators: true }
+      );
+
+      if (!category) {
+        await logError(req.user._id, "EDIT_CATEGORY", "Category", req, "Category not found after update", {
+          categoryId: req.params.id
+        });
+        return res.status(404).json({ error: "Category not found" });
+      }
+
+      const response = {
+        ...category.toObject(),
+        images: category.images ? category.images.map(normalizeImagePath) : []
+      };
+      
+      // 🔹 Log EDIT action
+      await logSuccess(req.user._id, "EDIT_CATEGORY", "Category", category._id, req, {
+        categoryName: nameEn,
+        type,
+        country,
+        newImageCount: images.length
+      });
+
+      res.json(response);
+    } catch (err) {
+      // 🔹 Log error
+      await logError(req.user._id, "EDIT_CATEGORY", "Category", req, err.message, {
+        categoryId: req.params.id,
+        categoryName: req.body.nameEn
+      });
+      next(err);
+    }
+  }
+);
+
+/**
+ * DELETE /categories/:id
+ * Delete category - ADMIN ONLY
+ */
+router.delete("/:id", authMiddleware, authorize("delete_category"), async (req, res, next) => {
+  try {
+    const category = await Category.findByIdAndDelete(req.params.id);
+
+    if (!category) {
+      await logError(req.user._id, "DELETE_CATEGORY", "Category", req, "Category not found", {
+        categoryId: req.params.id
+      });
+      return res.status(404).json({ error: "Category not found" });
+    }
+    
+    // 🔹 Log DELETE action
+    await logSuccess(req.user._id, "DELETE_CATEGORY", "Category", req.params.id, req, {
+      categoryName: category.nameEn,
+      type: category.type
+    });
+
+    res.json({ message: "Category deleted successfully" });
+  } catch (err) {
+    // 🔹 Log error
+    await logError(req.user._id, "DELETE_CATEGORY", "Category", req, err.message, {
+      categoryId: req.params.id
+    });
+    next(err);
+  }
+});
+
+/**
+ * POST /categories/:id/images
+ * Add image to existing category - ADMIN ONLY
+ */
+router.post(
+  "/:id/images",
+  authMiddleware,
+  authorize("edit_category"),
+  uploadCategory.array("images", 1),
+  async (req, res, next) => {
+    try {
+      const category = await Category.findById(req.params.id);
+
+      if (!category) {
+        await logError(req.user._id, "EDIT_CATEGORY", "Category", req, "Category not found", {
+          categoryId: req.params.id
+        });
+        return res.status(404).json({ error: "Category not found" });
+      }
+
+      const images = (req.files || []).map(f => "/uploads/categories/" + f.filename);
+      category.images.push(...images);
+
+      await category.save();
+
+      const response = {
+        ...category.toObject(),
+        images: category.images ? category.images.map(normalizeImagePath) : []
+      };
+      
+      // 🔹 Log image addition as EDIT action
+      await logSuccess(req.user._id, "EDIT_CATEGORY", "Category", category._id, req, {
+        action: "add_images",
+        imagesAdded: images.length
+      });
+
+      res.json(response);
+    } catch (err) {
+      // 🔹 Log error
+      await logError(req.user._id, "EDIT_CATEGORY", "Category", req, err.message, {
+        categoryId: req.params.id,
+        action: "add_images"
+      });
+      next(err);
+    }
+  }
+);
+
+
+// DELETE IMAGE FROM CATEGORY
+router.delete(
+  "/:id/images/:imageName",
+  authMiddleware,
+  authorize("edit_category"),
+  async (req, res, next) => {
+    try {
+      const { id, imageName } = req.params;
+
+      const category = await Category.findById(id);
+      if (!category) {
+        await logError(req.user._id, "EDIT_CATEGORY", "Category", req, "Category not found", {
+          categoryId: id
+        });
+        return res.status(404).json({ error: "Category not found" });
+      }
+
+      // 🧹 remove from DB
+      category.images = category.images.filter(img => {
+        const name = img.split('/').pop();
+        return name !== imageName;
+      });
+
+      await category.save();
+
+      const fs = require('fs');
+      const path = require('path');
+      const imagePath = path.join("/app/uploads/categories", path.basename(imageName));
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
+      
+      // 🔹 Log image deletion as EDIT action
+      await logSuccess(req.user._id, "EDIT_CATEGORY", "Category", id, req, {
+        action: "delete_image",
+        imageName
+      });
+
+      res.json({ message: "Image deleted successfully", category });
+    } catch (err) {
+      // 🔹 Log error
+      await logError(req.user._id, "EDIT_CATEGORY", "Category", req, err.message, {
+        categoryId: id,
+        imageName: req.params.imageName,
+        action: "delete_image"
+      });
+      next(err);
+    }
+  }
+);
+module.exports = router;

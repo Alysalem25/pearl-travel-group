@@ -1,0 +1,48 @@
+const mongoose = require("mongoose");
+
+const BookedProgramsSchema = new mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+    },
+    userEmail: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    userName: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    // Useful for categorizing 'Domestic' vs 'International' vs 'Conference'
+    userNumber: {
+        type: String,
+        required: true,
+    },
+    message: {
+        type: String,
+        default: "Egypt",
+    },
+    program: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Program",
+        required: true,
+    },
+    status: {
+        type: String,
+        enum: ["pending", "reviewed"],
+        default: "pending",
+    },
+
+      reviewedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
+}, {
+    timestamps: true,
+});
+
+module.exports = mongoose.models.BookedPrograms || mongoose.model("BookedPrograms", BookedProgramsSchema);
