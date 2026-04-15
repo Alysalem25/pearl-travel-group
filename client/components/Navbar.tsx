@@ -120,11 +120,12 @@ function NavbarContent() {
       dir='ltr'
     >
       <div className={`
-  flex flex-row bg-gray-600 sm:items-center justify-around sm:justify-between sm:px-6 gap-3 text-sm text-white
+  flex flex-row bg-gray-600 sm:items-center justify-around sm:justify-between sm:px-6
+   gap-3 text-sm text-white
   transition-all duration-5000 ease-in-out overflow-hidden
   ${scrolled
           ? "opacity-0 max-h-0 py-0 pointer-events-none"
-          : "opacity-100 max-h-20 py-2"
+          : "opacity-100 max-h-20"
         }
 `}>
 
