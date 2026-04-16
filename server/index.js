@@ -35,7 +35,7 @@ app.use(helmet());
 // Parse JSON request bodies
 app.use(express.json({ limit: "10mb" }));
 
-const allowedOrigins = ["http://localhost:3000", "http://147.93.126.15", "http://147.93.126.15/login"];
+const allowedOrigins = ["http://localhost:3000", "http://147.93.126.15", "http://147.93.126.15/login", "https://pearltravelgroup.com","http://pearltravelgroup.com"];
 
 app.use(cors({
   origin: function (origin, callback) {
