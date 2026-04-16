@@ -314,7 +314,7 @@ function CruisesContent() {
   if (!mounted) return null;
 
   return (
-    <div dir={getDirection(lang)} className="min-h-screen bg-gray-50">
+    <div dir={getDirection(lang)} className="min-h-screen bg-gray-50 text-gray-800">
       <Navbar />
 
       {/* Hero Section */}

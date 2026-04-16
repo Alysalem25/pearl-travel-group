@@ -145,7 +145,7 @@ function CruisiesContent() {
 
     return (
         <>
-            <main className="min-h-screen bg-white" dir={direction}>
+            <main className="min-h-screen bg-white text-gray-800" dir={direction}>
                 <Navbar />
 
                 {/* Same layout as Egypt page: section + max-w-7xl + title + grid */}

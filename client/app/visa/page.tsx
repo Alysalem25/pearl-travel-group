@@ -975,7 +975,7 @@ function VisaPageContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50" dir={direction}>
+    <div className="min-h-screen bg-gray-50 text-gray-800" dir={direction}>
       <Navbar />
 
       <main className="relative z-10 flex items-center justify-center min-h-screen px-4 py-20 pt-36">

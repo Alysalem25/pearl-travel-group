@@ -645,7 +645,7 @@ function HotelBookingContent() {
   };
 
   return (
-    <div dir={getDirection(lang)} className="min-h-screen bg-gray-50">
+    <div dir={getDirection(lang)} className="min-h-screen bg-gray-50 text-gray-800">
       <Navbar />
 
       <SuccessPopup

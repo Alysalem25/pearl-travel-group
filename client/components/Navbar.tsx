@@ -286,14 +286,14 @@ function NavbarContent() {
                   >
                     <Link
                       href={`/Egypt?lang=${lang}`}
-                      className="block px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+                      className="block px-4 py-3 text-gray-700  hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
                       onClick={() => setDestinationsDropdown(false)}
                     >
                       {t.navbar.egypt}
                     </Link>
                     <Link
                       href={`/Albania?lang=${lang}`}
-                      className="block px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+                      className="block px-4 py-3 text-gray-700  hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
                       onClick={() => setDestinationsDropdown(false)}
                     >
                       {t.navbar.albania}
@@ -483,14 +483,14 @@ function NavbarContent() {
                     }`}>
                     <Link
                       href={`/Egypt?lang=${lang}`}
-                      className="block px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+                      className="block px-4 py-3 text-gray-700 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
                       onClick={() => setDestinationsDropdown(false)}
                     >
                       {t.navbar.egypt}
                     </Link>
                     <Link
                       href={`/Albania?lang=${lang}`}
-                      className="block px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+                      className="block px-4 py-3 text-gray-700  hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
                       onClick={() => setDestinationsDropdown(false)}
                     >
                       {t.navbar.albania}
@@ -518,7 +518,7 @@ function NavbarContent() {
                       className={`flex-1 px-4 py-2 rounded-lg transition-colors duration-200 font-medium ${lang === "en"
                         ? "bg-blue-600 text-white"
                         : scrolled
-                          ? "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+                          ? "bg-gray-100 dark:bg-gray-800 text-gray-700  hover:bg-gray-200 dark:hover:bg-gray-700"
                           : "bg-white/10 text-white hover:bg-white/20"
                         }`}
                     >
@@ -529,7 +529,7 @@ function NavbarContent() {
                       className={`flex-1 px-4 py-2 rounded-lg transition-colors duration-200 font-medium ${lang === "ar"
                         ? "bg-blue-600 text-white"
                         : scrolled
-                          ? "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+                          ? "bg-gray-100 dark:bg-gray-800 text-gray-700    hover:bg-gray-200 dark:hover:bg-gray-700"
                           : "bg-white/10 text-white hover:bg-white/20"
                         }`}
                     >
