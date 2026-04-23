@@ -414,6 +414,14 @@ export const api = {
 
     changePassword: (id: string, data: { currentPassword: string; newPassword: string }) =>
       apiClient.put(`/auth/profile/${id}/password`, data)
+  },
+
+    mice: {
+    create: (data: any) => apiClient.post("/mice", data),
+    getAll: () => apiClient.get("/mice"),
+    delete: (id: string) => apiClient.delete(`/mice/${id}`),
+    changeStatus: (id: string, status: string) =>
+      apiClient.put(`/mice/${id}/status`, { status }),
   }
 };
 

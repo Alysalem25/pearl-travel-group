@@ -113,10 +113,8 @@ function NavbarContent() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${scrolled
-        ? "bg-white/95  backdrop-blur-xl shadow-md"
-        : "bg-transparent backdrop-blur-xl shadow-md"
-        } ${isRTL ? "font-arabic" : ""}`}
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 
+        bg-white/95  backdrop-blur-xl shadow-md ${isRTL ? "font-arabic" : ""}`}
       dir='ltr'
     >
       <div className={`
@@ -202,7 +200,7 @@ function NavbarContent() {
           <div className="hidden md:flex items-center gap-6 lg:gap-8">
             <Link
               href={`/?lang=${lang}`}
-              className={`transition-colors duration-200 font-medium ${scrolled
+              className={`transition-colors duration-200 font-medium text-black ${scrolled
                 ? "text-black hover:text-[var(--mainColor)]"
                 : " hover:text-red-700"
                 }`}
@@ -211,8 +209,8 @@ function NavbarContent() {
             </Link>
             <Link
               href={`/Flight?lang=${lang}`}
-              className={`transition-colors duration-200 font-medium ${scrolled
-                ? "text-black hover:text-[var(--mainColor)]"
+              className={`transition-colors duration-200 font-medium text-black ${scrolled
+                ? "hover:text-[var(--mainColor)]"
                 : " hover:text-red-700"
                 }`}
             >
@@ -220,8 +218,8 @@ function NavbarContent() {
             </Link>
             <Link
               href={`/hotel?lang=${lang}`}
-              className={`transition-colors duration-200 font-medium ${scrolled
-                ? "text-black hover:text-[var(--mainColor)]"
+              className={`transition-colors duration-200 font-medium text-black ${scrolled
+                ? "hover:text-[var(--mainColor)]"
                 : "  hover:text-red-700"
                 }`}
             >
@@ -230,9 +228,9 @@ function NavbarContent() {
 
             <Link
               href={`/cars?lang=${lang}`}
-              className={`transition-colors duration-200 font-medium ${scrolled
-                ? "text-black hover:text-[var(--mainColor)]"
-                : " hover:text-red-700"
+              className={`transition-colors duration-200 font-medium text-black ${scrolled
+                ? "hover:text-[var(--mainColor)]"
+                : "  hover:text-red-700"
                 }`}
             >
               {t.navbar.cars}
@@ -240,7 +238,7 @@ function NavbarContent() {
 
             <Link
               href={`/cruisies?lang=${lang}`}
-              className={`transition-colors duration-200 font-medium ${scrolled
+              className={`transition-colors duration-200 font-medium text-black ${scrolled
                 ? "text-black hover:text-[var(--mainColor)]"
                 : " hover:text-red-700"
                 }`}
@@ -249,19 +247,28 @@ function NavbarContent() {
             </Link>
             <Link
               href={`/visa?lang=${lang}`}
-              className={`transition-colors duration-200 font-medium ${scrolled
+              className={`transition-colors duration-200 font-medium  text-black ${scrolled
                 ? "text-black hover:text-[var(--mainColor)]"
                 : " hover:text-red-700"
                 }`}
             >
               {t.navbar.visa}
             </Link>
+            <Link
+              href={`/mice?lang=${lang}`}
+              className={`transition-colors duration-200 font-medium  text-black ${scrolled
+                ? "text-black hover:text-[var(--mainColor)]"
+                : " hover:text-red-700"
+                }`}
+            >
+              {t.navbar.mice}
+            </Link>
 
             {/* Dropdown */}
             <div className="relative" data-dropdown="destinations">
               <button
                 onClick={() => setDestinationsDropdown(!destinationsDropdown)}
-                className={`flex items-center gap-1 transition-colors duration-200 font-medium ${scrolled
+                className={`flex items-center gap-1 transition-colors duration-200 font-medium  text-black ${scrolled
                   ? "text-black hover:text-[var(--mainColor)]"
                   : " hover:text-red-700"
                   }`}
@@ -286,14 +293,14 @@ function NavbarContent() {
                   >
                     <Link
                       href={`/Egypt?lang=${lang}`}
-                      className="block px-4 py-3 text-gray-700  hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+                      className="block px-4 py-3 text-black  hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
                       onClick={() => setDestinationsDropdown(false)}
                     >
                       {t.navbar.egypt}
                     </Link>
                     <Link
                       href={`/Albania?lang=${lang}`}
-                      className="block px-4 py-3 text-gray-700  hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+                      className="block px-4 py-3 text-black  hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
                       onClick={() => setDestinationsDropdown(false)}
                     >
                       {t.navbar.albania}

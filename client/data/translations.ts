@@ -17,6 +17,7 @@ export interface NavbarTranslations {
   hotel: string;
   cruisies: string,
   contact: string;
+  mice: string;
 }
 
 export interface HomePageTranslations {
@@ -61,6 +62,7 @@ export const translations: Record<Language, Translations> = {
       hotel: "Hotel",
       cruisies: "Cruisies",
       contact: "Contact",
+      mice: "MICE",
     },
     home: {
       heading: "Let the Journey Begin",
@@ -100,6 +102,7 @@ export const translations: Record<Language, Translations> = {
       hotel: "فنادق",
       cruisies:"الرحلات البحريه",
       contact: "اتصل بنا",
+      mice: "mice",
     },
     home: {
       heading: "لتبدأ الرحلة",
