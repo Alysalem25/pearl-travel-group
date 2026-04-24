@@ -118,7 +118,7 @@ function NavbarContent() {
       dir='ltr'
     >
       <div className={`
-  flex flex-row bg-gray-600 sm:items-center justify-around sm:justify-between sm:px-6
+  flex flex-row bg-[#141f2f] sm:items-center justify-around sm:justify-between sm:px-6
    gap-3 text-sm text-white
   transition-all duration-5000 ease-in-out overflow-hidden
   ${scrolled
@@ -135,14 +135,14 @@ function NavbarContent() {
             <svg xmlns="http://www.w3.org/2000/svg" height="18" width="18" fill="#fff" viewBox="0 -960 960 960">
               <path d="M798-120q-125 0-247-54.5T329-329Q229-429 174.5-551T120-798q0-18 12-30t30-12h162q14 0 25 9.5t13 22.5l26 140q2 16-1 27t-11 19l-97 98q20 37 47.5 71.5T387-386q31 31 65 57.5t72 48.5l94-94q9-9 23.5-13.5T670-390l138 28q14 4 23 14.5t9 23.5v162q0 18-12 30t-30 12Z" />
             </svg>
-            <a href="tel:+201067588333" className="hover:underline">
-              +20 106 758 8333
+            <a href="tel:+201098076669" className="hover:underline">
+              +20 109 807 6669
             </a>
           </div>
 
           {/* EMAIL */}
           <div className={` flex items-center gap-2   sm:border-l sm:pl-4 text-white border-white`}>
-            <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" fill={scrolled ? "#000" : "#fff"} viewBox="0 -960 960 960">
+            <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" fill={scrolled ? "#000" : "#ffffff"} viewBox="0 -960 960 960">
               <path fill="currentColor" d="M440-520 120-720v400h400v80H120q-33 0-56.5-23.5T40-320v-480q0-33 23.5-56.5T120-880h640q33 0 56.5 23.5T840-800v200h-80v-120L440-520Zm0-80 320-200H120l320 200Z" />
             </svg>
             <a href="mailto:info@pearltravelgroup.com" className="hover:underline break-all">
@@ -293,14 +293,14 @@ function NavbarContent() {
                   >
                     <Link
                       href={`/Egypt?lang=${lang}`}
-                      className="block px-4 py-3 text-black  hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+                      className="block px-4 py-3 text-white  hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
                       onClick={() => setDestinationsDropdown(false)}
                     >
                       {t.navbar.egypt}
                     </Link>
                     <Link
                       href={`/Albania?lang=${lang}`}
-                      className="block px-4 py-3 text-black  hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+                      className="block px-4 py-3 text-white  hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
                       onClick={() => setDestinationsDropdown(false)}
                     >
                       {t.navbar.albania}
@@ -490,14 +490,14 @@ function NavbarContent() {
                     }`}>
                     <Link
                       href={`/Egypt?lang=${lang}`}
-                      className="block px-4 py-3 text-gray-700 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+                      className="block px-4 py-3 text-white hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
                       onClick={() => setDestinationsDropdown(false)}
                     >
                       {t.navbar.egypt}
                     </Link>
                     <Link
                       href={`/Albania?lang=${lang}`}
-                      className="block px-4 py-3 text-gray-700  hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+                      className="block px-4 py-3 text-white  hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
                       onClick={() => setDestinationsDropdown(false)}
                     >
                       {t.navbar.albania}
