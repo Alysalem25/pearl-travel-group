@@ -4,16 +4,18 @@
 import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import { ChevronDown, Menu, X, Globe, BarChart3, User, Instagram, Facebook } from "lucide-react";
+import { ChevronDown, Menu, X, Globe, BarChart3, User, Instagram, Facebook, ChevronRight, Briefcase, Zap, GraduationCap, MapPin } from "lucide-react";
 import { translations } from "@/data/translations";
 import { Language, getDirection } from "@/lib/language";
 import { getLanguageFromSearchParams, updateLanguage } from "@/lib/language";
 import { useAuth } from "@/context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 
+
 function NavbarContent() {
   const [open, setOpen] = useState(false);
   const [destinationsDropdown, setDestinationsDropdown] = useState(false);
+  const [affiliateDropdown, setAffiliateDropdown] = useState(false);
   const [langDropdown, setLangDropdown] = useState(false);
   const [lang, setLang] = useState<Language>("en");
   const [mounted, setMounted] = useState(false);
@@ -69,24 +71,26 @@ function NavbarContent() {
         !target.closest('[data-dropdown="language"]')
       ) {
         setDestinationsDropdown(false);
+        setAffiliateDropdown(false);
         setLangDropdown(false);
       }
     };
 
-    if (destinationsDropdown || langDropdown) {
+    if (destinationsDropdown || affiliateDropdown || langDropdown) {
       document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [destinationsDropdown, langDropdown]);
+  }, [destinationsDropdown, affiliateDropdown, langDropdown]);
 
   const changeLang = (newLang: Language) => {
     updateLanguage(newLang);
     setLang(newLang);
     setLangDropdown(false);
     setDestinationsDropdown(false);
+    setAffiliateDropdown(false);
     setOpen(false);
     // Refresh the page to apply language changes
     router.refresh();
@@ -263,7 +267,101 @@ function NavbarContent() {
             >
               {t.navbar.mice}
             </Link>
+            <div className="relative" data-dropdown="affiliate">
+              <button
+                onClick={() => setAffiliateDropdown(!affiliateDropdown)}
+                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg transition-all duration-300 font-medium text-sm ${affiliateDropdown
+                  ? "bg-red-50 text-red-700"
+                  : scrolled
+                    ? "text-slate-800 hover:text-red-700 hover:bg-slate-50"
+                    : "text-black hover:text-red-700 hover:bg-white/10"
+                  }`}
+              >
+                {t.navbar.affiliate}
+                <ChevronDown
+                  size={14}
+                  className={`transition-transform duration-300 ease-out ${affiliateDropdown ? "rotate-180" : ""
+                    }`}
+                />
+              </button>
 
+              <AnimatePresence>
+                {affiliateDropdown && (
+                  <>
+                    {/* Backdrop overlay */}
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="fixed inset-0 z-40"
+                      onClick={() => setAffiliateDropdown(false)}
+                    />
+
+                    <motion.div
+                      initial={{ opacity: 0, y: -8, scale: 0.96 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -8, scale: 0.96 }}
+                      transition={{
+                        duration: 0.25,
+                        ease: [0.25, 0.1, 0.25, 1] as const
+                      }}
+                      className={`absolute ${isRTL ? "left-0" : "right-0"} top-full mt-2 z-50 min-w-[200px]`}
+                    >
+                      {/* Dropdown card with arrow */}
+                      <div className="relative bg-white/95 backdrop-blur-xl rounded-2xl shadow-xl shadow-black/10 border border-slate-100 overflow-hidden">
+                        {/* Top arrow */}
+                        <div
+                          className={`absolute -top-2 ${isRTL ? "left-6" : "right-6"} w-4 h-4 bg-white border-l border-t border-slate-100 rotate-45`}
+                        />
+
+                        {/* Header */}
+                        <div className="px-4 py-3 border-b border-slate-100 bg-gradient-to-r from-red-50/50 to-transparent">
+                          <span className="text-xs font-semibold text-red-600 uppercase tracking-wider">
+                            {lang === "en" ? "Our Partners" : "شركاؤنا"}
+                          </span>
+                        </div>
+
+                        {/* Items */}
+                        <div className="py-2">
+                          <p
+                            onClick={() => setAffiliateDropdown(false)}
+                            className="group flex items-center gap-3 px-4 py-3 mx-2 rounded-xl text-slate-700 hover:text-red-700 hover:bg-red-50 transition-all duration-200"
+                          >
+                            <span className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 group-hover:bg-red-100 text-slate-500 group-hover:text-red-600 transition-colors duration-200">
+                              <Briefcase size={16} />
+                            </span>
+                            <span className="font-medium text-sm">{t.navbar.classy_travel}</span>
+                          </p>
+
+                          <p
+                            onClick={() => setAffiliateDropdown(false)}
+                            className="group flex items-center gap-3 px-4 py-3 mx-2 rounded-xl text-slate-700 hover:text-red-700 hover:bg-red-50 transition-all duration-200"
+                          >
+                            <span className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 group-hover:bg-red-100 text-slate-500 group-hover:text-red-600 transition-colors duration-200">
+                              <Zap size={16} />
+                            </span>
+                            <span className="font-medium text-sm">{t.navbar.bounce}</span>
+                          </p>
+
+                          <p
+                            onClick={() => setAffiliateDropdown(false)}
+                            className="group flex items-center gap-3 px-4 py-3 mx-2 rounded-xl text-slate-700 hover:text-red-700 hover:bg-red-50 transition-all duration-200"
+                          >
+                            <span className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 group-hover:bg-red-100 text-slate-500 group-hover:text-red-600 transition-colors duration-200">
+                              <GraduationCap size={16} />
+                            </span>
+                            <span className="font-medium text-sm">{t.navbar.buckswood}</span>
+                          </p>
+
+                          <div className="mx-3 my-2 h-px bg-slate-100" />
+                        </div>
+                      </div>
+                    </motion.div>
+                  </>
+                )}
+              </AnimatePresence>
+            </div>
             {/* Dropdown */}
             <div className="relative" data-dropdown="destinations">
               <button
@@ -294,14 +392,14 @@ function NavbarContent() {
                     <Link
                       href={`/Egypt?lang=${lang}`}
                       className="block px-4 py-3 text-black hover:text-white  hover:bg-red-700 transition-colors duration-200"
-                      onClick={() => setDestinationsDropdown(false)}
+                      onClick={() => setAffiliateDropdown(false)}
                     >
                       {t.navbar.egypt}
                     </Link>
                     <Link
                       href={`/Albania?lang=${lang}`}
                       className="block px-4 py-3 text-black hover:text-white  hover:bg-red-700 transition-colors duration-200"
-                      onClick={() => setDestinationsDropdown(false)}
+                      onClick={() => setAffiliateDropdown(false)}
                     >
                       {t.navbar.albania}
                     </Link>
@@ -309,6 +407,13 @@ function NavbarContent() {
                 )}
               </AnimatePresence>
             </div>
+            {/* Dropdown 
+            Affiliate
+              Classy Travel
+              Bounce 
+              Buckswood
+            */}
+
 
 
 

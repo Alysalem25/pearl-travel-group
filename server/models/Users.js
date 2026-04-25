@@ -149,6 +149,11 @@ const UserSchema = new mongoose.Schema(
       default: "active"
     },
 
+    inTeam: {
+      type: Boolean,
+      default: false,
+    },
+
     images: [String]
   },
   { timestamps: true }

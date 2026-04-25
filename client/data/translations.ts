@@ -18,6 +18,10 @@ export interface NavbarTranslations {
   cruisies: string,
   contact: string;
   mice: string;
+  affiliate: string;
+  classy_travel: string;
+  bounce: string;
+  buckswood: string;
 }
 
 export interface HomePageTranslations {
@@ -63,6 +67,10 @@ export const translations: Record<Language, Translations> = {
       cruisies: "Cruisies",
       contact: "Contact",
       mice: "MICE",
+      affiliate: "Affiliates",
+      classy_travel: "Classy Travel",
+      bounce: "Bounce",
+      buckswood: "Buckswood"
     },
     home: {
       heading: "Let the Journey Begin",
@@ -100,9 +108,13 @@ export const translations: Record<Language, Translations> = {
       albania: "ألبانيا",
       cars: "سيارات",
       hotel: "فنادق",
-      cruisies:"الرحلات البحريه",
+      cruisies: "الرحلات البحريه",
       contact: "اتصل بنا",
       mice: "MICE",
+      affiliate: "الشراكات",
+      classy_travel: "Classy Travel",
+      bounce: "Bounce",
+      buckswood: "Buckswood"
     },
     home: {
       heading: "لتبدأ الرحلة",

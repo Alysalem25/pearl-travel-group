@@ -558,7 +558,7 @@ router.post(
   "/",
   authMiddleware,
   authorize("add_program"),
-  upload.array("images", 5),
+  upload.array("images", 10),
   async (req, res, next) => {
     try {
       const {
