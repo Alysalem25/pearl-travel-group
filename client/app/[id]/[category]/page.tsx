@@ -115,7 +115,7 @@ const Page = () => {
                   `
                 }}
               >
-                <h2 className="text-white text-xl font-bold mb-6">
+                <h2 className="text-white text-xl text-center font-bold mb-6">
                   {lang === "ar" ? program.titleAr : program.titleEn}
                 </h2>
               </div>

@@ -120,7 +120,7 @@ function NavbarContent() {
       <div className={`
   flex flex-row bg-[#141f2f] sm:items-center justify-around sm:justify-between sm:px-6
    gap-3 text-sm text-white
-  transition-all duration-5000 ease-in-out overflow-hidden
+  transition-all duration-5000 ease-in-out overf  low-hidden
   ${scrolled
           ? "opacity-0 max-h-0 py-0 pointer-events-none"
           : "opacity-100 max-h-20"
@@ -289,18 +289,18 @@ function NavbarContent() {
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.2 }}
                     className={`absolute ${isRTL ? "left-0" : "right-0"
-                      } top-full mt-2 bg-white dark:bg-gray-800 backdrop-blur-xl shadow-lg rounded-lg w-40 overflow-hidden`}
+                      } top-full mt-2 bg-white backdrop-blur-xl shadow-lg rounded-lg w-40 overflow-hidden`}
                   >
                     <Link
                       href={`/Egypt?lang=${lang}`}
-                      className="block px-4 py-3 text-white  hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+                      className="block px-4 py-3 text-black hover:text-white  hover:bg-red-700 transition-colors duration-200"
                       onClick={() => setDestinationsDropdown(false)}
                     >
                       {t.navbar.egypt}
                     </Link>
                     <Link
                       href={`/Albania?lang=${lang}`}
-                      className="block px-4 py-3 text-white  hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+                      className="block px-4 py-3 text-black hover:text-white  hover:bg-red-700 transition-colors duration-200"
                       onClick={() => setDestinationsDropdown(false)}
                     >
                       {t.navbar.albania}
