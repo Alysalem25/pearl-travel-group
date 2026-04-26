@@ -830,7 +830,9 @@ function CruisiesPageContent() {
                         {/* category & country */}
                         <div className="flex w-full gap-6">
 
-                            <select className="bg-white w-full p-2 rounded border border-gray-600" value={formData.category} onChange={e => setFormData({ ...formData, category: e.target.value as any })} required>
+                            <select className="bg-white w-full p-2 rounded border border-gray-600" 
+                            value={formData.category}
+                            onChange={e => setFormData({ ...formData, category: e.target.value as any , subCategory: "null" })} required>
                                 <option value="">Select Category</option>
                                 <option value="Nile">Nile</option>
                                 <option value="MSC">MSC</option>
@@ -845,9 +847,9 @@ function CruisiesPageContent() {
                                     onChange={(e) => setFormData({ ...formData, subCategory: e.target.value })}
                                 >
                                     <option value="">Select Nile Category</option>
-                                    <option value="altera deluxe">Altera Deluxe</option>
+                                    <option value="altera deluxe">Ultra Deluxe</option>
                                     <option value="deluxe">Deluxe</option>
-                                    <option value="standard">standard</option>
+                                    <option value="standard">Standard</option>
                                 </select>
                             )}
 

@@ -73,7 +73,7 @@ export default function ButtonSection() {
                         href="/Egypt"
                     >
                         <span className="button_text">
-                            {isRTL ? "خدامات مصر" : "Egypt Office"}
+                            {isRTL ? "مكاتب مصر" : "Egypt Office"}
                         </span>
                     </a>
                 </motion.div>
@@ -91,7 +91,7 @@ export default function ButtonSection() {
                         href="/Albania"
                     >
                         <span className="button_text">
-                            {isRTL ? " خدامات ألبانيا" : "Albania Office"}
+                            {isRTL ? " مكاتب ألبانيا" : "Albania Office"}
                         </span>
                     </a>
                 </motion.div>

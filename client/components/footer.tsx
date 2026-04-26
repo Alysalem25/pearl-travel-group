@@ -125,13 +125,15 @@ function FooterContent() {
               {lang === "en" ? "Contact Info" : "معلومات التواصل"}
             </h4>
             <div className="space-y-3">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center ">
                 <Phone size={18} className="text-[var(--mainColor)]" />
                 <a href="tel:+201067588333" dir='ltr'
-                  className="text-gray-300 text-sm hover:text-[var(--mainColor)] transition-colors duration-200 ">
+                  className="text-gray-300 text-sm hover:text-[var(--mainColor)] 
+                  transition-colors duration-200 ">
                   +20 106 758 8333
                 </a>,
-                <a href="tel:+034855588" className="text-gray-300 text-sm hover:text-[var(--mainColor)] transition-colors duration-200" dir='ltr'
+                <a href="tel:+034855588" className="text-gray-300 ml-2
+                text-sm hover:text-[var(--mainColor)] transition-colors duration-200" dir='ltr'
                 >
                   034855588
                 </a>

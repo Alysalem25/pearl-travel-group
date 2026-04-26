@@ -193,7 +193,7 @@ interface Cruise {
   titleEn: string;
   titleAr: string;
   // category: 'Nile' | 'MSC' | 'Silversea' | 'Caribbean' | 'Norwegian';
-  subCategory?: "Ultra Deluxe" | "Deluxe" | "Standard" | "null";
+  subCategory?: "Ultra Deluxe" | "Deluxe" | "Standard" | null;
   images: string[];
   status: string;
   duration?: string;

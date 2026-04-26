@@ -29,8 +29,8 @@ const CruisiesSchema = new mongoose.Schema(
 
     subCategory: {
       type: String,
-      enum: ["altera deluxe", "deluxe", "standard" , null],
-      default: null,
+      enum: ["altera deluxe", "deluxe", "standard" , "null"],
+      default: "null",
       // required: function () {
       //   return this.category === "Nile";
       // },
