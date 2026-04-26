@@ -267,14 +267,13 @@ function NavbarContent() {
             >
               {t.navbar.mice}
             </Link>
+
             <div className="relative" data-dropdown="affiliate">
               <button
                 onClick={() => setAffiliateDropdown(!affiliateDropdown)}
-                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg transition-all duration-300 font-medium text-sm ${affiliateDropdown
-                  ? "bg-red-50 text-red-700"
-                  : scrolled
-                    ? "text-slate-800 hover:text-red-700 hover:bg-slate-50"
-                    : "text-black hover:text-red-700 hover:bg-white/10"
+                className={`flex items-center gap-1 transition-colors duration-200 font-medium  text-black ${scrolled
+                  ? "text-black hover:text-[var(--mainColor)]"
+                  : " hover:text-red-700"
                   }`}
               >
                 {t.navbar.affiliate}
@@ -576,7 +575,56 @@ function NavbarContent() {
                 >
                   {t.navbar.visa}
                 </Link>
+                <Link
+                  href={`/mice?lang=${lang}`}
+                  onClick={() => setOpen(false)}
+                  className={`block py-2 transition-colors duration-200 font-medium ${scrolled
+                    ? "text-white hover:text-blue-600 dark:hover:text-blue-400"
+                    : "text-white hover:text-white/80"
+                    }`}
+                >
+                  {t.navbar.mice}
+                </Link>
                 {/* Mobile Dropdown */}
+
+
+                <details className="group">
+                  <summary className={`cursor-pointer py-2 transition-colors duration-200 font-medium list-none ${scrolled
+                    ? "text-white hover:text-blue-600 dark:hover:text-blue-400"
+                    : "text-white hover:text-white/80"
+                    }`}>
+                    <div className="flex items-center justify-between">
+                      <span>{t.navbar.affiliate}</span>
+                      <ChevronDown
+                        size={16}
+                        className="transition-transform duration-200 group-open:rotate-180"
+                      />
+                    </div>
+                  </summary>
+                  <div className={`pl-4 mt-2 space-y-2 rtl:pl-0 rtl:pr-4 ${scrolled ?
+                    "text-gray-600 dark:text-gray-400" : "text-white/80"
+                    }`}>
+                    <p
+                      className="block px-4 py-3 text-white hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+                      onClick={() => setAffiliateDropdown(false)}
+                    >
+                      {t.navbar.classy_travel}
+                    </p>
+                    <p
+                      className="block px-4 py-3 text-white  hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+                      onClick={() => setAffiliateDropdown(false)}
+                    >
+                      {t.navbar.bounce}
+                    </p>
+                    <p
+                      className="block px-4 py-3 text-white  hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+                      onClick={() => setAffiliateDropdown(false)}
+                    >
+                      {t.navbar.buckswood}
+                    </p>
+                  </div>
+                </details>
+
                 <details className="group">
                   <summary className={`cursor-pointer py-2 transition-colors duration-200 font-medium list-none ${scrolled
                     ? "text-white hover:text-blue-600 dark:hover:text-blue-400"

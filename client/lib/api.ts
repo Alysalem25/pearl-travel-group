@@ -12,6 +12,7 @@
 
 import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from "axios";
 import { getAuthToken, clearAuthData } from "./auth";
+import { get } from "http";
 
 
 type CategoryPayload = {
@@ -416,13 +417,45 @@ export const api = {
       apiClient.put(`/auth/profile/${id}/password`, data)
   },
 
-    mice: {
+  mice: {
     create: (data: any) => apiClient.post("/mice", data),
     getAll: () => apiClient.get("/mice"),
     delete: (id: string) => apiClient.delete(`/mice/${id}`),
     changeStatus: (id: string, status: string) =>
       apiClient.put(`/mice/${id}/status`, { status }),
+  },
+
+  // media: {
+  //   uploadMedia: (formData: FormData) =>
+  //     apiClient.post("/media", formData),
+  //   getMediaBySection: (section: string) =>
+  //     apiClient.get(`/media/${section}`),
+
+  //   deleteMedia: (id: string) =>
+  //     apiClient.delete(`/media/${id}`),
+  // }
+  media: {
+    getAllMedia: () => apiClient.get("/media"),
+    uploadMedia: (formData: FormData) =>
+      apiClient.post("/media", formData, {
+        headers: {
+          // DO NOT set Content-Type here! Axios handles multipart automatically
+        },
+      }),
+    updateMedia: (id: string, formData: FormData) =>
+      apiClient.put(`/media/${id}`, formData, {
+        headers: {
+          // DO NOT set Content-Type here! Axios handles multipart automatically
+        },
+      }),
+    getMediaBySection: (section: string) =>
+      apiClient.get(`/media/${section}`),
+    getMediaBySectionAndType: (section: string, type: string) =>
+      apiClient.get(`/media/${section}/${type}`),
+    deleteMedia: (id: string) =>
+      apiClient.delete(`/media/${id}`),
   }
+
 };
 
 export default apiClient;

@@ -80,6 +80,8 @@ const cruiseRoutes = require("./routes/cruiseRoutes");
 const eventRouter = require('./routes/eventRouter');
 const logsRoutes = require('./routes/logsRoutes');
 const miceRouter = require('./routes/miceRouter');
+const mediaRouter = require("./routes/mediaRouter");
+
 
 // ============================================
 // 🗄️ DATABASE CONNECTION 
@@ -112,7 +114,7 @@ app.get("/health", (req, res) => {
 /**
  * Database health check endpoint
  * Returns database connection status
- */
+*/
 app.get("/health/db", (req, res) => {
   const mongoState = mongoose.connection.readyState;
   const states = {
@@ -182,6 +184,7 @@ app.use("/api/cruisies", cruiseRoutes);
 app.use('/api/events', eventRouter);
 app.use('/api/logs', logsRoutes);
 app.use("/api/mice", miceRouter);
+app.use("/api/media", mediaRouter);
 // ============================================
 // 📊 STATS ENDPOINT (PUBLIC)
 // ============================================

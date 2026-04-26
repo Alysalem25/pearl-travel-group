@@ -140,14 +140,13 @@ svg {
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.button_img1 {
+/* .button_img1 {
   background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url("/egypt1.jpg");
 }
 
 .button_img2 {
-  /* Replace with your Albania image path */
   background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0, 0, 0, 0.627)), url("/albania.jpg");
-}
+} */
 
 .button_img1:hover, .button_img2:hover {
   cursor: pointer;

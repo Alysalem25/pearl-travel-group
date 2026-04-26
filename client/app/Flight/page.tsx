@@ -510,7 +510,7 @@ import Navbar from "@/components/Navbar";
 import axios from "axios";
 import { useState, useEffect, Suspense } from "react";
 import AirportDropdown from "@/components/SearchableDropdown"
-import apiClient from "@/lib/api";
+import apiClient, { api } from "@/lib/api";
 import SuccessPopup from "@/components/SuccessPopup";
 import { Language, getDirection, getLanguageFromSearchParams } from "@/lib/language";
 import { useParams, useSearchParams } from 'next/navigation';
@@ -581,6 +581,24 @@ function FlightSearch() {
             { from: "", to: "", date: "" },
         ],
     });
+
+
+
+        const [flightImage, setFlightImage] = useState<any>(null);
+    
+
+  useEffect(() => {
+    // Fetch all media for about section
+    
+    // Fetch single image for about section (for main hero image)
+    api.media.getMediaBySectionAndType("flight", "image")
+    .then(res => {
+      if (res.data) setFlightImage(res.data);
+    })
+    .catch(err => console.error("Failed to fetch flight image:", err));
+
+  }, []);
+
 
     /* language */
     useEffect(() => {
@@ -1062,6 +1080,11 @@ function FlightSearch() {
                         <p className="text-gray-500 text-lg max-w-2xl mx-auto">
                             {lang === "en" ? "Travel at ease, let our professional team arrange your convenient and shortest route to your destination" : "سافر بسهولة، دعنا فريقنا المتخصص ينظم رحلتك القادمة بأكثر الطرق وضماناً"}
                         </p>
+                        <img
+                            src={flightImage?.url || "/albania.jpg"}
+                            alt="Flight Search"
+                            className="mx-auto mt-8 w-full max-w-md rounded-3xl"
+                        />
                     </div>
 
                     {/* Main Form Card */}

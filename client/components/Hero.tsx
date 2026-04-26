@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { translations } from "@/data/translations";
 import { Language, getDirection } from "@/lib/language";
 import { getLanguageFromSearchParams } from "@/lib/language";
+import { api } from "@/lib/api";
 
 export default function Hero() {
   const [lang, setLang] = useState<Language>("en");
@@ -36,6 +37,28 @@ export default function Hero() {
       );
     };
   }, [searchParams]);
+
+
+  // const [media, setMedia] = useState<any[]>([]);
+  const [heroVideo, setHeroVideo] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchVideo = async () => {
+      try {
+        const res = await api.media.getMediaBySectionAndType("home_video", "video");
+        const video = res.data?.[0];
+        
+        console.log("res:", res.data);
+        console.log("Fetched video:", video);
+
+        setHeroVideo(video);
+      } catch (err) {
+        console.error("Failed:", err);
+      }
+    };
+
+    fetchVideo();
+  }, []);
 
   if (!mounted) {
     return null; // Prevent hydration mismatch
@@ -83,7 +106,7 @@ export default function Hero() {
           playsInline
           className="absolute top-0 left-0 w-full h-full object-cover"
         >
-          <source src="https://res.cloudinary.com/dyissekq4/video/upload/q_auto/f_auto/v1777042199/19009052-uhd_3840_2160_24fps_mkowze.mp4" type="video/mp4" />
+          <source src={heroVideo?.url || "https://res.cloudinary.com/dyissekq4/video/upload/q_auto/f_auto/v1777042199/19009052-uhd_3840_2160_24fps_mkowze.mp4"} type="video/mp4" />
         </video>
 
         <div className="absolute inset-0 bg-black/50"></div>

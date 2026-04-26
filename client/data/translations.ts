@@ -64,7 +64,7 @@ export const translations: Record<Language, Translations> = {
       albania: "Albania",
       cars: "Cars",
       hotel: "Hotel",
-      cruisies: "Cruisies",
+      cruisies: "Cruises",
       contact: "Contact",
       mice: "MICE",
       affiliate: "Affiliates",

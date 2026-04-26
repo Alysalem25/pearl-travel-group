@@ -89,3 +89,22 @@ Content-Type: application/json
   "numOfChildren": 0,
   "cabinClass": "business"
 }
+
+
+###
+
+
+POST http://localhost:5000/api/media
+Content-Type: application/json
+
+{
+  "section": "about",
+  "type": "image",
+  "title": "External Image",
+  "url": "https://share.google/lmGSB4JUFOYnmyTB9"
+}
+
+
+###
+GET http://localhost:5000/api/media/home_video
+Content-Type: application/json

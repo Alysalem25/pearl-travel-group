@@ -410,7 +410,7 @@ import React, { useState, useEffect, Suspense } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/footer";
 import axios from "axios";
-import apiClient from "@/lib/api";
+import apiClient, { api } from "@/lib/api";
 import SuccessPopup from "@/components/SuccessPopup";
 import { Language, getDirection, getLanguageFromSearchParams } from "@/lib/language";
 import { useSearchParams } from 'next/navigation';
@@ -568,6 +568,21 @@ function HotelBookingContent() {
     remarks: "",
   });
 
+      const [hotelImage, setHotelImage] = useState<any>(null);
+ 
+
+  useEffect(() => {
+    // Fetch all media for about section
+    
+    // Fetch single image for about section (for main hero image)
+    api.media.getMediaBySectionAndType("hotel", "image")
+    .then(res => {
+      if (res.data) setHotelImage(res.data);
+    })
+    .catch(err => console.error("Failed to fetch hotel image:", err));
+
+  }, []);
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -655,7 +670,10 @@ function HotelBookingContent() {
         message={t.successMessage}
       />
 
-      <main className="relative z-10 flex items-center justify-center min-h-screen px-4 py-20  pt-36">
+      <main className="relative z-10 flex items-center justify-center min-h-screen px-4 py-20  pt-36 "
+        style={{
+          backgroundImage: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${hotelImage?.url || "/albania.jpg"})`
+        }}>
         <div className="w-full max-w-4xl">
           {/* Header */}
           <div className="relative mb-8 text-center">
@@ -748,7 +766,7 @@ function HotelBookingContent() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="relative">
                     <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600" />
-                        <span className="absolute left-10 top-1/2 -translate-y-1/2 text-black">
+                    <span className="absolute left-10 top-1/2 -translate-y-1/2 text-black">
                       Check-in date
                     </span>
                     <input

@@ -132,7 +132,7 @@ const ProgramPage = () => {
                     <p className="text-xs sm:text-sm uppercase tracking-[0.2em] text-blue-900 mb-2">
                         {lang === 'en' ? "Program Details" : "تفاصيل البرنامج"}
                     </p>
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 mb-3">
+                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 mb-3">
                         {program
                             ? (lang === "en" ? program.titleEn : program.titleAr)
                             : (lang === "en" ? "Loading program..." : "جاري تحميل البرنامج...")}
@@ -308,8 +308,8 @@ const ProgramPage = () => {
                                                                 className="mt-2 px-4 py-1.5 text-sm rounded-full border border-blue-900 text-blue-900 hover:bg-blue-50 transition-colors"
                                                             >
                                                                 {activeDayIndex === index
-                                                                    ? (lang === "en" ? "+" : "-")
-                                                                    : (lang === "en" ? "+" : "-")}
+                                                                    ? "-" : "+"
+                                                                  }
                                                             </button>
                                                         </div>
                                                         {activeDayIndex === index && (

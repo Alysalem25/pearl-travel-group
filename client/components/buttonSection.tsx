@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Language, getDirection, getLanguageFromSearchParams } from "@/lib/language";
+import { api } from "@/lib/api";
 
 export default function ButtonSection() {
     const [lang, setLang] = useState<Language>("en");
@@ -22,6 +23,26 @@ export default function ButtonSection() {
         return () =>
             window.removeEventListener("languagechange", handleLanguageChange as EventListener);
     }, [searchParams]);
+
+
+    const [egyptImage, setEgyptImage] = useState<any>(null);
+    const [albaniaImage, setAlbaniaImage] = useState<any>(null);
+    const [aboutImage3, setAboutImage3] = useState<any>(null);
+
+    useEffect(() => {
+        // Fetch all media for about section
+
+        // Fetch single image for about section (for main hero image)
+        api.media.getMediaBySectionAndType("egypt", "image")
+            .then(res => {
+                if (res.data) setEgyptImage(res.data);
+            })
+            .catch(err => console.error("Failed to fetch Egypt image:", err));
+        api.media.getMediaBySectionAndType("albania", "image")
+            .then(res => setAlbaniaImage(res.data || []))
+            .catch(err => console.error("Failed to fetch Albania image:", err));
+
+    }, []);
 
     if (!mounted) return null;
 
@@ -43,11 +64,11 @@ export default function ButtonSection() {
             <div className="container flex flex-wrap justify-center mx-auto px-6 text-center mb-12 gap-8">
 
                 {/* Egypt Button */}
-                <motion.div
-                    variants={item}
-
-                >
+                <motion.div variants={item}>
                     <a
+                        style={{
+                            backgroundImage: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${egyptImage?.url || "/egypt1.jpg"})`
+                        }}
                         className="button_img1 text-3xl text-white font-bold"
                         href="/Egypt"
                     >
@@ -63,6 +84,9 @@ export default function ButtonSection() {
 
                 >
                     <a
+                        style={{
+                            backgroundImage: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${albaniaImage?.url || "/albania.jpg"})`
+                        }}
                         className="button_img2 text-3xl text-white font-bold"
                         href="/Albania"
                     >

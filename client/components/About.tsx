@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Language, getDirection, getLanguageFromSearchParams } from "@/lib/language";
+import { api } from "@/lib/api";
 
 export default function About() {
   const [lang, setLang] = useState<Language>("en");
@@ -22,6 +23,28 @@ export default function About() {
     return () =>
       window.removeEventListener("languagechange", handleLanguageChange as EventListener);
   }, [searchParams]);
+
+    const [media, setMedia] = useState<any[]>([]);
+    const [aboutImage1, setAboutImage1] = useState<any>(null);
+    const [aboutImage2, setAboutImage2] = useState<any>(null);
+    const [aboutImage3, setAboutImage3] = useState<any>(null);
+
+  useEffect(() => {
+    // Fetch all media for about section
+    
+    // Fetch single image for about section (for main hero image)
+    api.media.getMediaBySectionAndType("about1", "image")
+    .then(res => {
+      if (res.data) setAboutImage1(res.data);
+    })
+    .catch(err => console.error("Failed to fetch about image:", err));
+    api.media.getMediaBySectionAndType("about2" , "image")
+      .then(res => setAboutImage2(res.data || []))
+      .catch(err => console.error("Failed to fetch media:", err));
+    api.media.getMediaBySectionAndType("about3" , "image")
+      .then(res => setAboutImage3(res.data || []))
+      .catch(err => console.error("Failed to fetch media:", err));
+  }, []);
 
   if (!mounted) return null;
 
@@ -125,17 +148,19 @@ export default function About() {
             className="grid grid-cols-2 gap-6"
           >
             <img
-              src="WhatsApp Image 2026-02-22 at 4.49.51 PM.jpeg"
+              src={aboutImage1?.url ||"WhatsApp Image 2026-02-22 at 4.49.51 PM.jpeg"}
+                            // src={aboutImage?.url || media[0]?.url }
+
               alt="..."
               className="col-span-2 rounded-2xl object-cover w-full h-auto shadow-lg"
             />
             <img
-              src="WhatsApp Image 2026-02-22 at 4.47.40 PM.jpeg"
+              src={aboutImage2?.url ||"WhatsApp Image 2026-02-22 at 4.47.40 PM.jpeg"}
               alt=""
               className="rounded-3xl object-cover w-full shadow-lg"
             />
             <img
-              src="WhatsApp Image 2026-02-22 at 4.47.25 PM.jpeg"
+              src={aboutImage3?.url ||"WhatsApp Image 2026-02-22 at 4.47.25 PM.jpeg"}
               alt=""
               className="rounded-3xl object-cover w-full shadow-xl"
             />
