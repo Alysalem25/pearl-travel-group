@@ -295,14 +295,14 @@ const OurTeam = () => {
                                             {member.name}
                                         </h3>
                                         <div className="w-8 h-0.5 bg-slate-200 mx-auto group-hover:w-16 group-hover:bg-red-400 transition-all duration-500" />
-                                        <p className="text-sm font-medium text-blue-700 transition-colors duration-300 uppercase tracking-wide">
+                                        <p className="text-sm font-medium text-blue-900 transition-colors duration-300 uppercase tracking-wide">
                                             {member.roleInTeam}
                                         </p>
                                     </div>
 
                                     {/* Hover indicator line */}
                                     <motion.div
-                                        className="absolute bottom-0 left-6 right-6 h-1 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full"
+                                        className="absolute bottom-0 left-6 right-6 h-1 bg-gradient-to-r from-blue-900 to-blue-600 rounded-full"
                                         initial={{ scaleX: 0, opacity: 0 }}
                                         animate={{
                                             scaleX: isHovered ? 1 : 0,

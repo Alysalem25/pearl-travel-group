@@ -670,9 +670,11 @@ function HotelBookingContent() {
         message={t.successMessage}
       />
 
-      <main className="relative z-10 flex items-center justify-center min-h-screen px-4 py-20  pt-36 "
+      <main className="relative z-10 flex items-center justify-center min-h-screen object-fit px-4 py-20  pt-36 "
         style={{
-          backgroundImage: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${hotelImage?.url || "/albania.jpg"})`
+          // backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+          backgroundImage: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${hotelImage?.url || "https://res.cloudinary.com/dyissekq4/image/upload/q_auto/f_auto/v1777193587/IMG_20260426_115027.jpg_tfsbtk.jpg"})`
         }}>
         <div className="w-full max-w-4xl">
           {/* Header */}
@@ -685,7 +687,7 @@ function HotelBookingContent() {
             <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
               {t.title}
             </h1>
-            <p className="text-gray-500 text-lg max-w-2xl mx-auto">
+            <p className="text-white               text-lg max-w-2xl mx-auto">
               {t.subtitle}
             </p>
           </div>

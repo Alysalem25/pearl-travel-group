@@ -1085,7 +1085,7 @@ function FlightSearch() {
 
                     <div className="relative mb-8 h-80 text-center">
                         <img
-                            src={flightImage?.url || "/albania.jpg"}
+                            src={flightImage?.url || "https://res.cloudinary.com/dyissekq4/image/upload/q_auto/f_auto/v1777209548/WhatsApp_Image_2026-04-26_at_4.17.36_PM_jpj8q2.jpg"}
                             alt="Flight Search"
                             className="mx-auto mt-8 w-full h-80 rounded-3xl"
                         />

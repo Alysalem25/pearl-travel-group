@@ -71,7 +71,7 @@ export const translations: Record<Language, Translations> = {
       affiliate: "Affiliates",
       classy_travel: "Classy Travel",
       bounce: "Bounce",
-      buckswood: "Buckswoo",
+      buckswood: "Buckswood",
       msc: "MSC",
     },
     home: {
