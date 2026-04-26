@@ -108,3 +108,19 @@ Content-Type: application/json
 ###
 GET http://localhost:5000/api/media/home_video
 Content-Type: application/json
+
+
+###
+
+## book program 
+POST http://localhost:5000/api/programs/book
+Content-Type: application/json
+
+{
+  "userEmail": "test@gmail.com",
+  "programId": "69ede6a46b386b184c7d0fbb",
+  "userName": "Ahmed",
+  "userNumber": "0100000000",
+  "message": "I am interested in this program. Please provide more details."
+
+}

@@ -74,7 +74,7 @@ const miceServices: MiceService[] = [
             "دعم التنسيق على مدار الساعة"
         ],
         icon: "transport",
-        heroImage: "https://kimi-web-img.moonshot.cn/img/media.radissonhotels.net/bd6a3ffbee2333b51257072d9e598b9760cdc65f.jpg"
+        heroImage: "https://res.cloudinary.com/dyissekq4/image/upload/q_auto/f_auto/v1777193868/IMG_20260426_114707.jpg_fjeviz.jpg"
     },
     {
         id: 3,
@@ -99,7 +99,7 @@ const miceServices: MiceService[] = [
             "تسجيل وصول سريع للمجموعات"
         ],
         icon: "accommodation",
-        heroImage: "https://kimi-web-img.moonshot.cn/img/static-new.lhw.com/564a54e491b2502aefeabc3b1551ed0f15ee48b5.jpg"
+        heroImage: "https://res.cloudinary.com/dyissekq4/image/upload/q_auto/f_auto/v1777193619/IMG_20260426_114912.jpg_wzuxna.jpg"
     },
     {
         id: 4,
@@ -124,7 +124,7 @@ const miceServices: MiceService[] = [
             "تطوير الموضوع والعلامة التجارية"
         ],
         icon: "events",
-        heroImage: "https://kimi-web-img.moonshot.cn/img/assets.builderassets.com/445d966d1920dd1e9229b911839194f4c1bea214.jpg"
+        heroImage: "https://res.cloudinary.com/dyissekq4/image/upload/q_auto/f_auto/v1777193560/pexels-eran-design-2158190390-35215413_1_uvsehr.jpg"
     },
     {
         id: 5,
@@ -202,8 +202,8 @@ function MiceDetailContent() {
                         src={service.heroImage}
                         alt={lang === "en" ? service.titleEN : service.titleAR}
                         // fill
-                        className="object-cover"
-                        // priority
+                        className="object-cover w-full h-full"
+                    // priority
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
                     <div className="absolute inset-0 flex items-end">
@@ -263,53 +263,53 @@ function MiceDetailContent() {
                     {/* Overview Tab */}
                     {activeTab === "overview" && (
                         <>
-                        
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.4 }}
-                            className="grid grid-cols-1 lg:grid-cols-3 gap-12"
-                        >
-                            <div className="lg:col-span-6 space-y-6">
-                                <h2 className="text-3xl font-bold text-gray-900">
-                                    {lang === "en" ? "About This Service" : "عن هذه الخدمة"}
-                                </h2>
-                                <p className="text-lg text-gray-600 leading-relaxed">
-                                    {lang === "en" ? service.longDescriptionEN : service.longDescriptionAR}
-                                </p>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-8">
-                                    <div className="bg-blue-50 rounded-xl p-6 text-center">
-                                        <Calendar className="w-8 h-8 text-blue-600 mx-auto mb-3" />
-                                        <h3 className="font-semibold text-gray-900 mb-1">
-                                            {lang === "en" ? "Flexible Scheduling" : "جدولة مرنة"}
-                                        </h3>
-                                        <p className="text-sm text-gray-600">
-                                            {lang === "en" ? "Any date, any time" : "أي تاريخ، أي وقت"}
-                                        </p>
-                                    </div>
-                                    <div className="bg-red-50 rounded-xl p-6 text-center">
-                                        <Users className="w-8 h-8 text-red-600 mx-auto mb-3" />
-                                        <h3 className="font-semibold text-gray-900 mb-1">
-                                            {lang === "en" ? "Any Group Size" : "أي حجم مجموعة"}
-                                        </h3>
-                                        <p className="text-sm text-gray-600">
-                                            {lang === "en" ? "From 10 to 1000+" : "من 10 إلى 1000+"}
-                                        </p>
-                                    </div>
-                                    <div className="bg-gray-100 rounded-xl p-6 text-center">
-                                        <MapPin className="w-8 h-8 text-gray-700 mx-auto mb-3" />
-                                        <h3 className="font-semibold text-gray-900 mb-1">
-                                            {lang === "en" ? "All Egypt" : "جميع أنحاء مصر"}
-                                        </h3>
-                                        <p className="text-sm text-gray-600">
-                                            {lang === "en" ? "Nationwide coverage" : "تغطية على مستوى الجمهورية"}
-                                        </p>
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.4 }}
+                                className="grid grid-cols-1 lg:grid-cols-3 gap-12"
+                            >
+                                <div className="lg:col-span-6 space-y-6">
+                                    <h2 className="text-3xl font-bold text-gray-900">
+                                        {lang === "en" ? "About This Service" : "عن هذه الخدمة"}
+                                    </h2>
+                                    <p className="text-lg text-gray-600 leading-relaxed">
+                                        {lang === "en" ? service.longDescriptionEN : service.longDescriptionAR}
+                                    </p>
+
+                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-8">
+                                        <div className="bg-blue-50 rounded-xl p-6 text-center">
+                                            <Calendar className="w-8 h-8 text-blue-600 mx-auto mb-3" />
+                                            <h3 className="font-semibold text-gray-900 mb-1">
+                                                {lang === "en" ? "Flexible Scheduling" : "جدولة مرنة"}
+                                            </h3>
+                                            <p className="text-sm text-gray-600">
+                                                {lang === "en" ? "Any date, any time" : "أي تاريخ، أي وقت"}
+                                            </p>
+                                        </div>
+                                        <div className="bg-red-50 rounded-xl p-6 text-center">
+                                            <Users className="w-8 h-8 text-red-600 mx-auto mb-3" />
+                                            <h3 className="font-semibold text-gray-900 mb-1">
+                                                {lang === "en" ? "Any Group Size" : "أي حجم مجموعة"}
+                                            </h3>
+                                            <p className="text-sm text-gray-600">
+                                                {lang === "en" ? "From 10 to 1000+" : "من 10 إلى 1000+"}
+                                            </p>
+                                        </div>
+                                        <div className="bg-gray-100 rounded-xl p-6 text-center">
+                                            <MapPin className="w-8 h-8 text-gray-700 mx-auto mb-3" />
+                                            <h3 className="font-semibold text-gray-900 mb-1">
+                                                {lang === "en" ? "World-wide" : "جميع أنحاء العالم"}
+                                            </h3>
+                                            <p className="text-sm text-gray-600">
+                                                {lang === "en" ? "Nationwide coverage" : "تغطية على مستوى الجمهورية"}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            {/* <div className="bg-gray-50 rounded-2xl p-8 h-fit">
+                                {/* <div className="bg-gray-50 rounded-2xl p-8 h-fit">
                                 <h3 className="text-xl font-bold text-gray-900 mb-6">
                                     {lang === "en" ? "Quick Facts" : "معلومات سريعة"}
                                 </h3>
@@ -352,56 +352,56 @@ function MiceDetailContent() {
                                     </button>
                                 </Link>
                             </div> */}
-                            
-                        </motion.div>
+
+                            </motion.div>
                             <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.4 }}
-                        >
-                            <h2 className="text-3xl font-bold text-gray-900 mb-8">
-                                {lang === "en" ? "Explore Other Services" : "استكشاف خدمات أخرى"}
-                            </h2>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                                {otherServices.map((otherService, index) => (
-                                    <motion.div
-                                        key={otherService.id}
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ duration: 0.4, delay: index * 0.1 }}
-                                    >
-                                        <Link href={`/mice/${otherService.id}`}>
-                                            <div className="group bg-gray-100 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer h-full">
-                                                <div className="relative h-48 overflow-hidden">
-                                                    <img
-                                                        src={otherService.heroImage}
-                                                        alt={lang === "en" ? otherService.titleEN : otherService.titleAR}
-                                                        // fill
-                                                        className="object-cover group-hover:scale-110 transition-transform duration-500"
-                                                    />
-                                                    <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors" />
-                                                    <div className="absolute top-4 left-4 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.4 }}
+                            >
+                                <h2 className="text-3xl font-bold text-gray-900 mb-8">
+                                    {lang === "en" ? "Explore Other Services" : "استكشاف خدمات أخرى"}
+                                </h2>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                    {otherServices.map((otherService, index) => (
+                                        <motion.div
+                                            key={otherService.id}
+                                            initial={{ opacity: 0, y: 20 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ duration: 0.4, delay: index * 0.1 }}
+                                        >
+                                            <Link href={`/mice/${otherService.id}`}>
+                                                <div className="group bg-gray-100 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer h-full">
+                                                    <div className="relative h-48 overflow-hidden">
+                                                        <img
+                                                            src={otherService.heroImage}
+                                                            alt={lang === "en" ? otherService.titleEN : otherService.titleAR}
+                                                            // fill
+                                                            className="object-cover group-hover:scale-110 transition-transform duration-500"
+                                                        />
+                                                        <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors" />
+                                                        {/* <div className="absolute top-4 left-4 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full">
                                                         #{otherService.id}
+                                                    </div> */}
+                                                    </div>
+                                                    <div className="p-6">
+                                                        <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-red-600 transition-colors">
+                                                            {lang === "en" ? otherService.titleEN : otherService.titleAR}
+                                                        </h3>
+                                                        <p className="text-gray-600 text-sm line-clamp-2">
+                                                            {lang === "en" ? otherService.descriptionEN : otherService.descriptionAR}
+                                                        </p>
+                                                        <div className={`mt-4 flex items-center text-red-600 font-medium text-sm ${isRTL ? "flex-row-reverse" : ""}`}>
+                                                            <span>{lang === "en" ? "Learn More" : "اقرأ المزيد"}</span>
+                                                            <ArrowLeft className={`w-4 h-4 ${isRTL ? "rotate-180 mr-2" : "ml-2"}`} />
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div className="p-6">
-                                                    <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-red-600 transition-colors">
-                                                        {lang === "en" ? otherService.titleEN : otherService.titleAR}
-                                                    </h3>
-                                                    <p className="text-gray-600 text-sm line-clamp-2">
-                                                        {lang === "en" ? otherService.descriptionEN : otherService.descriptionAR}
-                                                    </p>
-                                                    <div className={`mt-4 flex items-center text-red-600 font-medium text-sm ${isRTL ? "flex-row-reverse" : ""}`}>
-                                                        <span>{lang === "en" ? "Learn More" : "اقرأ المزيد"}</span>
-                                                        <ArrowLeft className={`w-4 h-4 ${isRTL ? "rotate-180 mr-2" : "ml-2"}`} />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </Link>
-                                    </motion.div>
-                                ))}
-                            </div>
-                        </motion.div>
+                                            </Link>
+                                        </motion.div>
+                                    ))}
+                                </div>
+                            </motion.div>
                         </>
                     )}
 
@@ -501,7 +501,7 @@ function MiceDetailContent() {
                                     ? "Contact our MICE specialists today and let us create an unforgettable experience for your team."
                                     : "تواصل مع متخصصي مؤتمرات وفعاليات لدينا اليوم ودعنا نخلق تجربة لا تُنسى لفريقك."}
                             </p>
-                            <Link href="/mice">
+                            <Link href="/mice" >
                                 <button className="bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-8 rounded-lg text-lg transition-colors">
                                     {lang === "en" ? "Get Started" : "ابدأ الآن"}
                                 </button>

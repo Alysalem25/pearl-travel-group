@@ -124,7 +124,6 @@ const Page = () => {
         )}
 
         <div className="max-w-7xl mx-auto mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 px-6">
-          {id === "Albania" && (
             <motion.div
               key={"mice"}
               variants={item}
@@ -154,8 +153,6 @@ const Page = () => {
                 </div>
               </div>
             </motion.div>
-          )
-          }
           {categories.map(cat => {
             const imageUrl =
               cat.images && cat.images.length > 0

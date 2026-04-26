@@ -656,7 +656,7 @@ function MiceContent() {
                         >
                             <span className="inline-flex items-center gap-2 px-4 py-2 mb-6 text-sm font-semibold tracking-wider text-red-600 uppercase bg-red-50 rounded-full">
                                 <Sparkles size={16} />
-                                {lang === "en" ? "Since 1985" : "منذ عام 1985"}
+                                {lang === "en" ? "Since 1985" : " تأسست 1985"}
                             </span>
                             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-slate-900 mb-6 tracking-tight">
                                 {lang === "en" ? "MICE" : "مؤتمرات وفعاليات"}
@@ -728,13 +728,14 @@ function MiceContent() {
                             initial="hidden"
                             whileInView="show"
                             viewport={{ once: true, margin: "-50px" }}
-                            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
+                            className="flex flex-row  sm:flex-row sm:flex-wrap gap-6 lg:gap-8 justify-center"
+                            // className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
                         >
                             {services.map((service, index) => (
                                 <motion.div
                                     key={service.id}
                                     variants={scaleIn}
-                                    className="group relative bg-white/80 backdrop-blur-sm border border-slate-100 rounded-3xl p-8 shadow-lg shadow-slate-200/50 hover:shadow-xl hover:shadow-slate-300/40 hover:border-red-100 hover:-translate-y-1 transition-all duration-500"
+                                    className="group w-1/4 relative bg-white/80 backdrop-blur-sm border border-slate-100 rounded-3xl p-8 shadow-lg shadow-slate-200/50 hover:shadow-xl hover:shadow-slate-300/40 hover:border-red-100 hover:-translate-y-1 transition-all duration-500"
                                 >
                                     {/* Icon */}
                                     <div className="relative mb-6">

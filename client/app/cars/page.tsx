@@ -1046,6 +1046,19 @@ function CarRentalContent() {
     carType: '',
   });
 
+  const services = [
+    {
+      img: "https://res.cloudinary.com/dyissekq4/image/upload/q_auto/f_auto/v1777193984/IMG_20260426_115751.jpg_ktgsbp.jpg",
+      text: "Airport transfers",
+      desc: "With additional wait time and flight tracking in case of delays, our service is optimized to make every airport transfer a breeze.",
+    },
+    {
+      img: "https://res.cloudinary.com/dyissekq4/image/upload/q_auto/f_auto/v1777194033/WhatsApp_Image_2026-04-26_at_11.58.09_AM_ga4x0c.jpg",
+      text: "Intercity trips",
+      desc: "Your stressfree solution for traveling between cities with chauffeurs all over the world.",
+    },
+  ];
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
     setFormData(prev => ({
@@ -1449,6 +1462,59 @@ function CarRentalContent() {
       {/* Form Section with Background Image - Form on Left */}
 
 
+
+
+      {/* Your Existing Rows */}
+      {/* <div className="w-full text-center  h-52 flex flex-row justify-around my-4">
+        <div className="row w-full text-center max-w-4xl h-52 flex flex-row justify-around">
+          <div className="col flex flex-row">
+            <div className="col bg-gray-200 h-full w-1/2 rounded-l-2xl overflow-hidden">
+              <img src="/albania.jpg" alt="car" className="w-full h-full object-cover transition-all duration-300" />
+            </div>
+            <div className="col bg-gray-100 h-full w-1/2 p-4 rounded-r-2xl flex items-center justify-center">
+              <p className="text-gray-600 font-medium">rghergvhe</p>
+            </div>
+          </div>
+          <div className="col flex flex-row">
+            <div className="col bg-gray-200 h-full w-1/2 rounded-l-2xl overflow-hidden">
+              <img src="/albania.jpg" alt="car" className="w-full h-full object-cover transition-all duration-300" />
+            </div>
+            <div className="col bg-gray-100 h-full w-1/2 p-4 rounded-r-2xl flex items-center justify-center">
+              <p className="text-gray-600 font-medium">rghergvhe</p>
+            </div>
+          </div>
+        </div>
+      </div> */}
+      <div className="w-full flex justify-center my-10 px-4">
+        <div className="max-w-5xl w-full grid md:grid-cols-2 gap-6">
+          {services.map((item, index) => (
+            <div
+              key={index}
+              className="flex h-52 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition duration-300"
+            >
+              {/* Image */}
+              <div className="w-1/2 overflow-hidden">
+                <img
+                  src={item.img}
+                  alt={item.text}
+                  className="w-full  object-cover hover:scale-110 transition duration-500"
+                />
+              </div>
+
+              {/* Text */}
+              <div className="w-1/2 bg-gray-100 p-4 flex flex-col justify-center">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  {item.text}
+                </h3>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  {item.desc}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Trust Badges */}
       <section className="py-12 bg-white border-t border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1468,28 +1534,6 @@ function CarRentalContent() {
           </div>
         </div>
       </section>
-
-      {/* Your Existing Rows */}
-      <div className="w-full text-center  h-52 flex flex-row justify-around p-12">
-        <div className="row w-full text-center max-w-4xl h-52 flex flex-row justify-around m-4">
-          <div className="col flex flex-row">
-            <div className="col bg-gray-200 h-full w-1/2 rounded-l-2xl overflow-hidden">
-              <img src="/albania.jpg" alt="car" className="w-full h-full object-cover transition-all duration-300" />
-            </div>
-            <div className="col bg-gray-100 h-full w-1/2 p-4 rounded-r-2xl flex items-center justify-center">
-              <p className="text-gray-600 font-medium">rghergvhe</p>
-            </div>
-          </div>
-          <div className="col flex flex-row">
-            <div className="col bg-gray-200 h-full w-1/2 rounded-l-2xl overflow-hidden">
-              <img src="/albania.jpg" alt="car" className="w-full h-full object-cover transition-all duration-300" />
-            </div>
-            <div className="col bg-gray-100 h-full w-1/2 p-4 rounded-r-2xl flex items-center justify-center">
-              <p className="text-gray-600 font-medium">rghergvhe</p>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <Footer />
     </div>

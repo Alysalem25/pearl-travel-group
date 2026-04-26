@@ -287,10 +287,16 @@ router.delete("/:id", authMiddleware,
 
 router.get("/type/:type", async (req, res) => {
   try {
-
-    const type =
-      req.params.type.charAt(0).toUpperCase() +
-      req.params.type.slice(1).toLowerCase();
+    // Map URL parameters to correct enum values
+    const typeMap = {
+      'nile': 'Nile',
+      'msc': 'MSC',
+      'silversea': 'Silversea',
+      'caribbean': 'Caribbean',
+      'norwegian': 'Norwegian'
+    };
+    
+    const type = typeMap[req.params.type.toLowerCase()] || req.params.type;
 
     const cruises = await Cruisies.find({
       category: type,

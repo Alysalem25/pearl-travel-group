@@ -280,14 +280,14 @@ const ProgramPage = () => {
 
 
                                         <div className="mt-6 border-t border-gray-200 pt-4">
-                                            <div className="flex items-center justify-between mb-3">
+                                            {/* <div className="flex items-center justify-between mb-3">
                                                 <span className="font-semibold text-gray-900">
                                                     {lang === "en" ? "Days Itinerary" : "برنامج الأيام"}
                                                 </span>
                                                 <span className="text-sm text-gray-500">
                                                     {program.days.length} {lang === "en" ? "days" : "يوم"}
                                                 </span>
-                                            </div>
+                                            </div> */}
                                             {
                                                 program.days.map((day, index) => (
                                                     <div key={index} className="w-full mt-3 p-4 bg-gray-50 rounded-2xl border border-gray-200">

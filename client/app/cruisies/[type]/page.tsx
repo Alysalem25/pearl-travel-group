@@ -264,6 +264,7 @@ function CruisesContent() {
   const [lang, setLang] = useState<Language>("en");
   const [mounted, setMounted] = useState(false);
   const [cruises, setCruises] = useState<Cruise[]>([]);
+  const [fullCruises, setFullCruises] = useState<Cruise[]>([]);
   const [loading, setLoading] = useState(true);
 
   const t = translations[lang];
@@ -288,13 +289,16 @@ function CruisesContent() {
 
       if (Array.isArray(res.data)) {
         setCruises(res.data);
+        setFullCruises(res.data);
       } else {
         console.error("Invalid response shape", res.data);
         setCruises([]);
+        setFullCruises([]);
       }
     } catch (err) {
       console.error("Error fetching programs:", err);
       setCruises([]);
+      setFullCruises([]);
     } finally {
       setLoading(false);
     }
@@ -303,10 +307,11 @@ function CruisesContent() {
   const filterBySubCategory = async (subCategory: string) => {
     setLoading(true);
     if (subCategory === "All") {
-      fetchPrograms(type);
+      setCruises(fullCruises);
+      setLoading(false);
       return;
     }
-    const filtered = cruises.filter((cruise) => cruise.subCategory === subCategory);
+    const filtered = fullCruises.filter((cruise) => cruise.subCategory === subCategory);
     setCruises(filtered);
     setLoading(false);
   };
@@ -354,15 +359,14 @@ function CruisesContent() {
                 {lang === "ar" ? t.programs : `${type} ${t.programs}`}
               </h2>
               {type ==="Nile" && (<select
-                // value={formData.subCategory}
                 onChange={(e) => filterBySubCategory(e.target.value)}
                 className="ml-auto border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none
                 text-black focus:ring-2 focus:ring-red-500 focus:border-red-500"
                 >
                 <option value="All">All</option>
-                <option value="Ultra Deluxe">Ultra Deluxe</option>
-                <option value="Deluxe">Deluxe</option>
-                <option value="Standard">Standard</option>
+                <option value="altera deluxe">Ultra Deluxe</option>
+                <option value="deluxe">Deluxe</option>
+                <option value="standard">Standard</option>
               </select>)}
           </div>
 

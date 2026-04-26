@@ -79,6 +79,23 @@ function FooterContent() {
                 ? "Your trusted travel partner since 1985. We bring you closer to the world's most beautiful destinations."
                 : "شريكك الموثوق في السفر منذ عام 1985. نقربك من أجمل وجهات العالم."}
             </p>
+            <div className="m-2 flex flex-row">
+              <img
+                src="https://res.cloudinary.com/dyissekq4/image/upload/q_auto/f_auto/v1777217494/cropped_circle_image_lbsowz.png"
+                alt="ATAT Logo"
+                className="h-10 mr-2 w-auto object-contain opacity-80"
+              />
+              <img
+                src="https://res.cloudinary.com/dyissekq4/image/upload/q_auto/f_auto/v1777217718/da67a557-9c71-43e6-afcc-dd636ff54e5f_fsepmu.png"
+                alt="ATAT Logo"
+                className="h-10 mr-2 w-auto object-contain opacity-80"
+              />
+              <img
+                src="https://res.cloudinary.com/dyissekq4/image/upload/q_auto/f_auto/v1777217548/3cf74fc0-64f3-4608-8bed-585293d33cb9_iweesy.png"
+                alt="ATAT Logo"
+                className="h-10 mr-2 w-auto object-contain opacity-80"
+              />
+            </div>
           </motion.div>
 
           {/* Quick Links */}

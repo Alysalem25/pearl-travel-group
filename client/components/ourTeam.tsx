@@ -199,15 +199,15 @@ const OurTeam = () => {
                     transition={{ duration: 0.8, ease: "easeOut" }}
                     className="text-center mb-20"
                 >
-                    <span className="inline-block px-4 py-1.5 mb-4 text-sm font-semibold tracking-wider text-blue-600 uppercase bg-blue-50 rounded-full">
+                    {/* <span className="inline-block px-4 py-1.5 mb-4 text-sm font-semibold tracking-wider text-blue-600 uppercase bg-blue-50 rounded-full">
                         The People Behind
-                    </span>
+                    </span> */}
                     <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 mb-6 tracking-tight">
                         Our Team
                     </h2>
                     <div className="w-24 h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent mx-auto rounded-full mb-6" />
                     <p className="text-lg text-slate-500 max-w-2xl mx-auto leading-relaxed">
-                        Meet our professional team dedicated to delivering the best travel experience.
+                        Meet our professional team dedicated to delivering the best travel experience
                     </p>
                 </motion.div>
 
@@ -295,7 +295,7 @@ const OurTeam = () => {
                                             {member.name}
                                         </h3>
                                         <div className="w-8 h-0.5 bg-slate-200 mx-auto group-hover:w-16 group-hover:bg-red-400 transition-all duration-500" />
-                                        <p className="text-sm font-medium text-slate-400 group-hover:text-slate-500 transition-colors duration-300 uppercase tracking-wide">
+                                        <p className="text-sm font-medium text-blue-700 transition-colors duration-300 uppercase tracking-wide">
                                             {member.roleInTeam}
                                         </p>
                                     </div>

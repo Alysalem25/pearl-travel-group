@@ -308,7 +308,7 @@ Moreover, we are among the few who hold the 'Category A' rating from IATA in Egy
         {/* Section Header */}
         <motion.div variants={fadeUp} className="text-center mb-16 lg:mb-20">
           <span className="inline-block px-4 py-1.5 mb-4 text-sm font-medium tracking-wider text-[var(--mainColor)] uppercase bg-[var(--mainColor)]/10 rounded-full">
-            {lang === "en" ? "Since 1985" : "منذ عام 1985"}
+            {lang === "en" ? "Since 1985" : " تأسست 1985"}
           </span>
           <h1
             className={`font-bold text-[var(--mainColor)] ${isRTL ? "font-arabic" : ""} text-4xl sm:text-5xl lg:text-6xl tracking-tight`}
@@ -373,7 +373,7 @@ Moreover, we are among the few who hold the 'Category A' rating from IATA in Egy
               whileHover={{ y: -4 }}
               transition={{ duration: 0.3 }}
             >
-              <div className="absolute inset-0 bg-gradient-to-tr from-[var(--mainColor)]/20 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <img
                 src="WhatsApp Image 2026-02-22 at 4.49.51 PM.jpeg"
                 alt="Pearl Travel Office"

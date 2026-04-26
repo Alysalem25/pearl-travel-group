@@ -151,11 +151,13 @@ export default function Hero() {
             }}
           >
             {t.paragraph}
+            
           </motion.p>
 
 
         </motion.div>
       </div>
+
 
 
     </section>

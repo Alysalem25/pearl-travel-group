@@ -447,22 +447,23 @@ router.put("/booked/:id/status", authMiddleware, authorize("manage_booked_progra
 });
 
 // User route to book a program
+// post http://localhost:5000/api/programs/book
 router.post("/book", async (req, res, next) => {
   try {
     const { userEmail, userName, userNumber, programId, message } = req.body;
     
     // Find user by email to get userId
-    const user = await User.findOne({ email: userEmail });
-    if (!user) {
-      return res.status(400).json({ error: "User not found" });
-    }
+    // const user = await User.findOne({ email: userEmail });
+    // if (!user) {
+    //   return res.status(400).json({ error: "User not found" });
+    // }
 
     const program = await Program.findById(programId);
     if (!program) {
       return res.status(404).json({ error: "Program not found" });
     }
     const bookedProgram = new BookedPrograms({
-      userId: user._id,
+      // userId: user._id,
       userEmail,
       userName,
       userNumber,
@@ -472,20 +473,12 @@ router.post("/book", async (req, res, next) => {
     await bookedProgram.save();
     
     // 🔹 Log create booking action
-    if (user._id) {
-      await logSuccess(user._id, "CREATE_BOOKED_PROGRAM", "BookedProgram", bookedProgram._id, req, {
-        programId,
-        programTitle: program.titleEn
-      });
-    }
+  
     
     res.status(201).json(bookedProgram);
   }
   catch (err) {
-    await logError(null, "CREATE_BOOKED_PROGRAM", "BookedProgram", req, err.message, {
-      programId: req.body.programId,
-      userEmail: req.body.userEmail
-    });
+    
     next(err);
   }
 });

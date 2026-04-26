@@ -22,6 +22,7 @@ export interface NavbarTranslations {
   classy_travel: string;
   bounce: string;
   buckswood: string;
+  msc: string;
 }
 
 export interface HomePageTranslations {
@@ -70,7 +71,8 @@ export const translations: Record<Language, Translations> = {
       affiliate: "Affiliates",
       classy_travel: "Classy Travel",
       bounce: "Bounce",
-      buckswood: "Buckswood"
+      buckswood: "Buckswoo",
+      msc: "MSC",
     },
     home: {
       heading: "Let the Journey Begin",
@@ -101,9 +103,9 @@ export const translations: Record<Language, Translations> = {
     navbar: {
       home: "الصفحة الرئيسية",
       about: "حول",
-      visa: "تأشيرة",
+      visa: "تأشيرات",
       destinations: "مكاتبنا",
-      flight: "الرحلات الجوية",
+      flight: "حجز طيران",
       egypt: "مصر",
       albania: "ألبانيا",
       cars: "سيارات",
@@ -111,10 +113,11 @@ export const translations: Record<Language, Translations> = {
       cruisies: "الرحلات البحريه",
       contact: "اتصل بنا",
       mice: "MICE",
-      affiliate: "الشراكات",
+      affiliate: "شركاؤنا",
       classy_travel: "Classy Travel",
       bounce: "Bounce",
-      buckswood: "Buckswood"
+      buckswood: "Buckswood",
+      msc: "MSC",
     },
     home: {
       heading: "لتبدأ الرحلة",

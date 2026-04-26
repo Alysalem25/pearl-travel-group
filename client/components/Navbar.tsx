@@ -315,11 +315,11 @@ function NavbarContent() {
                         />
 
                         {/* Header */}
-                        <div className="px-4 py-3 border-b border-slate-100 bg-gradient-to-r from-red-50/50 to-transparent">
+                        {/* <div className="px-4 py-3 border-b border-slate-100 bg-gradient-to-r from-red-50/50 to-transparent">
                           <span className="text-xs font-semibold text-red-600 uppercase tracking-wider">
                             {lang === "en" ? "Our Partners" : "شركاؤنا"}
                           </span>
-                        </div>
+                        </div> */}
 
                         {/* Items */}
                         <div className="py-2">
@@ -329,7 +329,7 @@ function NavbarContent() {
                           >
                             <span className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 group-hover:bg-red-100 text-slate-500 group-hover:text-red-600 transition-colors duration-200">
                               {/* <Briefcase size={16} /> */}
-                              <img src="/albania.jpg" alt="Classy Travel" className="w-4 h-4 object-contain" />
+                              <img src="https://res.cloudinary.com/dyissekq4/image/upload/q_auto/f_auto/v1777217687/1_eapn1r.png" alt="Classy Travel" className="w-12 object-contain" />
                             </span>
                             <span className="font-medium text-sm">{t.navbar.classy_travel}</span>
                           </p>
@@ -339,7 +339,10 @@ function NavbarContent() {
                             className="group flex items-center gap-3 px-4 py-3 mx-2 rounded-xl text-slate-700 hover:text-red-700 hover:bg-red-50 transition-all duration-200"
                           >
                             <span className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 group-hover:bg-red-100 text-slate-500 group-hover:text-red-600 transition-colors duration-200">
-                              <Zap size={16} />
+
+                              <img src="https://res.cloudinary.com/dyissekq4/image/upload/q_auto/f_auto/v1777217662/dabdabc9-e773-42b0-9ff1-8db429e05e1d_g2oulv.png" />
+
+                              {/* <Zap size={16} /> */}
                             </span>
                             <span className="font-medium text-sm">{t.navbar.bounce}</span>
                           </p>
@@ -349,9 +352,21 @@ function NavbarContent() {
                             className="group flex items-center gap-3 px-4 py-3 mx-2 rounded-xl text-slate-700 hover:text-red-700 hover:bg-red-50 transition-all duration-200"
                           >
                             <span className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 group-hover:bg-red-100 text-slate-500 group-hover:text-red-600 transition-colors duration-200">
-                              <GraduationCap size={16} />
+                              {/* <GraduationCap size={16} /> */}
+                              <img src="https://res.cloudinary.com/dyissekq4/image/upload/q_auto/f_auto/v1777217702/d2976c14-ebb1-485d-8e7f-8948da50c5f2_t4pskm.png" alt="Buckswood" className="w-12 object-contain" />
                             </span>
                             <span className="font-medium text-sm">{t.navbar.buckswood}</span>
+                          </p>
+                   
+                          <p
+                            onClick={() => setAffiliateDropdown(false)}
+                            className="group flex items-center gap-3 px-4 py-3 mx-2 rounded-xl text-slate-700 hover:text-red-700 hover:bg-red-50 transition-all duration-200"
+                          >
+                            <span className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 group-hover:bg-red-100 text-slate-500 group-hover:text-red-600 transition-colors duration-200">
+                              {/* <GraduationCap size={16} /> */}
+                              <img src="https://res.cloudinary.com/dyissekq4/image/upload/q_auto/f_auto/v1777218769/msc_logo-removebg-preview_mjjvi6.png" alt="MSC" className="w-12 object-contain" />
+                            </span>
+                            <span className="font-medium text-sm">{t.navbar.msc}</span>
                           </p>
 
                           <div className="mx-3 my-2 h-px bg-slate-100" />
