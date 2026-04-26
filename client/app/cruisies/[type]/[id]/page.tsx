@@ -325,7 +325,7 @@ const ProgramPage = () => {
                                                         </div>
                                                         {activeDayIndex === index && (
                                                             <div className="mt-3 p-3 bg-white rounded-xl border border-gray-100">
-                                                                <p className="text-gray-700 text-sm leading-relaxed">
+                                                                <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-wrap">
                                                                     {lang === "en" ? day.descriptionEn : day.descriptionAr}
                                                                 </p>
                                                             </div>

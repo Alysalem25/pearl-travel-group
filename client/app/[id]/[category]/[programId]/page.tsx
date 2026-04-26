@@ -294,7 +294,7 @@ const ProgramPage = () => {
 
                                                         <div className="flex justify-between items-center gap-4">
                                                             <div className='flex flex-row items-center gap-3'>
-                                <h3 className="flex items-center justify-center min-w-10 h-10 rounded-full bg-blue-900 text-white font-semibold text-lg">
+                                                                <h3 className="flex items-center justify-center min-w-10 h-10 rounded-full bg-blue-900 text-white font-semibold text-lg">
                                                                     {day.dayNumber}
                                                                 </h3>
                                                                 <p className="text-gray-900 text-base font-medium">
@@ -309,12 +309,12 @@ const ProgramPage = () => {
                                                             >
                                                                 {activeDayIndex === index
                                                                     ? "-" : "+"
-                                                                  }
+                                                                }
                                                             </button>
                                                         </div>
                                                         {activeDayIndex === index && (
                                                             <div className="mt-3 p-3 bg-white rounded-xl border border-gray-100">
-                                                                <p className="text-gray-700 text-sm leading-relaxed">
+                                                                <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-wrap">
                                                                     {lang === "en" ? day.descriptionEn : day.descriptionAr}
                                                                 </p>
                                                             </div>
