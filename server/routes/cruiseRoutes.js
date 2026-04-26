@@ -77,6 +77,7 @@ router.post(
 
       // files uploaded by multer
       const images = (req.files || []).map(f => "/uploads/Cruisies/" + f.filename);
+        const subCategoryValue = subCategory || null; // default value if not provided
 
       const cruise = new Cruisies({
         titleEn,
@@ -84,7 +85,7 @@ router.post(
         descriptionEn,
         descriptionAr,
         category,
-        subCategory,
+        subCategory : subCategoryValue,
         durationDays,
         durationNights,
         price,

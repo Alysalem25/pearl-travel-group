@@ -10,7 +10,7 @@ const DaySchema = new mongoose.Schema(
     descriptionEn: { type: String, required: true },
     descriptionAr: { type: String, required: true },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const CruisiesSchema = new mongoose.Schema(
@@ -23,17 +23,18 @@ const CruisiesSchema = new mongoose.Schema(
 
     category: {
       type: String,
-      enum: ["Nile", "MSC" ,"Silversea" , "Caribbean" , "Norwegian"],
+      enum: ["Nile", "MSC", "Silversea", "Caribbean", "Norwegian"],
       default: "Nile",
     },
 
-      subCategory: {
-  type: String,
-  enum: ["altera deluxe" , "deluxe" , "standard"],
-  required: function () {
-    return this.category === "Nile";
-  }
-},  
+    subCategory: {
+      type: String,
+      enum: ["altera deluxe", "deluxe", "standard" , null],
+      default: null,
+      // required: function () {
+      //   return this.category === "Nile";
+      // },
+    },
     durationDays: { type: Number, required: true },
     durationNights: { type: Number, required: true },
 
@@ -43,7 +44,7 @@ const CruisiesSchema = new mongoose.Schema(
 
     days: {
       type: [DaySchema],
-      validate: v => v.length > 0,
+      validate: (v) => v.length > 0,
     },
 
     status: {
@@ -52,7 +53,7 @@ const CruisiesSchema = new mongoose.Schema(
       default: "active",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports =

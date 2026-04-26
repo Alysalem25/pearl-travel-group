@@ -119,20 +119,24 @@ const UserSchema = new mongoose.Schema(
       required: true
     },
 
-    // 🎯 role مجرد label
     role: {
       type: String,
       enum: ["admin", "head", "user"],
       default: "user"
     },
 
-    // 🔥 أهم حاجة
+    roleInTeam: {
+      type: String,
+      required: function () { return this.inTeam; }
+    },
+
     permissions: {
       type: [String],
       default: []
     },
 
-    // 👤 بيانات العميل فقط
+
+
     clientInfo: {
       nationalId: String,
       passportNumber: String,
@@ -142,7 +146,6 @@ const UserSchema = new mongoose.Schema(
 
 
 
-    // 📊 Work Status for filtering users
     workStatus: {
       type: String,
       enum: ["active", "inactive", "pending", "suspended"],

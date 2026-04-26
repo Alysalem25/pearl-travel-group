@@ -513,7 +513,7 @@ function CarRentalContent() {
         message={t.successMessage}
       />
 
-      <main className="relative z-10 flex items-center justify-center min-h-screen px-4 py-20 pt-36">
+      <main className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4  pt-36">
         <div className="w-full max-w-4xl">
           {/* Header */}
           <div className="relative mb-8 text-center">
@@ -833,7 +833,54 @@ function CarRentalContent() {
             </div>
           </div>
         </div>
+
+
+        <div className="row w-full max-w-4xl h-52 flex flex-row justify-around m-4">
+
+          <div className="col flex flex-row ">
+            <div className="col bg-amber-700 h-full  w-1/2">
+              <img src="/albania.jpg" alt="car" className="w-full h-full object-cover transition-all duration-300" />
+            </div>
+            <div className="col bg-gray-300 h-full w-1/2 p-4">
+              <p>rghergvhe</p>
+            </div>
+          </div>
+          <div className="col flex flex-row">
+            <div className="col bg-amber-700 h-full  w-1/2">
+              <img src="/albania.jpg" alt="car" className="w-full h-full object-cover transition-all duration-300" />
+            </div>
+            <div className="col bg-gray-300 h-full w-1/2 p-4">
+              <p>rghergvhe</p>
+            </div>
+          </div>
+
+        </div>
+        <div className="row w-full max-w-4xl h-52 flex flex-row justify-around m-4">
+
+          <div className="col flex flex-row bg-gray-300 rounded-2xl ">
+            <div className="col  h-full  w-1/2">
+              <img src="/albania.jpg" alt="car" className="w-full h-full object-cover transition-all duration-300" />
+            </div>
+            <div className="col  h-full w-1/2 p-4">
+              <p>rghergvhe</p>
+            </div>
+          </div>
+          <div className="col flex flex-row">
+            <div className="col bg-amber-700 h-full  w-1/2">
+              <img src="/albania.jpg" alt="car" className="w-full h-full object-cover transition-all duration-300" />
+            </div>
+            <div className="col bg-gray-300 h-full w-1/2 p-4">
+              <p>rghergvhe</p>
+            </div>
+          </div>
+
+        </div>
       </main>
+      {/* <div className="relative z-10 flex items-center flex-col justify-center min-h-screen px-4 ">
+
+
+
+      </div> */}
 
       <Footer />
     </div>

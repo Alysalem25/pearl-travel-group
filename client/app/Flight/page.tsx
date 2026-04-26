@@ -584,20 +584,20 @@ function FlightSearch() {
 
 
 
-        const [flightImage, setFlightImage] = useState<any>(null);
-    
+    const [flightImage, setFlightImage] = useState<any>(null);
 
-  useEffect(() => {
-    // Fetch all media for about section
-    
-    // Fetch single image for about section (for main hero image)
-    api.media.getMediaBySectionAndType("flight", "image")
-    .then(res => {
-      if (res.data) setFlightImage(res.data);
-    })
-    .catch(err => console.error("Failed to fetch flight image:", err));
 
-  }, []);
+    useEffect(() => {
+        // Fetch all media for about section
+
+        // Fetch single image for about section (for main hero image)
+        api.media.getMediaBySectionAndType("flight", "image")
+            .then(res => {
+                if (res.data) setFlightImage(res.data);
+            })
+            .catch(err => console.error("Failed to fetch flight image:", err));
+
+    }, []);
 
 
     /* language */
@@ -1066,7 +1066,7 @@ function FlightSearch() {
                 message={lang === "en" ? "Our team will contact you shortly." : "سيتواصل معك فريقنا قريبًا."}
             />
 
-            <main className="relative z-10 flex items-center justify-center min-h-screen px-4 py-20  pt-36">
+            <main className="relative z-10 flex items-center justify-center min-h-screen py-20 mx-4 pt-36">
                 <div className="w-full max-w-6xl">
                     {/* Header Card */}
                     <div className="relative mb-8 text-center">
@@ -1080,16 +1080,19 @@ function FlightSearch() {
                         <p className="text-gray-500 text-lg max-w-2xl mx-auto">
                             {lang === "en" ? "Travel at ease, let our professional team arrange your convenient and shortest route to your destination" : "سافر بسهولة، دعنا فريقنا المتخصص ينظم رحلتك القادمة بأكثر الطرق وضماناً"}
                         </p>
+
+                    </div>
+
+                    <div className="relative mb-8 h-80 text-center">
                         <img
                             src={flightImage?.url || "/albania.jpg"}
                             alt="Flight Search"
-                            className="mx-auto mt-8 w-full max-w-md rounded-3xl"
+                            className="mx-auto mt-8 w-full h-80 rounded-3xl"
                         />
                     </div>
 
                     {/* Main Form Card */}
                     <div className="relative bg-white border-2 border-gray-200 rounded-3xl p-8 shadow-xl shadow-gray-200 overflow-hidden">
-
                         {/* Trip Type Tabs */}
                         <div className="relative flex flex-wrap gap-2 mb-8 p-1 bg-gray-100 rounded-2xl">
                             {tripTypes[lang].map((type) => {

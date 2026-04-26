@@ -124,6 +124,38 @@ const Page = () => {
         )}
 
         <div className="max-w-7xl mx-auto mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 px-6">
+          {id === "Albania" && (
+            <motion.div
+              key={"mice"}
+              variants={item}
+              onClick={() => router.push(`/mice`)}
+              className="cursor-pointer"
+            >
+
+
+              <div
+                className="relative w-full h-[300px] rounded-3xl overflow-hidden
+                  bg-cover bg-center
+                  transition-all duration-300
+                  hover:brightness-75
+                  hover:shadow-2xl
+                  hover:-translate-y-1
+                  hover:scale-[1.02]"
+                style={{
+                    backgroundImage: "url(/albania.jpg)"
+                }}
+              >
+                <div className="absolute inset-0 bg-black/40"></div>
+
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <h1 className="text-xl font-bold text-white text-center px-4">
+                    {lang === 'ar' ? "MICE" : "MICE"}
+                  </h1>
+                </div>
+              </div>
+            </motion.div>
+          )
+          }
           {categories.map(cat => {
             const imageUrl =
               cat.images && cat.images.length > 0
@@ -134,9 +166,11 @@ const Page = () => {
               <motion.div
                 key={cat._id}
                 variants={item}
-                onClick={() => router.push(`/${id}/${cat._id}`)} // ✅ أفضل من window.location
+                onClick={() => router.push(`/${id}/${cat._id}`)}
                 className="cursor-pointer"
               >
+
+
                 <div
                   className="relative w-full h-[300px] rounded-3xl overflow-hidden
                   bg-cover bg-center

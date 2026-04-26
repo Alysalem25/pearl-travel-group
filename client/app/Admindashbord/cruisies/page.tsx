@@ -565,7 +565,7 @@ function CruisiesPageContent() {
         titleEn: '',
         titleAr: '',
         category: 'Nile',
-        subCategory: '',
+        subCategory: 'null',
         durationDays: 1,
         durationNights: 0,
         price: 0,

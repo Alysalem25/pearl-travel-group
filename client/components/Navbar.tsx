@@ -328,7 +328,8 @@ function NavbarContent() {
                             className="group flex items-center gap-3 px-4 py-3 mx-2 rounded-xl text-slate-700 hover:text-red-700 hover:bg-red-50 transition-all duration-200"
                           >
                             <span className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 group-hover:bg-red-100 text-slate-500 group-hover:text-red-600 transition-colors duration-200">
-                              <Briefcase size={16} />
+                              {/* <Briefcase size={16} /> */}
+                              <img src="/albania.jpg" alt="Classy Travel" className="w-4 h-4 object-contain" />
                             </span>
                             <span className="font-medium text-sm">{t.navbar.classy_travel}</span>
                           </p>
