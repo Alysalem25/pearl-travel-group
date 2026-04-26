@@ -717,7 +717,7 @@ function CruisiesPageContent() {
             titleEn: '',
             titleAr: '',
             category: 'Nile',
-            subCategory: "",
+            subCategory: "null",
             durationDays: 1,
             durationNights: 0,
             price: 0,
@@ -832,7 +832,11 @@ function CruisiesPageContent() {
 
                             <select className="bg-white w-full p-2 rounded border border-gray-600" 
                             value={formData.category}
-                            onChange={e => setFormData({ ...formData, category: e.target.value as any , subCategory: "null" })} required>
+                            onChange={e => {
+                                const newCategory = e.target.value as any;
+                                setFormData({ ...formData, category: newCategory, subCategory: newCategory === "Nile" ? "null" : "null" });
+                            }} 
+                            required>
                                 <option value="">Select Category</option>
                                 <option value="Nile">Nile</option>
                                 <option value="MSC">MSC</option>
@@ -845,8 +849,9 @@ function CruisiesPageContent() {
                                 <select
                                     value={formData.subCategory}
                                     onChange={(e) => setFormData({ ...formData, subCategory: e.target.value })}
+                                    className="bg-white w-full p-2 rounded border border-gray-600"
                                 >
-                                    <option value="">Select Nile Category</option>
+                                    <option value="null">Select Nile Category</option>
                                     <option value="altera deluxe">Ultra Deluxe</option>
                                     <option value="deluxe">Deluxe</option>
                                     <option value="standard">Standard</option>
