@@ -886,7 +886,6 @@
 //     </div>
 //   );
 // }
-
 'use client';
 
 import React, { useState, Suspense } from "react";
@@ -1002,7 +1001,6 @@ const translations = {
   }
 };
 
-// Loading fallback
 function CarPageLoading() {
   return (
     <div className="min-h-screen bg-white flex items-center justify-center">
@@ -1014,7 +1012,6 @@ function CarPageLoading() {
   );
 }
 
-// Main export with Suspense wrapper
 export default function Page() {
   return (
     <Suspense fallback={<CarPageLoading />}>
@@ -1023,7 +1020,6 @@ export default function Page() {
   );
 }
 
-// Inner component that uses useSearchParams
 function CarRentalContent() {
   const searchParams = useSearchParams();
   const lang = getLanguageFromSearchParams(searchParams);
@@ -1114,312 +1110,349 @@ function CarRentalContent() {
         message={t.successMessage}
       />
 
-      <main className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 pt-36">
-        <div className="w-full max-w-4xl">
-          {/* Header */}
-          <div className="relative mb-8 text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gray-100 border border-gray-200 text-gray-700 text-sm font-medium mb-4">
-              <Sparkles className="w-4 h-4" />
-              <span>{isRTL ? "خدمة متميزة" : "Premium Service"}</span>
-            </div>
+      {/* Header Section with Background Image */}
+      <section
+        className="relative w-full min-h-[400px] lg:min-h-[500px] bg-cover bg-center bg-no-repeat
+         flex items-center text-center ali justify-center sm:flex-row flex-col text-white"
+        style={{ backgroundImage: "url('https://res.cloudinary.com/dyissekq4/image/upload/q_auto/f_auto/v1777193957/IMG_20260426_115818.jpg_fdeth3.jpg')" }}
+      >
+        <div className="absolute inset-0 bg-black/30" />
 
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              {t.title}
-            </h1>
-            <p className="text-gray-500 text-lg max-w-2xl mx-auto">
-              {t.subtitle}
-            </p>
+        <div className="relative z-10 text-center pt-20 sm:pt-0 px-4">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white text-sm font-medium mb-6">
+            <Sparkles className="w-4 h-4" />
+            <span>{isRTL ? "خدمة متميزة" : "Premium Service"}</span>
           </div>
 
-          {/* Main Form Card */}
-          <div className="relative bg-white border border-gray-200 rounded-3xl p-8 shadow-xl shadow-gray-100/50 overflow-hidden">
+          <h1 className="text-5xl lg:text-7xl font-bold text-white mb-4 drop-shadow-lg">
+            {t.title}
+          </h1>
+          <p className="text-lg text-white/90 max-w-2xl mx-auto drop-shadow-md">
+            {t.subtitle}
+          </p>
+        </div>
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full py-16 lg:py-24 sm:mt-12">
+          <div className="grid lg:grid-cols-1 gap-12 items-start">
 
-            {/* Step Indicator */}
-            <div className="flex items-center justify-center mb-8">
-              <div className="flex items-center gap-4">
-                <div className={`flex items-center justify-center w-10 h-10 rounded-full font-bold text-sm ${step >= 1 ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-400'}`}>
-                  1
-                </div>
-                <div className={`w-16 h-1 rounded-full ${step >= 2 ? 'bg-gray-900' : 'bg-gray-100'}`} />
-                <div className={`flex items-center justify-center w-10 h-10 rounded-full font-bold text-sm ${step >= 2 ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-400'}`}>
-                  2
+            {/* LEFT: Form Card */}
+            <div className="bg-white rounded-3xl shadow-2xl p-8 lg:p-10 border border-gray-100">
+              {/* Step Indicator */}
+              <div className="flex items-center justify-center mb-2">
+                <div className="flex items-center gap-4">
+                  <div className={`flex items-center justify-center w-10 h-10 rounded-full font-bold text-sm ${step >= 1 ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-400'}`}>
+                    1
+                  </div>
+                  <div className={`w-16 h-1 rounded-full ${step >= 2 ? 'bg-gray-900' : 'bg-gray-100'}`} />
+                  <div className={`flex items-center justify-center w-10 h-10 rounded-full font-bold text-sm ${step >= 2 ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-400'}`}>
+                    2
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {step === 1 ? (
-              <form onSubmit={handleNextStep} className="space-y-6">
-                <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2 mb-6">
-                  <Car className="w-5 h-5 text-gray-700" />
-                  {t.step1}
-                </h2>
+              {step === 1 ? (
+                <form onSubmit={handleNextStep} className="space-y-6">
+                  <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2 mb-6">
+                    <Car className="w-5 h-5 text-gray-700" />
+                    {t.step1}
+                  </h2>
 
-                {error && (
-                  <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-red-600 text-center text-sm">
-                    {error}
+                  {error && (
+                    <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-red-600 text-center text-sm">
+                      {error}
+                    </div>
+                  )}
+
+                  {/* Car Type Selection */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-3">{t.carType}</label>
+                    <div className="grid grid-cols-2 gap-4">
+                      <label className={`relative flex flex-col items-center p-6 border-2 rounded-2xl cursor-pointer transition-all duration-300 ${formData.carType === 'Premium' ? 'border-gray-900 bg-gray-50' : 'border-gray-200 hover:border-gray-300'}`}>
+                        <input
+                          type="radio"
+                          name="carType"
+                          value="Premium"
+                          onChange={handleChange}
+                          className="absolute opacity-0"
+                        />
+                        <Image
+                          src="/car-wash.png"
+                          alt="Premium"
+                          width={80}
+                          height={80}
+                          className={`mb-3 transition-all duration-300 ${formData.carType === 'Premium' ? 'grayscale-0' : 'grayscale opacity-60'}`}
+                        />
+                        <span className="font-semibold text-gray-900">{t.premium}</span>
+                        {formData.carType === 'Premium' && (
+                          <CheckCircle2 className="absolute top-3 right-3 w-5 h-5 text-gray-900" />
+                        )}
+                      </label>
+
+                      <label className={`relative flex flex-col items-center p-6 border-2 rounded-2xl cursor-pointer transition-all duration-300 ${formData.carType === 'Normal' ? 'border-gray-900 bg-gray-50' : 'border-gray-200 hover:border-gray-300'}`}>
+                        <input
+                          type="radio"
+                          name="carType"
+                          value="Normal"
+                          onChange={handleChange}
+                          className="absolute opacity-0"
+                        />
+                        <Image
+                          src="/car.png"
+                          alt="Normal"
+                          width={80}
+                          height={80}
+                          className={`mb-3 transition-all duration-300 ${formData.carType === 'Normal' ? 'grayscale-0' : 'grayscale opacity-60'}`}
+                        />
+                        <span className="font-semibold text-gray-900">{t.normal}</span>
+                        {formData.carType === 'Normal' && (
+                          <CheckCircle2 className="absolute top-3 right-3 w-5 h-5 text-gray-900" />
+                        )}
+                      </label>
+                    </div>
                   </div>
-                )}
 
-                {/* Car Type Selection */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">{t.carType}</label>
-                  <div className="grid grid-cols-2 gap-4">
-                    <label className={`relative flex flex-col items-center p-6 border-2 rounded-2xl cursor-pointer transition-all duration-300 ${formData.carType === 'Premium' ? 'border-gray-900 bg-gray-50' : 'border-gray-200 hover:border-gray-300'}`}>
+                  {/* Route Inputs */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="relative">
+                      <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                       <input
-                        type="radio"
-                        name="carType"
-                        value="Premium"
+                        type="text"
+                        name="from"
+                        value={formData.from}
                         onChange={handleChange}
-                        className="absolute opacity-0"
+                        placeholder={t.from}
+                        className="w-full bg-gray-50 border border-gray-200 text-gray-900 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-200 transition-all placeholder-gray-400"
+                        required
                       />
-                      <Image
-                        src="/car-wash.png"
-                        alt="Premium"
-                        width={80}
-                        height={80}
-                        className={`mb-3 transition-all duration-300 ${formData.carType === 'Premium' ? 'grayscale-0' : 'grayscale opacity-60'}`}
-                      />
-                      <span className="font-semibold text-gray-900">{t.premium}</span>
-                      {formData.carType === 'Premium' && (
-                        <CheckCircle2 className="absolute top-3 right-3 w-5 h-5 text-gray-900" />
-                      )}
-                    </label>
+                    </div>
 
-                    <label className={`relative flex flex-col items-center p-6 border-2 rounded-2xl cursor-pointer transition-all duration-300 ${formData.carType === 'Normal' ? 'border-gray-900 bg-gray-50' : 'border-gray-200 hover:border-gray-300'}`}>
+                    <div className="relative">
+                      <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                       <input
-                        type="radio"
-                        name="carType"
-                        value="Normal"
+                        type="text"
+                        name="to"
+                        value={formData.to}
                         onChange={handleChange}
-                        className="absolute opacity-0"
+                        placeholder={t.to}
+                        className="w-full bg-gray-50 border border-gray-200 text-gray-900 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-200 transition-all placeholder-gray-400"
+                        required
                       />
-                      <Image
-                        src="/car.png"
-                        alt="Normal"
-                        width={80}
-                        height={80}
-                        className={`mb-3 transition-all duration-300 ${formData.carType === 'Normal' ? 'grayscale-0' : 'grayscale opacity-60'}`}
+                    </div>
+                  </div>
+
+                  {/* Date and Return */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="relative">
+                      <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                      <input
+                        type="datetime-local"
+                        name="date"
+                        value={formData.date}
+                        onChange={handleChange}
+                        className="w-full bg-gray-50 border border-gray-200 text-gray-900 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-200 transition-all"
+                        required
                       />
-                      <span className="font-semibold text-gray-900">{t.normal}</span>
-                      {formData.carType === 'Normal' && (
-                        <CheckCircle2 className="absolute top-3 right-3 w-5 h-5 text-gray-900" />
-                      )}
-                    </label>
-                  </div>
-                </div>
+                    </div>
 
-                {/* Route Inputs */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="relative">
-                    <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="text"
-                      name="from"
-                      value={formData.from}
-                      onChange={handleChange}
-                      placeholder={t.from}
-                      className="w-full bg-gray-50 border border-gray-200 text-gray-900 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-200 transition-all placeholder-gray-400"
-                      required
-                    />
+                    <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl border border-gray-200">
+                      <input
+                        type="checkbox"
+                        id="isReturn"
+                        checked={formData.isReturn}
+                        onChange={() => setFormData(prev => ({ ...prev, isReturn: !prev.isReturn }))}
+                        className="w-5 h-5 text-gray-900 border-gray-300 rounded focus:ring-gray-500"
+                      />
+                      <label htmlFor="isReturn" className="text-gray-700 font-medium cursor-pointer">
+                        {t.isReturn}
+                      </label>
+                    </div>
                   </div>
 
-                  <div className="relative">
-                    <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="text"
-                      name="to"
-                      value={formData.to}
-                      onChange={handleChange}
-                      placeholder={t.to}
-                      className="w-full bg-gray-50 border border-gray-200 text-gray-900 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-200 transition-all placeholder-gray-400"
-                      required
-                    />
-                  </div>
-                </div>
-
-                {/* Date and Return */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="relative">
-                    <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="datetime-local"
-                      name="date"
-                      value={formData.date}
-                      onChange={handleChange}
-                      className="w-full bg-gray-50 border border-gray-200 text-gray-900 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-200 transition-all"
-                      required
-                    />
-                  </div>
-
-                  <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl border border-gray-200">
-                    <input
-                      type="checkbox"
-                      id="isReturn"
-                      checked={formData.isReturn}
-                      onChange={() => setFormData(prev => ({ ...prev, isReturn: !prev.isReturn }))}
-                      className="w-5 h-5 text-gray-900 border-gray-300 rounded focus:ring-gray-500"
-                    />
-                    <label htmlFor="isReturn" className="text-gray-700 font-medium cursor-pointer">
-                      {t.isReturn}
-                    </label>
-                  </div>
-                </div>
-
-                {formData.isReturn && (
-                  <div className="relative">
-                    <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="datetime-local"
-                      name="returnDate"
-                      value={formData.returnDate}
-                      onChange={handleChange}
-                      placeholder={t.returnDate}
-                      className="w-full bg-gray-50 border border-gray-200 text-gray-900 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-200 transition-all"
-                    />
-                  </div>
-                )}
-
-                <button
-                  type="submit"
-                  className="w-full bg-gray-900 text-white py-4 rounded-xl font-semibold text-lg hover:bg-gray-800 transition-colors shadow-lg shadow-gray-200"
-                >
-                  <span className="flex items-center justify-center gap-2">
-                    {t.continue}
-                    {isRTL ? <ArrowLeft className="w-5 h-5" /> : <ArrowRight className="w-5 h-5" />}
-                  </span>
-                </button>
-              </form>
-            ) : (
-              <form onSubmit={handleFinalSubmit} className="space-y-6">
-                <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2 mb-6">
-                  <User className="w-5 h-5 text-gray-700" />
-                  {t.step2}
-                </h2>
-
-                {error && (
-                  <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-red-600 text-center text-sm">
-                    {error}
-                  </div>
-                )}
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="relative">
-                    <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="text"
-                      name="userName"
-                      value={formData.userName}
-                      onChange={handleChange}
-                      placeholder={t.name}
-                      className="w-full bg-gray-50 border border-gray-200 text-gray-900 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-200 transition-all placeholder-gray-400"
-                      required
-                    />
-                  </div>
-
-                  <div className="relative">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="email"
-                      name="userEmail"
-                      value={formData.userEmail}
-                      onChange={handleChange}
-                      placeholder={t.email}
-                      className="w-full bg-gray-50 border border-gray-200 text-gray-900 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-200 transition-all placeholder-gray-400"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="relative">
-                  <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <input
-                    type="tel"
-                    name="userNumber"
-                    value={formData.userNumber}
-                    onChange={handleChange}
-                    placeholder={t.phone}
-                    className="w-full bg-gray-50 border border-gray-200 text-gray-900 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-200 transition-all placeholder-gray-400"
-                    required
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="relative">
-                    <Users className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="number"
-                      name="numOfAdults"
-                      min={1}
-                      value={formData.numOfAdults}
-                      onChange={handleChange}
-                      placeholder={t.passengers}
-                      className="w-full bg-gray-50 border border-gray-200 text-gray-900 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-200 transition-all placeholder-gray-400"
-                      required
-                    />
-                  </div>
-
-                  <div className="relative">
-                    <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="number"
-                      name="numOfLuggage"
-                      min={0}
-                      value={formData.numOfLuggage}
-                      onChange={handleChange}
-                      placeholder={t.luggage}
-                      className="w-full bg-gray-50 border border-gray-200 text-gray-900 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-200 transition-all placeholder-gray-400"
-                    />
-                  </div>
-                </div>
-
-                <div className="relative">
-                  <MessageSquare className="absolute left-4 top-4 w-5 h-5 text-gray-400" />
-                  <textarea
-                    name="remarks"
-                    value={formData.remarks}
-                    onChange={handleChange}
-                    placeholder={t.remarks}
-                    rows={3}
-                    className="w-full bg-gray-50 border border-gray-200 text-gray-900 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-200 transition-all placeholder-gray-400 resize-none"
-                  />
-                </div>
-
-                <div className="flex gap-4">
-                  <button
-                    type="button"
-                    onClick={() => setStep(1)}
-                    className="flex-1 py-4 rounded-xl font-semibold text-lg border border-gray-300 text-gray-600 hover:bg-gray-50 transition-colors"
-                  >
-                    {isRTL ? <ArrowRight className="w-5 h-5 inline ml-2" /> : <ArrowLeft className="w-5 h-5 inline mr-2" />}
-                    {t.back}
-                  </button>
+                  {formData.isReturn && (
+                    <div className="relative">
+                      <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                      <input
+                        type="datetime-local"
+                        name="returnDate"
+                        value={formData.returnDate}
+                        onChange={handleChange}
+                        placeholder={t.returnDate}
+                        className="w-full bg-gray-50 border border-gray-200 text-gray-900 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-200 transition-all"
+                      />
+                    </div>
+                  )}
 
                   <button
                     type="submit"
-                    disabled={loading}
-                    className="flex-[2] bg-gray-900 text-white py-4 rounded-xl font-semibold text-lg hover:bg-gray-800 transition-colors disabled:opacity-70 shadow-lg shadow-gray-200"
+                    className="w-full bg-gray-900 text-white py-4 rounded-xl font-semibold text-lg hover:bg-gray-800 transition-colors shadow-lg shadow-gray-200"
                   >
                     <span className="flex items-center justify-center gap-2">
-                      {loading ? (
-                        <>
-                          <Loader2 className="w-5 h-5 animate-spin" />
-                          {t.processing}
-                        </>
-                      ) : (
-                        <>
-                          <CheckCircle2 className="w-5 h-5" />
-                          {t.submit}
-                        </>
-                      )}
+                      {t.continue}
+                      {isRTL ? <ArrowLeft className="w-5 h-5" /> : <ArrowRight className="w-5 h-5" />}
                     </span>
                   </button>
-                </div>
-              </form>
-            )}
-          </div>
+                </form>
+              ) : (
+                <form onSubmit={handleFinalSubmit} className="space-y-6">
+                  <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2 mb-6">
+                    <User className="w-5 h-5 text-gray-700" />
+                    {t.step2}
+                  </h2>
 
-          {/* Trust Badges */}
-          <div className="mt-8 flex flex-wrap justify-center gap-8 text-gray-500 text-sm">
+                  {error && (
+                    <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-red-600 text-center text-sm">
+                      {error}
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="relative">
+                      <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                      <input
+                        type="text"
+                        name="userName"
+                        value={formData.userName}
+                        onChange={handleChange}
+                        placeholder={t.name}
+                        className="w-full bg-gray-50 border border-gray-200 text-gray-900 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-200 transition-all placeholder-gray-400"
+                        required
+                      />
+                    </div>
+
+                    <div className="relative">
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                      <input
+                        type="email"
+                        name="userEmail"
+                        value={formData.userEmail}
+                        onChange={handleChange}
+                        placeholder={t.email}
+                        className="w-full bg-gray-50 border border-gray-200 text-gray-900 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-200 transition-all placeholder-gray-400"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="relative">
+                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <input
+                      type="tel"
+                      name="userNumber"
+                      value={formData.userNumber}
+                      onChange={handleChange}
+                      placeholder={t.phone}
+                      className="w-full bg-gray-50 border border-gray-200 text-gray-900 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-200 transition-all placeholder-gray-400"
+                      required
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="relative">
+                      <Users className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                      <input
+                        type="number"
+                        name="numOfAdults"
+                        min={1}
+                        value={formData.numOfAdults}
+                        onChange={handleChange}
+                        placeholder={t.passengers}
+                        className="w-full bg-gray-50 border border-gray-200 text-gray-900 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-200 transition-all placeholder-gray-400"
+                        required
+                      />
+                    </div>
+
+                    <div className="relative">
+                      <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                      <input
+                        type="number"
+                        name="numOfLuggage"
+                        min={0}
+                        value={formData.numOfLuggage}
+                        onChange={handleChange}
+                        placeholder={t.luggage}
+                        className="w-full bg-gray-50 border border-gray-200 text-gray-900 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-200 transition-all placeholder-gray-400"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="relative">
+                    <MessageSquare className="absolute left-4 top-4 w-5 h-5 text-gray-400" />
+                    <textarea
+                      name="remarks"
+                      value={formData.remarks}
+                      onChange={handleChange}
+                      placeholder={t.remarks}
+                      rows={3}
+                      className="w-full bg-gray-50 border border-gray-200 text-gray-900 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-200 transition-all placeholder-gray-400 resize-none"
+                    />
+                  </div>
+
+                  <div className="flex gap-4">
+                    <button
+                      type="button"
+                      onClick={() => setStep(1)}
+                      className="flex-1 py-4 rounded-xl font-semibold text-lg border border-gray-300 text-gray-600 hover:bg-gray-50 transition-colors"
+                    >
+                      {isRTL ? <ArrowRight className="w-5 h-5 inline ml-2" /> : <ArrowLeft className="w-5 h-5 inline mr-2" />}
+                      {t.back}
+                    </button>
+
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="flex-[2] bg-gray-900 text-white py-4 rounded-xl font-semibold text-lg hover:bg-gray-800 transition-colors disabled:opacity-70 shadow-lg shadow-gray-200"
+                    >
+                      <span className="flex items-center justify-center gap-2">
+                        {loading ? (
+                          <>
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                            {t.processing}
+                          </>
+                        ) : (
+                          <>
+                            <CheckCircle2 className="w-5 h-5" />
+                            {t.submit}
+                          </>
+                        )}
+                      </span>
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+
+            {/* RIGHT: Empty / Visual space */}
+            {/* <div className="hidden lg:flex flex-col items-center justify-center h-full">
+                <div className="text-center space-y-6">
+                  <div className="w-24 h-24 rounded-full bg-white/20 backdrop-blur-sm border-2 border-white/40 flex items-center justify-center mx-auto">
+                    <Car className="w-12 h-12 text-white" />
+                  </div>
+                  <h3 className="text-3xl font-bold text-white drop-shadow-lg">
+                    {isRTL ? "رحلة فاخرة تنتظرك" : "Luxury Awaits"}
+                  </h3>
+                  <p className="text-white/80 max-w-sm mx-auto">
+                    {isRTL
+                      ? "احجز سيارتك الفاخرة الآن واستمتع بتجربة قيادة لا مثيل لها"
+                      : "Book your luxury car now and enjoy an unparalleled driving experience"}
+                  </p>
+                </div>
+              </div> */}
+          </div>
+        </div>
+        {/* <section
+          className="relative w-full min-h-[700px] lg:min-h-[800px] bg-cover bg-center bg-no-repeat"
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/80 to-transparent" />
+
+        </section> */}
+      </section>
+
+      {/* Form Section with Background Image - Form on Left */}
+
+
+      {/* Trust Badges */}
+      <section className="py-12 bg-white border-t border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-wrap justify-center gap-8 text-gray-500 text-sm">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-emerald-500" />
               <span>{t.trust.secure}</span>
@@ -1434,8 +1467,11 @@ function CarRentalContent() {
             </div>
           </div>
         </div>
+      </section>
 
-        <div className="row w-full max-w-4xl h-52 flex flex-row justify-around m-4">
+      {/* Your Existing Rows */}
+      <div className="w-full text-center  h-52 flex flex-row justify-around p-12">
+        <div className="row w-full text-center max-w-4xl h-52 flex flex-row justify-around m-4">
           <div className="col flex flex-row">
             <div className="col bg-gray-200 h-full w-1/2 rounded-l-2xl overflow-hidden">
               <img src="/albania.jpg" alt="car" className="w-full h-full object-cover transition-all duration-300" />
@@ -1453,26 +1489,7 @@ function CarRentalContent() {
             </div>
           </div>
         </div>
-
-        <div className="row w-full max-w-4xl h-52 flex flex-row justify-around m-4">
-          <div className="col flex flex-row bg-gray-100 rounded-2xl overflow-hidden">
-            <div className="col h-full w-1/2">
-              <img src="/albania.jpg" alt="car" className="w-full h-full object-cover transition-all duration-300" />
-            </div>
-            <div className="col h-full w-1/2 p-4 flex items-center justify-center">
-              <p className="text-gray-600 font-medium">rghergvhe</p>
-            </div>
-          </div>
-          <div className="col flex flex-row">
-            <div className="col bg-gray-200 h-full w-1/2 rounded-l-2xl overflow-hidden">
-              <img src="/albania.jpg" alt="car" className="w-full h-full object-cover transition-all duration-300" />
-            </div>
-            <div className="col bg-gray-100 h-full w-1/2 p-4 rounded-r-2xl flex items-center justify-center">
-              <p className="text-gray-600 font-medium">rghergvhe</p>
-            </div>
-          </div>
-        </div>
-      </main>
+      </div>
 
       <Footer />
     </div>
