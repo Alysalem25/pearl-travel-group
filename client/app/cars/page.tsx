@@ -1049,13 +1049,17 @@ function CarRentalContent() {
   const services = [
     {
       img: "https://res.cloudinary.com/dyissekq4/image/upload/q_auto/f_auto/v1777193984/IMG_20260426_115751.jpg_ktgsbp.jpg",
-      text: "Airport transfers",
-      desc: "With additional wait time and flight tracking in case of delays, our service is optimized to make every airport transfer a breeze.",
+      textEN: "Airport transfers",
+      descEN: "With additional wait time and flight tracking in case of delays, our service is optimized to make every airport transfer a breeze.",
+      textAR: "نقل المطار",
+      descAR: "خدمة نقل المطار مع وقت انتظار إضافي وتتبع للرحلات في حالة التأخير، تم تحسين خدمتنا لتجعل كل انتقال من وإلى المطار تجربة سلسة وخالية من المتاعب.",
     },
     {
       img: "https://res.cloudinary.com/dyissekq4/image/upload/q_auto/f_auto/v1777194033/WhatsApp_Image_2026-04-26_at_11.58.09_AM_ga4x0c.jpg",
-      text: "Intercity trips",
-      desc: "Your stressfree solution for traveling between cities with chauffeurs all over the world.",
+      textEN: "Intercity trips",
+      descEN: "Your stressfree solution for traveling between cities with chauffeurs all over the world.",
+      textAR: "رحلات بين المدن",
+      descAR: "الرحلات بين المدن حلّك المريح للسفر بين المدن بدون توتر، مع سائقين محترفين في جميع أنحاء العالم.",
     },
   ];
 
@@ -1496,7 +1500,7 @@ function CarRentalContent() {
               <div className="w-1/2 overflow-hidden">
                 <img
                   src={item.img}
-                  alt={item.text}
+                  alt={item.textEN}
                   className="w-full  object-cover hover:scale-110 transition duration-500"
                 />
               </div>
@@ -1504,10 +1508,10 @@ function CarRentalContent() {
               {/* Text */}
               <div className="w-1/2 bg-gray-100 p-4 flex flex-col justify-center">
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                  {item.text}
+                  {lang === 'ar' ? item.textAR : item.textEN}
                 </h3>
                 <p className="text-sm text-gray-600 leading-relaxed">
-                  {item.desc}
+                  {lang === 'ar' ? item.descAR : item.descEN}
                 </p>
               </div>
             </div>

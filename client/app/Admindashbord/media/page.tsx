@@ -26,7 +26,7 @@ const SECTIONS = [
 export default function MediaPage() {
     const [file, setFile] = useState<File | null>(null);
     const [externalUrl, setExternalUrl] = useState("");
-    const [section, setSection] = useState("about");
+    const [section, setSection] = useState("about1");
     const [mediaType, setMediaType] = useState<"image" | "video">("image");
     const [title, setTitle] = useState("");
     const [media, setMedia] = useState<any[]>([]);

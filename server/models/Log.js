@@ -50,6 +50,7 @@ const LogSchema = new mongoose.Schema(
         "DELETE_USER",
         "USER_ROLE_CHANGED",
         
+        
         // Program actions
         "CREATE_PROGRAM",
         "EDIT_PROGRAM",

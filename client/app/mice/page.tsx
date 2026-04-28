@@ -475,7 +475,7 @@
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Calendar, Users, MapPin, Briefcase, Globe, Mail, Phone, ChevronRight, Sparkles ,AlertCircle ,Check } from "lucide-react";
+import { X, Calendar, Users, MapPin, Briefcase, Globe, Mail, Phone, ChevronRight, Sparkles, AlertCircle, Check } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/footer";
 import { Language } from "@/data/translations";
@@ -728,42 +728,41 @@ function MiceContent() {
                             initial="hidden"
                             whileInView="show"
                             viewport={{ once: true, margin: "-50px" }}
-                            className="flex flex-row  sm:flex-row sm:flex-wrap gap-6 lg:gap-8 justify-center"
-                            // className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
+                            className="flex flex-col  sm:flex-row sm:flex-wrap gap-6 lg:gap-8 justify-center"
+                        // className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
                         >
                             {services.map((service, index) => (
-                                <motion.div
+                                <Link href={`/mice/${service.id}`}
                                     key={service.id}
-                                    variants={scaleIn}
-                                    className="group w-1/4 relative bg-white/80 backdrop-blur-sm border border-slate-100 rounded-3xl p-8 shadow-lg shadow-slate-200/50 hover:shadow-xl hover:shadow-slate-300/40 hover:border-red-100 hover:-translate-y-1 transition-all duration-500"
+                                    className="group w-full sm:w-1/4 relative bg-white/80 backdrop-blur-sm border border-slate-100 rounded-3xl p-8 shadow-lg shadow-slate-200/50 hover:shadow-xl hover:shadow-slate-300/40 hover:border-red-100 hover:-translate-y-1 transition-all duration-500"
                                 >
-                                    {/* Icon */}
-                                    <div className="relative mb-6">
-                                        <div className="w-16 h-16 flex items-center justify-center rounded-2xl bg-gradient-to-br from-red-500 to-red-600 text-white shadow-lg shadow-red-500/25 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
-                                            {service.icon}
+                                    <motion.div variants={scaleIn}>
+                                        {/* Icon */}
+                                        <div className="relative mb-6">
+                                            <div className="w-16 h-16 flex items-center justify-center rounded-2xl bg-gradient-to-br from-red-500 to-red-600 text-white shadow-lg shadow-red-500/25 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
+                                                {service.icon}
+                                            </div>
+                                            <div className="absolute -top-2 -right-2 w-6 h-6 bg-red-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                                         </div>
-                                        <div className="absolute -top-2 -right-2 w-6 h-6 bg-red-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                                    </div>
 
-                                    {/* Content */}
-                                    <h4 className="text-xl font-bold text-slate-800 mb-3 group-hover:text-red-600 transition-colors duration-300">
-                                        {lang === "en" ? service.titleEN : service.titleAR}
-                                    </h4>
-                                    <p className={`text-slate-500 leading-relaxed mb-6 ${isRTL ? "text-right" : "text-left"}`}>
-                                        {lang === "en" ? service.descEN : service.descAR}
-                                    </p>
+                                        {/* Content */}
+                                        <h4 className="text-xl font-bold text-slate-800 mb-3 group-hover:text-red-600 transition-colors duration-300">
+                                            {lang === "en" ? service.titleEN : service.titleAR}
+                                        </h4>
+                                        <p className={`text-slate-500 leading-relaxed mb-6 ${isRTL ? "text-right" : "text-left"}`}>
+                                            {lang === "en" ? service.descEN : service.descAR}
+                                        </p>
 
-                                    {/* Link */}
-                                    <Link href={`/mice/${service.id}`}>
+                                        {/* Link */}
                                         <span className="inline-flex items-center gap-2 text-red-600 font-semibold group-hover:gap-3 transition-all duration-300">
                                             {lang === "en" ? "Read More" : "اقرأ المزيد"}
                                             <ChevronRight size={16} className={`${isRTL ? "rotate-180" : ""}`} />
                                         </span>
-                                    </Link>
 
-                                    {/* Bottom accent */}
-                                    <div className="absolute bottom-0 left-6 right-6 h-1 bg-gradient-to-r from-red-400 to-red-600 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-                                </motion.div>
+                                        {/* Bottom accent */}
+                                        <div className="absolute bottom-0 left-6 right-6 h-1 bg-gradient-to-r from-red-400 to-red-600 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+                                    </motion.div>
+                                </Link>
                             ))}
                         </motion.div>
                     </div>

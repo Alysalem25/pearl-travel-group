@@ -11,6 +11,7 @@
 // import { ProtectedRoute } from '@/components/ProtectedRoute';
 // import { PERMISSIONS } from '@/lib/permissionConstants';
 // import Link from 'next/link'
+// // import apiClient from '@/lib/api'
 
 
 // interface User {
@@ -24,11 +25,17 @@
 //     inTeam: boolean
 //     roleInTeam: string
 //     workStatus?: string
+//     clientInfo?: {
+//         nationalId?: string
+//         passportNumber?: string
+//         address?: string
+//         note?: string
+//     }
 // }
 
 // export default function UsersPage() {
 //     return (
-//         <ProtectedRoute requiredPermission={PERMISSIONS.MANAGE_USERS}>
+//         <ProtectedRoute requiredPermission={PERMISSIONS.MANAGE_CLIENTS}>
 //             <UsersPageContent />
 //         </ProtectedRoute>
 //     )
@@ -47,12 +54,13 @@
 //         email: '',
 //         password: '',
 //         number: '',
-//         role: '',
+//         role: 'user',
 //         images: '',
 //         inTeam: false,
 //         roleInTeam: '',
-//         workStatus: 'active', // New field
+//         workStatus: 'active',
 //     })
+
 //     const [clientInfo, setClientInfo] = React.useState({
 //         nationalId: '',
 //         passportNumber: '',
@@ -66,10 +74,11 @@
 //     const queryClient = useQueryClient()
 
 //     // Fetch Data
-//     const { data: drivers = [], isLoading } = useQuery({
+//     // const { data: drivers = [], isLoading } = useQuery({
+//     const { data: clients = [], isLoading } = useQuery({
 //         queryKey: ['users'],
 //         queryFn: async () => {
-//             const response = await apiClient.get('/auth/users')
+//             const response = await apiClient.get('/users/clients')
 //             console.log('Fetched users:', response.data)
 //             return response.data.users || response.data
 //         }
@@ -124,7 +133,7 @@
 //             email: '',
 //             password: '',
 //             number: '',
-//             role: '',
+//             role: 'user',
 //             inTeam: false,
 //             images: '',
 //             roleInTeam: '',
@@ -154,7 +163,7 @@
 
 
 //     // Filter users based on search term and workStatus
-//     const filteredUsers = drivers.filter((User: User) =>
+//     const filteredUsers = clients.filter((User: User) =>
 //         (searchTerm === '' ||
 //             User.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
 //             User.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -230,7 +239,7 @@
 //                         </select>
 //                     </div>
 //                     <span className="">
-//                         {filteredUsers.length} of {drivers.length} users
+//                         {filteredUsers.length} of {clients.length} users
 //                     </span>
 //                 </div>
 
@@ -278,22 +287,20 @@
 //                                     value={formData.role}
 //                                     onChange={e => {
 //                                         setFormData({ ...formData, role: e.target.value }),
-//                                         setPermissions(['add_program', 'edit_program', 'delete_program',
-//                                             'add_country', 'edit_country', 'delete_country',
-//                                             'add_category', 'edit_category', 'delete_category',
-//                                             'add_cruise', 'edit_cruise', 'delete_cruise',
-//                                             'manage_users', 'manage_clients', 'manage_visa',
-//                                             'manage_booked_flights',
-//                                             'manage_booked_programs',
-//                                             'manage_booked_transportation',
-//                                             'manage_booked_hotels',
-//                                             'manage_booked_cruises'])
+//                                             setPermissions(['add_program', 'edit_program', 'delete_program',
+//                                                 'add_country', 'edit_country', 'delete_country',
+//                                                 'add_category', 'edit_category', 'delete_category',
+//                                                 'add_cruise', 'edit_cruise', 'delete_cruise',
+//                                                 'manage_users', 'manage_visa',
+//                                                 'manage_booked_flights',
+//                                                 'manage_booked_programs',
+//                                                 'manage_booked_transportation',
+//                                                 'manage_booked_hotels',
+//                                                 'manage_booked_cruises'])
 //                                     }}
 //                                     className="border p-2 rounded bg-white text-black"
 //                                 >
-//                                     <option value="" disabled>Select Role</option>
-//                                     <option value="admin">Admin</option>
-//                                     <option value="head">Head</option>
+
 //                                     <option value="user">User</option>
 //                                 </select>
 
@@ -323,72 +330,6 @@
 //                                         </textarea>
 //                                     </div>
 //                                 )}
-
-//                                 {formData.role === 'head' && (
-//                                     <div className="col-span-1 md:col-span-2 p-4 bg-gray-100 rounded border border-gray-300">
-//                                         <h3 className="font-semibold mb-3 text-black">Permissions:</h3>
-//                                         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-//                                             {[
-//                                                 { label: 'Add Program', value: 'add_program' },
-//                                                 { label: 'Edit Program', value: 'edit_program' },
-//                                                 { label: 'Delete Program', value: 'delete_program' },
-//                                                 { label: 'Add Country', value: 'add_country' },
-//                                                 { label: 'Edit Country', value: 'edit_country' },
-//                                                 { label: 'Delete Country', value: 'delete_country' },
-//                                                 { label: 'Add Category', value: 'add_category' },
-//                                                 { label: 'Edit Category', value: 'edit_category' },
-//                                                 { label: 'Delete Category', value: 'delete_category' },
-//                                                 { label: 'Add Crouises', value: 'add_cruise' },
-//                                                 { label: 'Edit Crouises', value: 'edit_cruise' },
-//                                                 { label: 'Delete Crouises', value: 'delete_cruise' },
-//                                                 { label: 'Manage Users', value: 'manage_users' },
-//                                                 { label: 'Manage Clients', value: 'manage_clients' },
-//                                                 { label: 'Manage Visa', value: 'manage_visa' },
-//                                                 { label: 'Manage Booked Flights', value: 'manage_booked_flights' },
-//                                                 { label: 'Manage Booked Programs', value: 'manage_booked_programs' },
-//                                                 { label: 'Manage Booked Transportation', value: 'manage_booked_transportation' },
-//                                                 { label: 'Manage Booked Hotels', value: 'manage_booked_hotels' },
-//                                                 { label: 'Manage Booked Cruises', value: 'manage_booked_cruises' }
-//                                             ].map(perm => (
-//                                                 <label key={perm.value} className="flex items-center gap-2 text-black cursor-pointer hover:bg-gray-200 p-1 rounded">
-//                                                     <input
-//                                                         type="checkbox"
-//                                                         className="form-checkbox h-4 w-4 text-blue-600"
-//                                                         checked={permissions.includes(perm.value)}
-//                                                         onChange={(e) => {
-//                                                             if (e.target.checked) setPermissions([...permissions, perm.value])
-//                                                             else setPermissions(permissions.filter(p => p !== perm.value))
-//                                                         }}
-//                                                     />
-//                                                     <span className="text-sm font-medium">{perm.label}</span>
-//                                                 </label>
-//                                             ))}
-//                                         </div>
-//                                     </div>
-//                                 )}
-
-//                                 {/* inTeam  */}
-//                                 <label className="flex items-center gap-2 text-black">
-//                                     <input
-//                                         type="checkbox"
-//                                         checked={formData.inTeam}
-//                                         onChange={e => setFormData({ ...formData, inTeam: e.target.checked })}
-//                                         className="form-checkbox h-5 w-5 text-blue-600"
-//                                     />
-//                                     In Team
-//                                 </label>
-
-//                                 {/* roleInTeam  */}
-//                                 {formData.inTeam && <label className="flex items-center gap-2 text-black">
-//                                     <input
-//                                         type="text"
-//                                         value={formData.roleInTeam}
-//                                         onChange={e => setFormData({ ...formData, roleInTeam: e.target.value })}
-//                                         className="border p-2 rounded bg-white text-black"
-//                                     />
-//                                     Role In Team
-//                                 </label>}
-
 //                                 {/* image upload */}
 //                                 <div className="mt-2">
 //                                     <label className="block text-gray-400 mb-1">Profile Image</label>
@@ -434,7 +375,7 @@
 //                     </div>
 //                 )}
 
-//                 {/* Drivers List */}
+//                 {/* clints List */}
 //                 <div className="bg-gray-200 p-4 m-6 rounded text-black">
 //                     <h2 className="text-lg font-semibold mb-3 ">All Users</h2>
 
@@ -467,26 +408,35 @@
 //                                                             <span className="font-semibold">Number:</span> {user.number}
 //                                                         </p>
 //                                                     )}
+
+//                                                     {
+//                                                         user.clientInfo && (
+//                                                             <p className="text-black text-sm">
+//                                                                 <p className="font-semibold">Client address:</p> {user.clientInfo.address}
+//                                                                 <p       className="font-semibold">Client national ID:</p>  
+//                                                                 <p       className="font-semibold">Client passport number:</p> {user.clientInfo.passportNumber}
+//                                                                 <p       className="font-semibold">Client note:</p> {user.clientInfo.note}
+//                                                             </p>
+//                                                         )
+//                                                     }
 //                                                     {/* Work Status Badge */}
 //                                                     <div className="mt-2">
 //                                                         <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${user.workStatus === 'active' ? 'bg-green-200 text-green-800' :
-//                                                                 user.workStatus === 'inactive' ? 'bg-gray-200 text-gray-800' :
-//                                                                     user.workStatus === 'pending' ? 'bg-yellow-200 text-yellow-800' :
-//                                                                         user.workStatus === 'suspended' ? 'bg-red-200 text-red-800' :
-//                                                                             'bg-gray-200 text-gray-800'
+//                                                             user.workStatus === 'inactive' ? 'bg-gray-200 text-gray-800' :
+//                                                                 user.workStatus === 'pending' ? 'bg-yellow-200 text-yellow-800' :
+//                                                                     user.workStatus === 'suspended' ? 'bg-red-200 text-red-800' :
+//                                                                         'bg-gray-200 text-gray-800'
 //                                                             }`}>
 //                                                             {user.workStatus || 'active'}
 //                                                         </span>
 //                                                     </div>
 //                                                 </div>
-//                                                     <div className="mt-4 flex gap-2">
-//                                                         <button onClick={() => deleteUser(user._id)}
-//                                                             className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
-//                                                         >
-//                                                             Delete
-//                                                         </button>
-//                                                     </div>
-                                              
+//                                                 {/* <div className="mt-4 flex gap-2">
+                                                     
+//                                                     <button onClick={() => deleteUser(user._id)}
+//                                                         className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+//                                                     >Delete</button>
+//                                                 </div> */}
 //                                             </div>
 //                                         </div>
 //                                     </div>
@@ -501,6 +451,7 @@
 // }
 
 // // export default UsersPage
+
 
 
 'use client'
@@ -537,7 +488,7 @@ interface UserData {
 
 export default function UsersPage() {
     return (
-        <ProtectedRoute requiredPermission={PERMISSIONS.MANAGE_USERS}>
+        <ProtectedRoute requiredPermission={PERMISSIONS.MANAGE_CLIENTS}>
             <UsersPageContent />
         </ProtectedRoute>
     )
@@ -573,7 +524,7 @@ const UsersPageContent = () => {
         email: '',
         password: '',
         number: '',
-        role: '',
+        role: 'user',
         images: '',
         inTeam: false,
         roleInTeam: '',
@@ -592,10 +543,10 @@ const UsersPageContent = () => {
     const queryClient = useQueryClient()
 
     // Fetch Data
-    const { data: users = [], isLoading } = useQuery({
+    const { data: clients = [], isLoading } = useQuery({
         queryKey: ['users'],
         queryFn: async () => {
-            const response = await apiClient.get('/auth/users')
+            const response = await apiClient.get('/users/clients')
             console.log('Fetched users:', response.data)
             return response.data.users || response.data
         }
@@ -645,7 +596,7 @@ const UsersPageContent = () => {
             email: '',
             password: '',
             number: '',
-            role: '',
+            role: 'user',
             inTeam: false,
             images: '',
             roleInTeam: '',
@@ -673,7 +624,7 @@ const UsersPageContent = () => {
 
     // Advanced Filtering Logic - filters by EVERY field in user data
     const filteredUsers = useMemo(() => {
-        return users.filter((user: UserData) => {
+        return clients.filter((user: UserData) => {
             // Quick search (searches all fields)
             const quickMatch = searchTerm === '' || 
                 user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -704,7 +655,7 @@ const UsersPageContent = () => {
                    workStatusMatch && inTeamMatch && roleInTeamMatch && nationalIdMatch && 
                    passportMatch && addressMatch && noteMatch
         })
-    }, [users, searchTerm, filters])
+    }, [clients, searchTerm, filters])
 
     const clearFilters = () => {
         setFilters({
@@ -876,17 +827,17 @@ const UsersPageContent = () => {
                                             className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                                         />
                                     </div>
-                                    <select
+                                    {/* <select
                                         value={filters.role}
                                         onChange={e => setFilters({...filters, role: e.target.value})}
                                         className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-slate-600"
                                     >
                                         <option value="">All Roles</option>
-                                        <option value="admin">Admin</option>
-                                        <option value="head">Head</option>
                                         <option value="user">User</option>
-                                    </select>
-                                    <select
+                                        <option value="admin">Admin</option>
+                                        <option value="manager">Manager</option>
+                                    </select> */}
+                                    {/* <select
                                         value={filters.workStatus}
                                         onChange={e => setFilters({...filters, workStatus: e.target.value})}
                                         className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-slate-600"
@@ -896,8 +847,8 @@ const UsersPageContent = () => {
                                         <option value="inactive">Inactive</option>
                                         <option value="pending">Pending</option>
                                         <option value="suspended">Suspended</option>
-                                    </select>
-                                    <select
+                                    </select> */}
+                                    {/* <select
                                         value={filters.inTeam}
                                         onChange={e => setFilters({...filters, inTeam: e.target.value})}
                                         className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-slate-600"
@@ -905,8 +856,8 @@ const UsersPageContent = () => {
                                         <option value="">Team Status</option>
                                         <option value="true">In Team</option>
                                         <option value="false">Not In Team</option>
-                                    </select>
-                                    <div className="relative">
+                                    </select> */}
+                                    {/* <div className="relative">
                                         <Shield className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
                                         <input
                                             type="text"
@@ -915,7 +866,7 @@ const UsersPageContent = () => {
                                             onChange={e => setFilters({...filters, roleInTeam: e.target.value})}
                                             className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                                         />
-                                    </div>
+                                    </div> */}
                                     <div className="relative">
                                         <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
                                         <input
@@ -963,7 +914,7 @@ const UsersPageContent = () => {
                         {/* Results Count */}
                         <div className="mt-4 flex items-center justify-between">
                             <span className="text-sm text-slate-500">
-                                Showing <span className="font-semibold text-slate-900">{filteredUsers.length}</span> of <span className="font-semibold text-slate-900">{users.length}</span> users
+                                Showing <span className="font-semibold text-slate-900">{filteredUsers.length}</span> of <span className="font-semibold text-slate-900">{clients.length}</span> users
                             </span>
                             {isLoading && (
                                 <span className="text-sm text-blue-600 animate-pulse">Loading...</span>
@@ -1036,26 +987,24 @@ const UsersPageContent = () => {
                                             value={formData.role}
                                             onChange={e => {
                                                 setFormData({ ...formData, role: e.target.value })
-                                                setPermissions(['add_program', 'edit_program', 'delete_program',
-                                                    'add_country', 'edit_country', 'delete_country',
-                                                    'add_category', 'edit_category', 'delete_category',
-                                                    'add_cruise', 'edit_cruise', 'delete_cruise',
-                                                    'manage_users', 'manage_clients', 'manage_visa',
-                                                    'manage_booked_flights',
-                                                    'manage_booked_programs',
-                                                    'manage_booked_transportation',
-                                                    'manage_booked_hotels',
-                                                    'manage_booked_cruises'])
+                                                // setPermissions(['add_program', 'edit_program', 'delete_program',
+                                                //     'add_country', 'edit_country', 'delete_country',
+                                                //     'add_category', 'edit_category', 'delete_category',
+                                                //     'add_cruise', 'edit_cruise', 'delete_cruise',
+                                                //     'manage_users', 'manage_visa',
+                                                //     'manage_booked_flights',
+                                                //     'manage_booked_programs',
+                                                //     'manage_booked_transportation',
+                                                //     'manage_booked_hotels',
+                                                //     'manage_booked_cruises'])
                                             }}
                                             className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                                         >
-                                            <option value="" disabled>Select Role</option>
-                                            <option value="admin">Admin</option>
-                                            <option value="head">Head</option>
                                             <option value="user">User</option>
+     
                                         </select>
                                     </div>
-                                    <div className="space-y-1.5">
+                                    {/* <div className="space-y-1.5">
                                         <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Work Status</label>
                                         <select
                                             value={formData.workStatus}
@@ -1067,135 +1016,57 @@ const UsersPageContent = () => {
                                             <option value="pending">Pending</option>
                                             <option value="suspended">Suspended</option>
                                         </select>
-                                    </div>
+                                    </div> */}
                                 </div>
 
-                                {/* Client Info - only for user role */}
-                                {formData.role === 'user' && (
-                                    <div className="bg-slate-50 rounded-xl p-5 border border-slate-200">
-                                        <h3 className="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-2">
-                                            <UserCheck className="w-4 h-4" />
-                                            Client Information
-                                        </h3>
-                                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                            <div className="space-y-1.5">
-                                                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">National ID</label>
-                                                <input 
-                                                    type="text" 
-                                                    placeholder="Enter National ID" 
-                                                    value={clientInfo.nationalId} 
-                                                    onChange={e => setClientInfo({ ...clientInfo, nationalId: e.target.value })} 
-                                                    className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" 
-                                                />
-                                            </div>
-                                            <div className="space-y-1.5">
-                                                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Passport Number</label>
-                                                <input 
-                                                    type="text" 
-                                                    placeholder="Enter Passport Number" 
-                                                    value={clientInfo.passportNumber} 
-                                                    onChange={e => setClientInfo({ ...clientInfo, passportNumber: e.target.value })} 
-                                                    className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" 
-                                                />
-                                            </div>
-                                            <div className="space-y-1.5">
-                                                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Address</label>
-                                                <input 
-                                                    type="text" 
-                                                    placeholder="Enter Address" 
-                                                    value={clientInfo.address} 
-                                                    onChange={e => setClientInfo({ ...clientInfo, address: e.target.value })} 
-                                                    className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" 
-                                                />
-                                            </div>
-                                            <div className="space-y-1.5 md:col-span-2 lg:col-span-3">
-                                                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Notes</label>
-                                                <textarea 
-                                                    placeholder="Additional notes..." 
-                                                    rows={3}
-                                                    value={clientInfo.note} 
-                                                    onChange={e => setClientInfo({ ...clientInfo, note: e.target.value })} 
-                                                    className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Permissions - only for head role */}
-                                {formData.role === 'head' && (
-                                    <div className="bg-slate-50 rounded-xl p-5 border border-slate-200">
-                                        <h3 className="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-2">
-                                            <Shield className="w-4 h-4" />
-                                            Permissions
-                                        </h3>
-                                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                                            {[
-                                                { label: 'Add Program', value: 'add_program' },
-                                                { label: 'Edit Program', value: 'edit_program' },
-                                                { label: 'Delete Program', value: 'delete_program' },
-                                                { label: 'Add Country', value: 'add_country' },
-                                                { label: 'Edit Country', value: 'edit_country' },
-                                                { label: 'Delete Country', value: 'delete_country' },
-                                                { label: 'Add Category', value: 'add_category' },
-                                                { label: 'Edit Category', value: 'edit_category' },
-                                                { label: 'Delete Category', value: 'delete_category' },
-                                                { label: 'Add Cruises', value: 'add_cruise' },
-                                                { label: 'Edit Cruises', value: 'edit_cruise' },
-                                                { label: 'Delete Cruises', value: 'delete_cruise' },
-                                                { label: 'Manage Users', value: 'manage_users' },
-                                                { label: 'Manage Clients', value: 'manage_clients' },
-                                                { label: 'Manage Visa', value: 'manage_visa' },
-                                                { label: 'Manage Booked Flights', value: 'manage_booked_flights' },
-                                                { label: 'Manage Booked Programs', value: 'manage_booked_programs' },
-                                                { label: 'Manage Booked Transportation', value: 'manage_booked_transportation' },
-                                                { label: 'Manage Booked Hotels', value: 'manage_booked_hotels' },
-                                                { label: 'Manage Booked Cruises', value: 'manage_booked_cruises' }
-                                            ].map(perm => (
-                                                <label key={perm.value} className="flex items-center gap-2 cursor-pointer hover:bg-white p-2 rounded-lg transition-colors">
-                                                    <input
-                                                        type="checkbox"
-                                                        className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500"
-                                                        checked={permissions.includes(perm.value)}
-                                                        onChange={(e) => {
-                                                            if (e.target.checked) setPermissions([...permissions, perm.value])
-                                                            else setPermissions(permissions.filter(p => p !== perm.value))
-                                                        }}
-                                                    />
-                                                    <span className="text-sm text-slate-700">{perm.label}</span>
-                                                </label>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Team Section */}
-                                <div className="flex flex-wrap items-center gap-6">
-                                    <label className="flex items-center gap-3 cursor-pointer">
-                                        <div className={`relative w-11 h-6 rounded-full transition-colors ${formData.inTeam ? 'bg-blue-600' : 'bg-slate-200'}`}>
-                                            <input
-                                                type="checkbox"
-                                                checked={formData.inTeam}
-                                                onChange={e => setFormData({ ...formData, inTeam: e.target.checked })}
-                                                className="sr-only"
-                                            />
-                                            <div className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${formData.inTeam ? 'translate-x-5' : 'translate-x-0'}`} />
-                                        </div>
-                                        <span className="text-sm font-medium text-slate-700">In Team</span>
-                                    </label>
-
-                                    {formData.inTeam && (
-                                        <div className="flex-1 min-w-[200px] max-w-xs">
-                                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1.5">Role in Team</label>
-                                            <input
-                                                type="text"
-                                                placeholder="e.g. Manager, Lead..."
-                                                value={formData.roleInTeam}
-                                                onChange={e => setFormData({ ...formData, roleInTeam: e.target.value })}
-                                                className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                                {/* Client Info */}
+                                <div className="bg-slate-50 rounded-xl p-5 border border-slate-200">
+                                    <h3 className="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-2">
+                                        <UserCheck className="w-4 h-4" />
+                                        Client Information
+                                    </h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                        <div className="space-y-1.5">
+                                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">National ID</label>
+                                            <input 
+                                                type="text" 
+                                                placeholder="Enter National ID" 
+                                                value={clientInfo.nationalId} 
+                                                onChange={e => setClientInfo({ ...clientInfo, nationalId: e.target.value })} 
+                                                className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" 
                                             />
                                         </div>
-                                    )}
+                                        <div className="space-y-1.5">
+                                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Passport Number</label>
+                                            <input 
+                                                type="text" 
+                                                placeholder="Enter Passport Number" 
+                                                value={clientInfo.passportNumber} 
+                                                onChange={e => setClientInfo({ ...clientInfo, passportNumber: e.target.value })} 
+                                                className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" 
+                                            />
+                                        </div>
+                                        <div className="space-y-1.5">
+                                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Address</label>
+                                            <input 
+                                                type="text" 
+                                                placeholder="Enter Address" 
+                                                value={clientInfo.address} 
+                                                onChange={e => setClientInfo({ ...clientInfo, address: e.target.value })} 
+                                                className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" 
+                                            />
+                                        </div>
+                                        <div className="space-y-1.5 md:col-span-2 lg:col-span-3">
+                                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Notes</label>
+                                            <textarea 
+                                                placeholder="Additional notes..." 
+                                                rows={3}
+                                                value={clientInfo.note} 
+                                                onChange={e => setClientInfo({ ...clientInfo, note: e.target.value })} 
+                                                className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none"
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
 
                                 {/* Image Upload */}
@@ -1258,7 +1129,7 @@ const UsersPageContent = () => {
                     </div>
                 )}
 
-                {/* Users Grid - 3 Cards Per Row */}
+                {/* Users Grid */}
                 <div className="px-6 lg:px-8 pb-8">
                     <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                         <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
@@ -1284,144 +1155,129 @@ const UsersPageContent = () => {
                                 </p>
                             </div>
                         ) : (
-                            <div className="p-6">
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                                    {filteredUsers.map((user: UserData) => (
-                                        <div key={user._id} className="group bg-white border border-slate-200 rounded-2xl p-5 hover:shadow-lg hover:border-blue-200 transition-all duration-300">
-                                            {/* Card Header */}
-                                            <div className="flex items-start gap-4 mb-4">
+                            <div className="divide-y divide-slate-100">
+                                {filteredUsers.map((user: UserData) => (
+                                    <div key={user._id} className="group hover:bg-slate-50/80 transition-colors duration-200">
+                                        <div className="p-5">
+                                            <div className="flex items-start gap-4">
+                                                {/* Avatar */}
                                                 <div className="relative flex-shrink-0">
                                                     <img
                                                         src={user.images && user.images.length > 0 ? user.images[0] : '/default-profile.png'}
                                                         alt={user.name}
-                                                        className="w-16 h-16 rounded-2xl object-cover border-2 border-slate-100 shadow-sm"
+                                                        className="w-14 h-14 rounded-2xl object-cover border-2 border-slate-100 shadow-sm"
                                                         onError={(e) => {
                                                             (e.target as HTMLImageElement).src = '/default-profile.png'
                                                         }}
                                                     />
                                                     <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${getStatusDot(user.workStatus)}`} />
                                                 </div>
+
+                                                {/* Main Info */}
                                                 <div className="flex-1 min-w-0">
-                                                    <h3 className="text-base font-bold text-slate-900 truncate">{user.name}</h3>
-                                                    <p className="text-xs text-slate-500 truncate mt-0.5">{user.email}</p>
-                                                    <div className="mt-2">
-                                                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide border ${getStatusColor(user.workStatus)}`}>
-                                                            <span className={`w-1.5 h-1.5 rounded-full ${getStatusDot(user.workStatus)}`} />
-                                                            {user.workStatus || 'active'}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {/* Card Body */}
-                                            <div className="space-y-2.5 mb-4">
-                                                {user.number && (
-                                                    <div className="flex items-center gap-2 text-sm text-slate-600">
-                                                        <Phone className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
-                                                        <span className="truncate">{user.number}</span>
-                                                    </div>
-                                                )}
-                                                <div className="flex items-center gap-2 text-sm text-slate-600">
-                                                    <Shield className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
-                                                    <span className="capitalize">{user.role || 'No role'}</span>
-                                                </div>
-                                                {user.inTeam && (
-                                                    <div className="flex items-center gap-2 text-sm text-slate-600">
-                                                        <UserCheck className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
-                                                        <span className="truncate">{user.roleInTeam || 'Team Member'}</span>
-                                                    </div>
-                                                )}
-                                            </div>
-
-                                            {/* Tags */}
-                                            <div className="flex flex-wrap gap-1.5 mb-4">
-                                                <span className="px-2 py-0.5 bg-blue-50 text-blue-700 text-[10px] font-semibold rounded-md border border-blue-100">
-                                                    {user.role}
-                                                </span>
-                                                {user.inTeam && (
-                                                    <span className="px-2 py-0.5 bg-purple-50 text-purple-700 text-[10px] font-semibold rounded-md border border-purple-100">
-                                                        Team
-                                                    </span>
-                                                )}
-                                                {user.clientInfo?.nationalId && (
-                                                    <span className="px-2 py-0.5 bg-amber-50 text-amber-700 text-[10px] font-semibold rounded-md border border-amber-100">
-                                                        ID
-                                                    </span>
-                                                )}
-                                                {user.clientInfo?.passportNumber && (
-                                                    <span className="px-2 py-0.5 bg-cyan-50 text-cyan-700 text-[10px] font-semibold rounded-md border border-cyan-100">
-                                                        Passport
-                                                    </span>
-                                                )}
-                                            </div>
-
-                                            {/* Expandable Client Info */}
-                                            {user.clientInfo && (user.clientInfo.nationalId || user.clientInfo.passportNumber || user.clientInfo.address || user.clientInfo.note) && (
-                                                <div className="border-t border-slate-100 pt-3">
-                                                    <button
-                                                        onClick={() => setExpandedUser(expandedUser === user._id ? null : user._id)}
-                                                        className="flex items-center justify-between w-full text-xs font-medium text-slate-500 hover:text-blue-600 transition-colors"
-                                                    >
-                                                        <span>Client Details</span>
-                                                        {expandedUser === user._id ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-                                                    </button>
-
-                                                    {expandedUser === user._id && (
-                                                        <div className="mt-3 space-y-2 animate-in slide-in-from-top-1 duration-200">
-                                                            {user.clientInfo.nationalId && (
-                                                                <div className="flex items-start gap-2 text-xs">
-                                                                    <CreditCard className="w-3.5 h-3.5 text-slate-400 mt-0.5 flex-shrink-0" />
-                                                                    <div>
-                                                                        <span className="text-slate-500 font-medium">National ID:</span>
-                                                                        <span className="text-slate-700 ml-1">{user.clientInfo.nationalId}</span>
-                                                                    </div>
-                                                                </div>
-                                                            )}
-                                                            {user.clientInfo.passportNumber && (
-                                                                <div className="flex items-start gap-2 text-xs">
-                                                                    <FileText className="w-3.5 h-3.5 text-slate-400 mt-0.5 flex-shrink-0" />
-                                                                    <div>
-                                                                        <span className="text-slate-500 font-medium">Passport:</span>
-                                                                        <span className="text-slate-700 ml-1">{user.clientInfo.passportNumber}</span>
-                                                                    </div>
-                                                                </div>
-                                                            )}
-                                                            {user.clientInfo.address && (
-                                                                <div className="flex items-start gap-2 text-xs">
-                                                                    <MapPin className="w-3.5 h-3.5 text-slate-400 mt-0.5 flex-shrink-0" />
-                                                                    <div>
-                                                                        <span className="text-slate-500 font-medium">Address:</span>
-                                                                        <span className="text-slate-700 ml-1">{user.clientInfo.address}</span>
-                                                                    </div>
-                                                                </div>
-                                                            )}
-                                                            {user.clientInfo.note && (
-                                                                <div className="flex items-start gap-2 text-xs">
-                                                                    <FileText className="w-3.5 h-3.5 text-slate-400 mt-0.5 flex-shrink-0" />
-                                                                    <div>
-                                                                        <span className="text-slate-500 font-medium">Notes:</span>
-                                                                        <span className="text-slate-700 ml-1">{user.clientInfo.note}</span>
-                                                                    </div>
-                                                                </div>
-                                                            )}
+                                                    <div className="flex items-start justify-between gap-4">
+                                                        <div>
+                                                            <h3 className="text-base font-bold text-slate-900 truncate">{user.name}</h3>
+                                                            <div className="flex items-center gap-3 mt-1 flex-wrap">
+                                                                <span className="flex items-center gap-1 text-xs text-slate-500">
+                                                                    <Mail className="w-3 h-3" />
+                                                                    {user.email}
+                                                                </span>
+                                                                {user.number && (
+                                                                    <span className="flex items-center gap-1 text-xs text-slate-500">
+                                                                        <Phone className="w-3 h-3" />
+                                                                        {user.number}
+                                                                    </span>
+                                                                )}
+                                                            </div>
                                                         </div>
-                                                    )}
+                                                        <div className="flex items-center gap-2 flex-shrink-0">
+                                                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(user.workStatus)}`}>
+                                                                <span className={`w-1.5 h-1.5 rounded-full ${getStatusDot(user.workStatus)}`} />
+                                                                {user.workStatus || 'active'}
+                                                            </span>
+                                                            <button
+                                                                onClick={() => setExpandedUser(expandedUser === user._id ? null : user._id)}
+                                                                className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-200 rounded-lg transition-colors"
+                                                            >
+                                                                {expandedUser === user._id ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Tags Row */}
+                                                    <div className="flex items-center gap-2 mt-3 flex-wrap">
+                                                        <span className="px-2.5 py-0.5 bg-blue-50 text-blue-700 text-xs font-medium rounded-md border border-blue-100">
+                                                            {user.role}
+                                                        </span>
+                                                        {user.inTeam && (
+                                                            <span className="px-2.5 py-0.5 bg-purple-50 text-purple-700 text-xs font-medium rounded-md border border-purple-100">
+                                                                Team: {user.roleInTeam || 'Member'}
+                                                            </span>
+                                                        )}
+                                                        {user.clientInfo?.nationalId && (
+                                                            <span className="px-2.5 py-0.5 bg-amber-50 text-amber-700 text-xs font-medium rounded-md border border-amber-100 flex items-center gap-1">
+                                                                <CreditCard className="w-3 h-3" />
+                                                                ID: {user.clientInfo.nationalId}
+                                                            </span>
+                                                        )}
+                                                        {user.clientInfo?.passportNumber && (
+                                                            <span className="px-2.5 py-0.5 bg-cyan-50 text-cyan-700 text-xs font-medium rounded-md border border-cyan-100 flex items-center gap-1">
+                                                                <FileText className="w-3 h-3" />
+                                                                Passport: {user.clientInfo.passportNumber}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Expanded Details */}
+                                            {expandedUser === user._id && user.clientInfo && (
+                                                <div className="mt-4 ml-[72px] bg-slate-50 rounded-xl p-4 border border-slate-200 animate-in slide-in-from-top-1 duration-200">
+                                                    <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Client Details</h4>
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                                        {user.clientInfo.address && (
+                                                            <div className="flex items-start gap-2">
+                                                                <MapPin className="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" />
+                                                                <div>
+                                                                    <p className="text-xs font-medium text-slate-500">Address</p>
+                                                                    <p className="text-sm text-slate-800">{user.clientInfo.address}</p>
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                        {user.clientInfo.nationalId && (
+                                                            <div className="flex items-start gap-2">
+                                                                <CreditCard className="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" />
+                                                                <div>
+                                                                    <p className="text-xs font-medium text-slate-500">National ID</p>
+                                                                    <p className="text-sm text-slate-800">{user.clientInfo.nationalId}</p>
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                        {user.clientInfo.passportNumber && (
+                                                            <div className="flex items-start gap-2">
+                                                                <FileText className="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" />
+                                                                <div>
+                                                                    <p className="text-xs font-medium text-slate-500">Passport Number</p>
+                                                                    <p className="text-sm text-slate-800">{user.clientInfo.passportNumber}</p>
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                        {user.clientInfo.note && (
+                                                            <div className="flex items-start gap-2 md:col-span-2">
+                                                                <FileText className="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" />
+                                                                <div>
+                                                                    <p className="text-xs font-medium text-slate-500">Notes</p>
+                                                                    <p className="text-sm text-slate-800">{user.clientInfo.note}</p>
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </div>
                                                 </div>
                                             )}
-
-                                            {/* Card Actions */}
-                                            <div className="flex gap-2 mt-4 pt-3 border-t border-slate-100">
-                                                <button
-                                                    onClick={() => deleteUser(user._id)}
-                                                    className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg text-xs font-semibold transition-colors"
-                                                >
-                                                    <Trash2 className="w-3.5 h-3.5" />
-                                                    Delete
-                                                </button>
-                                            </div>
                                         </div>
-                                    ))}
-                                </div>
+                                    </div>
+                                ))}
                             </div>
                         )}
                     </div>

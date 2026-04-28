@@ -71,7 +71,7 @@ export const useAuthChecks = () => {
 /**
  * DEPRECATED: Old authUtils functions
  * 
- * ❌ DO NOT USE - kept for backward compatibility only
+ * DO NOT USE - kept for backward compatibility only
  * Use useAuthChecks() hook instead
  */
 

@@ -6,6 +6,7 @@ const authorize = (requiredPermission) => {
     if (!req.user) {
       return res.status(401).json({ error: "Unauthorized: No user found in request" });
     }
+    
 
     // 2. Check if user has permission
     if (!hasPermission(req.user, requiredPermission)) {

@@ -50,6 +50,11 @@ const admin_sidebar = ({ sidebarOpen, setSidebarOpen, active }: AdminSidebarProp
       permission: PERMISSIONS.MANAGE_USERS
     },
     {
+      name: "Clients",
+      path: "/Admindashbord/clients",
+      permission: PERMISSIONS.MANAGE_CLIENTS
+    },
+    {
       name: "Visa Applications",
       path: "/Admindashbord/visa",
       permission: PERMISSIONS.MANAGE_VISA

@@ -684,7 +684,7 @@ function HotelBookingContent() {
               <span>{isRTL ? "إقامة فاخرة" : "Luxury Stay"}</span>
             </div>
 
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
               {t.title}
             </h1>
             <p className="text-white               text-lg max-w-2xl mx-auto">
@@ -986,7 +986,7 @@ function HotelBookingContent() {
           </div>
 
           {/* Trust Badges */}
-          <div className="mt-8 flex flex-wrap justify-center gap-8 text-gray-500 text-sm">
+          <div className="mt-8 flex flex-wrap justify-center gap-8 text-white text-sm">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-emerald-500" />
               <span>{t.trust.secure}</span>

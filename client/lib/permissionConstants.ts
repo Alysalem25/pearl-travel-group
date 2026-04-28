@@ -32,6 +32,7 @@ export const PERMISSIONS = {
 
   // Users
   MANAGE_USERS: 'manage_users',
+  MANAGE_CLIENTS: 'manage_clients',
 
   // Visa
   MANAGE_VISA: 'manage_visa',

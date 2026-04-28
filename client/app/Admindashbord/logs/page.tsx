@@ -669,7 +669,7 @@ const ACTION_OPTIONS = [
   // User actions
   { value: 'CREATE_USER', label: 'Create User' },
   { value: 'UPDATE_USER', label: 'Update User' },
-  { value: 'DELETE_USER', label: 'Delete User' },
+  { value: 'DELETE_CLIENT', label: 'Delete Client' },
   { value: 'USER_ROLE_CHANGED', label: 'User Role Changed' },
   
   // Program actions

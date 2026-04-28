@@ -190,11 +190,23 @@ const router = express.Router();
 router.post("/", async (req, res) => {
   try {
     const { section, type, title, url } = req.body;
+    console.log("Received media creation request:", { section, type, title, url });
 
     if (!url) {
       return res.status(400).json({ error: "URL is required" });
     }
 
+    if (!section) {
+      return res.status(400).json({ error: "Section is required" });
+    }
+
+    if (!type) {
+      return res.status(400).json({ error: "Type is required" });
+    }
+
+    if (Media.findOne({ section })) {
+      return res.status(400).json({ error: "Section already exists" });
+    }
 
 
     const media = new Media({

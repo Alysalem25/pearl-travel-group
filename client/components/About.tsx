@@ -31,7 +31,7 @@
 
 //   useEffect(() => {
 //     // Fetch all media for about section
-    
+
 //     // Fetch single image for about section (for main hero image)
 //     api.media.getMediaBySectionAndType("about1", "image")
 //     .then(res => {
@@ -180,6 +180,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion, Variants } from "framer-motion";
 import { Language, getDirection, getLanguageFromSearchParams } from "@/lib/language";
+import { api } from "@/lib/api";
 
 export default function About() {
   const [lang, setLang] = useState<Language>("en");
@@ -198,6 +199,27 @@ export default function About() {
     return () =>
       window.removeEventListener("languagechange", handleLanguageChange as EventListener);
   }, [searchParams]);
+
+  const [aboutImage1, setAboutImage1] = useState<any>(null);
+  const [aboutImage2, setAboutImage2] = useState<any>(null);
+  const [aboutImage3, setAboutImage3] = useState<any>(null);
+
+  useEffect(() => {
+    // Fetch all media for about section
+
+    // Fetch single image for about section (for main hero image)
+    api.media.getMediaBySectionAndType("about1", "image")
+      .then(res => {
+        if (res.data) setAboutImage1(res.data);
+      })
+      .catch(err => console.error("Failed to fetch about image:", err));
+    api.media.getMediaBySectionAndType("about2", "image")
+      .then(res => setAboutImage2(res.data || []))
+      .catch(err => console.error("Failed to fetch media:", err));
+    api.media.getMediaBySectionAndType("about3", "image")
+      .then(res => setAboutImage3(res.data || []))
+      .catch(err => console.error("Failed to fetch media:", err));
+  }, []);
 
   if (!mounted) return null;
 
@@ -244,41 +266,41 @@ Moreover, we are among the few who hold the 'Category A' rating from IATA in Egy
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
-      transition: { 
+      transition: {
         staggerChildren: 0.12,
-        delayChildren: 0.1 
+        delayChildren: 0.1
       },
     },
   };
 
   const fadeUp: Variants = {
     hidden: { opacity: 0, y: 40 },
-    show: { 
-      opacity: 1, 
-      y: 0, 
-      transition: { 
-        duration: 0.9, 
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.9,
         ease: [0.25, 0.1, 0.25, 1] as const
-      } 
+      }
     },
   };
 
   const scaleIn: Variants = {
     hidden: { opacity: 0, scale: 0.95 },
-    show: { 
-      opacity: 1, 
-      scale: 1, 
-      transition: { 
-        duration: 1, 
-        ease: "easeOut" 
-      } 
+    show: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 1,
+        ease: "easeOut"
+      }
     },
   };
 
   const listItem: Variants = {
     hidden: { opacity: 0, x: isRTL ? 20 : -20 },
-    show: { 
-      opacity: 1, 
+    show: {
+      opacity: 1,
       x: 0,
       transition: { duration: 0.6, ease: "easeOut" }
     },
@@ -368,39 +390,39 @@ Moreover, we are among the few who hold the 'Category A' rating from IATA in Egy
             className="relative grid grid-cols-2 grid-rows-[1fr_auto] gap-4 lg:gap-6 h-full"
           >
             {/* Main large image - takes remaining height */}
-            <motion.div 
+            <motion.div
               className="col-span-2 row-span-1 relative group h-full"
               whileHover={{ y: -4 }}
               transition={{ duration: 0.3 }}
             >
               <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <img
-                src="WhatsApp Image 2026-02-22 at 4.49.51 PM.jpeg"
+                src={aboutImage1?.url || "WhatsApp Image 2026-02-22 at 4.49.51 PM.jpeg"}
                 alt="Pearl Travel Office"
                 className="w-full h-full object-cover rounded-2xl shadow-lg shadow-slate-200/50 group-hover:shadow-xl group-hover:shadow-slate-300/50 transition-shadow duration-500"
               />
             </motion.div>
 
             {/* Two smaller images - fixed height */}
-            <motion.div 
+            <motion.div
               className="relative group"
               whileHover={{ y: -4 }}
               transition={{ duration: 0.3 }}
             >
               <img
-                src="WhatsApp Image 2026-02-22 at 4.47.40 PM.jpeg"
+                src={aboutImage2?.url || "WhatsApp Image 2026-02-22 at 4.47.40 PM.jpeg"}
                 alt="Travel Services"
                 className="w-full h-48 sm:h-56 object-cover rounded-xl shadow-md shadow-slate-200/50 group-hover:shadow-lg transition-shadow duration-500"
               />
             </motion.div>
 
-            <motion.div 
+            <motion.div
               className="relative group"
               whileHover={{ y: -4 }}
               transition={{ duration: 0.3 }}
             >
               <img
-                src="WhatsApp Image 2026-02-22 at 4.47.25 PM.jpeg"
+                src={aboutImage3?.url || "WhatsApp Image 2026-02-22 at 4.47.25 PM.jpeg"}
                 alt="Team"
                 className="w-full h-48 sm:h-56 object-cover rounded-xl shadow-md shadow-slate-200/50 group-hover:shadow-lg transition-shadow duration-500"
               />

@@ -20,7 +20,8 @@ const PERMISSIONS = {
   DELETE_CRUISE: 'delete_cruise',
 
   // Users
-  MANAGE_USERS: 'manage_users', // combining add/edit/delete users
+  MANAGE_USERS: 'manage_users', // combining add/edit users
+  MANAGE_CLIENTS: 'manage_clients',
 
   // Visa
   MANAGE_VISA: 'manage_visa', // view and edit visa
