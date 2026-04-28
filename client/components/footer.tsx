@@ -86,12 +86,12 @@ function FooterContent() {
                 className="h-10 mr-2 w-auto object-contain opacity-80"
               />
               <img
-                src="https://res.cloudinary.com/dyissekq4/image/upload/q_auto/f_auto/v1777217718/da67a557-9c71-43e6-afcc-dd636ff54e5f_fsepmu.png"
+                src="https://res.cloudinary.com/dyissekq4/image/upload/q_auto/f_auto/v1777286949/cropped_circle_image_2_qtn8z6.png"
                 alt="ATAT Logo"
                 className="h-10 mr-2 w-auto object-contain opacity-80"
               />
               <img
-                src="https://res.cloudinary.com/dyissekq4/image/upload/q_auto/f_auto/v1777217548/3cf74fc0-64f3-4608-8bed-585293d33cb9_iweesy.png"
+                src="https://res.cloudinary.com/dyissekq4/image/upload/q_auto/f_auto/v1777286947/cropped_circle_image_1_nxmnbr.png"
                 alt="ATAT Logo"
                 className="h-10 mr-2 w-auto object-contain opacity-80"
               />
