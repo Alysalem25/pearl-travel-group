@@ -3,7 +3,7 @@
     const User = require("../models/Users");
     const authMiddleware = require("../middlewares/authMiddleware");
     const authorize = require("../middlewares/authorizeMiddleware");
-    const { handleValidationErrors } = require("../middlewares/validators");
+    const { handleValidationErrors, validateVisa } = require("../middlewares/validators");
     const { logSuccess, logError } = require("../utils/loggerService");
 
     const router = express.Router();
@@ -12,7 +12,7 @@
      * POST /visa
      * Submit visa application - PUBLIC ROUTE
      */
-    router.post("/", handleValidationErrors, async (req, res, next) => {
+    router.post("/", handleValidationErrors, validateVisa, async (req, res, next) => {
         try {
             const {
                 fullName,

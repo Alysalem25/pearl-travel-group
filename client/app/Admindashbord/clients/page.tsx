@@ -708,10 +708,10 @@ const UsersPageContent = () => {
     }
 
     return (
-        <div className="min-h-screen flex bg-slate-50 text-slate-900 font-sans">
+        <div className="h-screen flex bg-slate-50 text-slate-900 font-sans">
             <AdminSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} active="users" />
 
-            <div className="flex-1 overflow-y-auto bg-slate-50">
+            <div className="flex-1 overflow-auto bg-slate-50">
                 {/* Header */}
                 <header className="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-10">
                     <div className="px-6 lg:px-8 py-4 flex items-center justify-between">

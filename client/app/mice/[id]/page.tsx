@@ -10,6 +10,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Calendar, Users, MapPin, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { api } from "@/lib/api";
 
 interface MiceService {
     id: number;
@@ -25,7 +26,50 @@ interface MiceService {
     heroImage: string;
 }
 
-const miceServices: MiceService[] = [
+
+
+function MiceDetailContent() {
+    const params = useParams();
+    const searchParams = useSearchParams();
+    const [lang, setLang] = useState<Language>("en");
+    const [mounted, setMounted] = useState(false);
+    const [activeTab, setActiveTab] = useState<"overview" | "features" | "other">("overview");
+
+    const serviceId = Number(params.id);
+
+    const [transportationImage, setTransportationImage] = useState<any>(null);
+    const [tailored_planning, setTailoredPlanning] = useState<any>(null);
+    const [dining_catering, setDiningCatering] = useState<any>(null);
+    const [accommodation, setAccommodation] = useState<any>(null);
+    const [event_management, setEventManagement] = useState<any>(null);
+
+    useEffect(() => {
+        // Fetch all media for about section
+
+        // Fetch single image for about section (for main hero image)
+        api.media.getMediaBySectionAndType("transportation", "image")
+            .then(res => {if (res.data) setTransportationImage(res.data);
+            })
+            .catch(err => console.error("Failed to fetch about image:", err));
+
+        api.media.getMediaBySectionAndType("tailored_planning", "image")
+            .then(res => {if (res.data) setTailoredPlanning(res.data || []);})
+            .catch(err => console.error("Failed to fetch media:", err));
+
+        api.media.getMediaBySectionAndType("accommodation", "image")
+            .then(res => {if (res.data) setAccommodation(res.data || []);})
+            .catch(err => console.error("Failed to fetch media:", err));
+
+        api.media.getMediaBySectionAndType("event_management", "image")
+            .then(res => {if (res.data) setEventManagement(res.data || []);})
+            .catch(err => console.error("Failed to fetch media:", err));
+
+        api.media.getMediaBySectionAndType("dining_catering", "image")
+            .then(res => {if (res.data) setDiningCatering(res.data || []);})
+            .catch(err => console.error("Failed to fetch media:", err));
+    }, []);
+
+    const miceServices: MiceService[] = [
     {
         id: 1,
         titleEN: "Tailored Planning",
@@ -49,7 +93,7 @@ const miceServices: MiceService[] = [
             "إدارة البائعين والموردين"
         ],
         icon: "planning",
-        heroImage: "https://kimi-web-img.moonshot.cn/img/excel.travel/90ef1834212e46442a3a12239cfea066a3d3d673.jpeg"
+        heroImage: tailored_planning || "https://res.cloudinary.com/dyissekq4/image/upload/q_auto/f_auto/v1777193619/IMG_20260426_114912.jpg_wzuxna.jpg"
     },
     {
         id: 2,
@@ -74,7 +118,7 @@ const miceServices: MiceService[] = [
             "دعم التنسيق على مدار الساعة"
         ],
         icon: "transport",
-        heroImage: "https://res.cloudinary.com/dyissekq4/image/upload/q_auto/f_auto/v1777193868/IMG_20260426_114707.jpg_fjeviz.jpg"
+        heroImage:  transportationImage || "https://res.cloudinary.com/dyissekq4/image/upload/q_auto/f_auto/v1777193868/IMG_20260426_114707.jpg_fjeviz.jpg"
     },
     {
         id: 3,
@@ -99,7 +143,7 @@ const miceServices: MiceService[] = [
             "تسجيل وصول سريع للمجموعات"
         ],
         icon: "accommodation",
-        heroImage: "https://res.cloudinary.com/dyissekq4/image/upload/q_auto/f_auto/v1777193619/IMG_20260426_114912.jpg_wzuxna.jpg"
+        heroImage: accommodation || "https://res.cloudinary.com/dyissekq4/image/upload/q_auto/f_auto/v1777193619/IMG_20260426_114912.jpg_wzuxna.jpg"
     },
     {
         id: 4,
@@ -124,7 +168,7 @@ const miceServices: MiceService[] = [
             "تطوير الموضوع والعلامة التجارية"
         ],
         icon: "events",
-        heroImage: "https://res.cloudinary.com/dyissekq4/image/upload/q_auto/f_auto/v1777193560/pexels-eran-design-2158190390-35215413_1_uvsehr.jpg"
+        heroImage:  event_management || "https://res.cloudinary.com/dyissekq4/image/upload/q_auto/f_auto/v1777193560/pexels-eran-design-2158190390-35215413_1_uvsehr.jpg"
     },
     {
         id: 5,
@@ -149,20 +193,13 @@ const miceServices: MiceService[] = [
             "خدمات المشروبات والبار"
         ],
         icon: "dining",
-        heroImage: "https://kimi-web-img.moonshot.cn/img/cache.marriott.com/1caec8d84bef3d641ca2ca78cc24c3d47e8d9105.jpg"
+        heroImage: dining_catering || "https://kimi-web-img.moonshot.cn/img/cache.marriott.com/1caec8d84bef3d641ca2ca78cc24c3d47e8d9105.jpg"
     }
 ];
 
-function MiceDetailContent() {
-    const params = useParams();
-    const searchParams = useSearchParams();
-    const [lang, setLang] = useState<Language>("en");
-    const [mounted, setMounted] = useState(false);
-    const [activeTab, setActiveTab] = useState<"overview" | "features" | "other">("overview");
-
-    const serviceId = Number(params.id);
     const service = miceServices.find((s) => s.id === serviceId);
     const otherServices = miceServices.filter((s) => s.id !== serviceId);
+
 
     useEffect(() => {
         setMounted(true);

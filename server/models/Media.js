@@ -44,6 +44,11 @@ const mediaSchema = new mongoose.Schema(
         "flight",
         "hotel",
         "cruises_video",
+        "tailored_planning",
+        "transportation",
+        "accommodation",
+        "event_management",
+        "dining_catering",
       ],
     },
     type: {

@@ -725,7 +725,7 @@ const translations = {
       nameLength: "Name must be at least 3 letters",
       phoneRequired: "Phone is required",
       phoneLength: "Phone must be at least 11 digits",
-      emailRequired:"Email is required",
+      emailRequired: "Email is required",
       destinationRequired: "Please select one destination",
       visitedRequired: "Please enter countries you have visited"
     },
@@ -770,7 +770,7 @@ const translations = {
       phoneRequired: "رقم الهاتف مطلوب",
       phoneLength: "يجب أن يكون رقم الهاتف ١١ رقماً على الأقل",
       destinationRequired: "الرجاء اختيار وجهة واحدة",
-      emailRequired:"الايميل مطلوب",
+      emailRequired: "الايميل مطلوب",
       visitedRequired: "الرجاء إدخال الدول التي زرتها"
     },
     trust: {
@@ -899,6 +899,12 @@ function VisaPageContent() {
 
     if (!normalizedEmail) {
       errors.email = t.errors.emailRequired;
+    }else{
+      // validate email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (normalizedEmail && !emailRegex.test(normalizedEmail)) {
+        errors.email = "Invalid email format";
+      }
     }
 
 
@@ -1115,6 +1121,7 @@ function VisaPageContent() {
                     <input
                       type="tel"
                       inputMode="numeric"
+                      required
                       pattern="[0-9]*"
                       value={stepOneForm.phone}
                       onChange={(e) => {
@@ -1135,6 +1142,7 @@ function VisaPageContent() {
                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-red-600" />
                     <input
                       type="email"
+                      required
                       value={stepOneForm.email}
                       onChange={(e) => {
                         setStepOneForm((prev) => ({ ...prev, email: e.target.value }));
@@ -1143,7 +1151,9 @@ function VisaPageContent() {
                       placeholder={t.email}
                       className="w-full bg-white border-2 border-gray-200 text-gray-800 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100 transition-all placeholder-gray-400"
                     />
-                        {stepOneErrors.email && (
+              
+
+                    {stepOneErrors.email && (
                       <p className="mt-1 text-sm text-red-600">{stepOneErrors.email}</p>
                     )}
                   </div>
@@ -1163,8 +1173,8 @@ function VisaPageContent() {
                         <label
                           key={country._id}
                           className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${stepOneForm.destination === country.nameEn
-                              ? "border-red-500 bg-red-50"
-                              : "border-gray-200 hover:border-red-200"
+                            ? "border-red-500 bg-red-50"
+                            : "border-gray-200 hover:border-red-200"
                             }`}
                         >
                           <input

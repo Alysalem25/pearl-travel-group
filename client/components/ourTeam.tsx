@@ -76,7 +76,7 @@
 //                                 </div>
 //                             )
 //                         })}
-                      
+
 //                     </div>
 
 //                 {/* </div> */}
@@ -102,6 +102,8 @@ import React, { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { motion, AnimatePresence } from 'framer-motion'
 import apiClient from '@/lib/api'
+import { Language, getDirection } from "@/lib/language";
+import { getLanguageFromSearchParams, updateLanguage } from "@/lib/language";
 
 interface TeamMember {
     _id: string
@@ -115,6 +117,7 @@ interface TeamMember {
 
 const OurTeam = () => {
     const [hoveredId, setHoveredId] = useState<string | null>(null)
+    const [lang, setLang] = useState<Language>("en");
 
     const { data: members = [], isLoading, isError } = useQuery({
         queryKey: ['team'],
@@ -203,11 +206,11 @@ const OurTeam = () => {
                         The People Behind
                     </span> */}
                     <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 mb-6 tracking-tight">
-                        Our Team
+                       {lang === "ar" ? "فريقنا" : "Our Team"}
                     </h2>
                     <div className="w-24 h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent mx-auto rounded-full mb-6" />
                     <p className="text-lg text-slate-500 max-w-2xl mx-auto leading-relaxed">
-                        Meet our professional team dedicated to delivering the best travel experience
+                        {lang === "ar" ? "تعرف على فريقنا المحترف المتخصص لتقديم أفضل تجربة سفر." : "Meet our professional team dedicated to delivering the best travel experience"}
                     </p>
                 </motion.div>
 

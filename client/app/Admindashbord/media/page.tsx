@@ -20,6 +20,11 @@ const SECTIONS = [
     // { value: "albania_video", label: "Albania Video" },
     { value: "flight", label: "Flight" },
     { value: "hotel", label: "Hotel" },
+    { value: "tailored_planning", label: "Tailored Planning" },
+    { value: "transportation", label: "Transportation" },
+    { value: "accommodation", label: "Accommodation" },
+    { value: "event_management", label: "Event Management" },
+    { value: "dining_catering", label: "Dining & Catering" },
     // { value: "cruises_video", label: "Cruises Video" },
 ];
 
@@ -103,7 +108,7 @@ export default function MediaPage() {
 
     return (
         <div className="flex h-screen bg-slate-50">
-            <AdminSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} active="Booked Programs" />
+            <AdminSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} active="Media" />
 
             <div className="flex-1 overflow-auto">
                 {/* Header */}
@@ -130,15 +135,15 @@ export default function MediaPage() {
 
                 <div className="p-6 space-y-6">
                     <div className="p-6 max-w-4xl mx-auto">
-                        <h1 className="text-2xl font-bold mb-6">Media Manager</h1>
+                        <h1 className="text-2xl text-black font-bold mb-6">Media Manager</h1>
 
                         {/* Section Selection */}
                         <div className="mb-4">
-                            <label className="block mb-2 font-medium">Section:</label>
+                            <label className="block mb-2 text-black font-medium">Section:</label>
                             <select
                                 value={section}
                                 onChange={(e) => { setSection(e.target.value); setEditingId(null); }}
-                                className="border p-2 rounded w-full"
+                                className="border border-black text-black p-2 rounded w-full"
                             >
                                 {SECTIONS.map(s => (
                                     <option key={s.value} value={s.value}>{s.label}</option>
@@ -148,11 +153,11 @@ export default function MediaPage() {
 
                         {/* Media Type */}
                         <div className="mb-4">
-                            <label className="block mb-2 font-medium">Media Type:</label>
+                            <label className="block mb-2 text-black font-medium">Media Type:</label>
                             <select
                                 value={mediaType}
                                 onChange={(e) => setMediaType(e.target.value as "image" | "video")}
-                                className="border p-2 rounded w-full"
+                                className="border border-black text-black  p-2 rounded w-full"
                             >
                                 <option value="image">Image</option>
                                 {/* <option value="video">Video</option> */}
@@ -161,33 +166,21 @@ export default function MediaPage() {
 
                         {/* Title */}
                         <div className="mb-4">
-                            <label className="block mb-2 font-medium">Title (optional):</label>
+                            <label className="block mb-2 text-black font-medium">Title (optional):</label>
                             <input
                                 type="text"
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
-                                className="border p-2 rounded w-full"
+                                className="border p-2 border-black text-black rounded w-full"
                                 placeholder="Enter title"
                             />
                         </div>
 
-                        {/* File Upload */}
-                        {/* <div className="mb-4">
-                            <label className="block mb-2 font-medium">Upload File:</label>
-                            <input
-                                type="file"
-                                accept={mediaType === "video" ? "video/*" : "image/*"}
-                                onChange={(e) => {
-                                    setFile(e.target.files?.[0] || null);
-                                    if (e.target.files?.[0]) setExternalUrl("");
-                                }}
-                                className="border p-2 rounded w-full"
-                            />
-                        </div> */}
-
+                     
+                
                         {/* External URL */}
                         <div className="mb-4">
-                            <label className="block mb-2 font-medium">Or External URL:</label>
+                            <label className="block mb-2 text-black font-medium">Or External URL:</label>
                             <input
                                 type="url"
                                 value={externalUrl}
@@ -195,7 +188,7 @@ export default function MediaPage() {
                                     setExternalUrl(e.target.value);
                                     if (e.target.value) setFile(null);
                                 }}
-                                className="border p-2 rounded w-full"
+                                className="border p-2 border-black text-black rounded w-full"
                                 placeholder="https://example.com/image.jpg"
                             />
                         </div>

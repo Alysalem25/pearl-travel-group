@@ -418,14 +418,14 @@ function ProgramsPageContent() {
 
 
     return (
-        <div className="min-h-screen flex bg-white text-black">
+        <div className=" h-screen flex bg-white text-black">
             <AdminSidebar
                 sidebarOpen={sidebarOpen}
                 setSidebarOpen={setSidebarOpen}
                 active="programs"
             />
 
-            <div className="flex-1">
+            <div className="flex-1 overflow-auto">
                 <header className="bg-white p-4 flex justify-between">
                     <h1 className="text-2xl font-bold">Programs</h1>
                     <button
