@@ -8,14 +8,14 @@ import CountryHero from '@/components/country-hero';
 import Footer from '@/components/footer'
 import { motion } from "framer-motion";
 import { Language, getDirection, getLanguageFromSearchParams } from "@/lib/language";
-import apiClient from "@/lib/api";
+import apiClient, { api } from "@/lib/api";
 
 interface Category {
   _id: string;
   nameEn: string;
   nameAr: string;
   type: 'Incoming' | 'Outgoing' | 'Domestic' | 'Educational' | 'Corporate';
-  images?: string[]; // ✅ تصحيح
+  images?: string[]; 
   isActive: boolean;
 }
 
@@ -57,6 +57,21 @@ const Page = () => {
       setLoading(false);
     }
   };
+
+
+    const [miceImage, setMiceImage] = useState<any>(null);
+  
+    useEffect(() => {
+      // Fetch all media for about section
+  
+      // Fetch single image for about section (for main hero image)
+      api.media.getMediaBySectionAndType("about1", "image")
+        .then(res => {
+          if (res.data) setMiceImage(res.data);
+        })
+        .catch(err => console.error("Failed to fetch about image:", err));
+    
+    }, []);
 
   if (!mounted) return null;
 
@@ -141,7 +156,7 @@ const Page = () => {
                   hover:-translate-y-1
                   hover:scale-[1.02]"
                 style={{
-                    backgroundImage: "url(/albania.jpg)"
+                    backgroundImage: `url(${miceImage || "https://res.cloudinary.com/dyissekq4/image/upload/q_auto/f_auto/v1777416031/pexels-jibarofoto-15448073_ki94cu.jpg"})`
                 }}
               >
                 <div className="absolute inset-0 bg-black/40"></div>

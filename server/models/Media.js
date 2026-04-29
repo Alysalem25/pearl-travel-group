@@ -43,6 +43,7 @@ const mediaSchema = new mongoose.Schema(
         "albania_video",
         "flight",
         "hotel",
+        "MICE",
         "cruises_video",
         "tailored_planning",
         "transportation",

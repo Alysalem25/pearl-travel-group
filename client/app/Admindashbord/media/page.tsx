@@ -20,6 +20,7 @@ const SECTIONS = [
     // { value: "albania_video", label: "Albania Video" },
     { value: "flight", label: "Flight" },
     { value: "hotel", label: "Hotel" },
+    { value: "MICE", label: "MICE" },
     { value: "tailored_planning", label: "Tailored Planning" },
     { value: "transportation", label: "Transportation" },
     { value: "accommodation", label: "Accommodation" },
