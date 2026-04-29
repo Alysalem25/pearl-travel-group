@@ -754,13 +754,7 @@ function NavbarContent() {
                     )}
                   </div>
                 ) : (
-                  <Link
-                    href={`/login?lang=${lang}`}
-                    onClick={() => setOpen(false)}
-                    className={`block w-full text-center py-2 px-4 mt-4 rounded-lg transition-colors duration-200 font-medium bg-blue-600 hover:bg-blue-700 text-white`}
-                  >
-                    Login
-                  </Link>
+<p></p>
                 )}
               </div>
             </motion.div>
