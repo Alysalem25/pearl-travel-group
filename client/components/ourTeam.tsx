@@ -98,12 +98,14 @@
 
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { motion, AnimatePresence } from 'framer-motion'
 import apiClient from '@/lib/api'
 import { Language, getDirection } from "@/lib/language";
 import { getLanguageFromSearchParams, updateLanguage } from "@/lib/language";
+import { useSearchParams } from 'next/dist/client/components/navigation'
+
 
 interface TeamMember {
     _id: string
@@ -118,6 +120,21 @@ interface TeamMember {
 const OurTeam = () => {
     const [hoveredId, setHoveredId] = useState<string | null>(null)
     const [lang, setLang] = useState<Language>("en");
+    const [mounted, setMounted] = useState(false);
+    const searchParams = useSearchParams();
+
+    useEffect(() => {
+        setMounted(true);
+        setLang(getLanguageFromSearchParams(searchParams));
+
+        const handleLanguageChange = (e: CustomEvent<{ lang: Language }>) => {
+            setLang(e.detail.lang);
+        };
+
+        window.addEventListener("languagechange", handleLanguageChange as EventListener);
+        return () =>
+            window.removeEventListener("languagechange", handleLanguageChange as EventListener);
+    }, [searchParams]);
 
     const { data: members = [], isLoading, isError } = useQuery({
         queryKey: ['team'],
@@ -206,7 +223,7 @@ const OurTeam = () => {
                         The People Behind
                     </span> */}
                     <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 mb-6 tracking-tight">
-                       {lang === "ar" ? "فريقنا" : "Our Team"}
+                        {lang === "ar" ? "فريقنا" : "Our Team"}
                     </h2>
                     <div className="w-24 h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent mx-auto rounded-full mb-6" />
                     <p className="text-lg text-slate-500 max-w-2xl mx-auto leading-relaxed">
