@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { translations, Language } from "@/data/translations";
 import { getDirection, getLanguageFromSearchParams } from "@/lib/language";
 import { Mail, Phone, MapPin, Facebook, Instagram, Linkedin, Twitter, MessageCircle as WhatsApp } from "lucide-react";
@@ -12,6 +12,7 @@ function FooterContent() {
   const [lang, setLang] = useState<Language>("en");
   const [mounted, setMounted] = useState(false);
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
@@ -40,8 +41,9 @@ function FooterContent() {
     { label: "Home", onClick: () => window.scrollTo({ top: 0, behavior: 'smooth' }) },
     {
       label: "About Us", onClick: () => {
-        const aboutSection = document.getElementById('about-section');
-        if (aboutSection) aboutSection.scrollIntoView({ behavior: 'smooth' });
+        // const aboutSection = document.getElementById('about-section');
+        // if (aboutSection) aboutSection.scrollIntoView({ behavior: 'smooth' });
+        router.push(`/?lang=${lang}#about-section`);
       }
     },
     { label: "Contact", onClick: handleContactClick },
@@ -49,8 +51,9 @@ function FooterContent() {
     { label: "الرئيسية", onClick: () => window.scrollTo({ top: 0, behavior: 'smooth' }) },
     {
       label: "عن الشركة", onClick: () => {
-        const aboutSection = document.getElementById('about-section');
-        if (aboutSection) aboutSection.scrollIntoView({ behavior: 'smooth' });
+        // const aboutSection = document.getElementById('about-section');
+        // if (aboutSection) aboutSection.scrollIntoView({ behavior: 'smooth' });
+        router.push(`/?lang=${lang}/#about-section`);
       }
     },
     { label: "اتصل بنا", onClick: handleContactClick },
@@ -109,7 +112,28 @@ function FooterContent() {
               {lang === "en" ? "Quick Links" : "روابط سريعة"}
             </h4>
             <ul className="space-y-2">
-              {footerLinks.map((link, index) => (
+              <li>
+                <Link
+                  href='/?lang=${lang}'
+                  className="text-gray-300 block hover:text-[var(--mainColor)] transition-colors duration-200"
+                >
+                  {lang === "en" ? "Home" : "الرئيسية"}
+                </Link>
+                <Link
+                  href={`/?lang=${lang}#about-section`}  // was: href='/#about-section'
+                  className="text-gray-300 block hover:text-[var(--mainColor)] transition-colors duration-200"
+                >
+                  {lang === "en" ? "About Us" : "عن الشركة"}
+                </Link>
+                <Link
+                  href='https://wa.me/201067588333'
+                  // className="text-gray-300 hover:text-[var(--mainColor)] transition-colors duration-200"
+                  className="text-gray-300 block hover:text-[var(--mainColor)] transition-colors duration-200"
+                >
+                  {lang === "en" ? "Contact" : "اتصل بنا"}
+                </Link>
+              </li>
+              {/* {footerLinks.map((link, index) => (
                 <li key={index}>
                   {link.href ? (
                     <Link
@@ -127,7 +151,7 @@ function FooterContent() {
                     </button>
                   )}
                 </li>
-              ))}
+              ))} */}
             </ul>
           </motion.div>
 

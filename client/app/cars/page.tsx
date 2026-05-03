@@ -1051,7 +1051,7 @@ function CarRentalContent() {
       img: "https://res.cloudinary.com/dyissekq4/image/upload/q_auto/f_auto/v1777193984/IMG_20260426_115751.jpg_ktgsbp.jpg",
       textEN: "Airport transfers",
       descEN: "With additional wait time and flight tracking in case of delays, our service is optimized to make every airport transfer a breeze.",
-      textAR: "نقل المطار",
+      textAR: "استقبال المطار",
       descAR: "خدمة نقل المطار مع وقت انتظار إضافي وتتبع للرحلات في حالة التأخير، تم تحسين خدمتنا لتجعل كل انتقال من وإلى المطار تجربة سلسة وخالية من المتاعب.",
     },
     {
