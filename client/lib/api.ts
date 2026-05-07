@@ -24,6 +24,27 @@ type CategoryPayload = {
   isActive: boolean
 }
 
+  type MultiCity = {
+  from: string;
+  to: string;
+  date: string;
+};
+
+type FlightCreateData = {
+  userEmail: string;
+  userName: string;
+  userNumber: string;
+  tripType: "round" | "oneway" | "multi";
+  from?: string;
+  to?: string;
+  date?: string;
+  returnDate?: string;
+  multiCities?: MultiCity[];
+  numOfAdults: number;
+  numOfChildren?: number;
+  cabinClass?: "economy" | "business" | "first";
+};
+
 // Create axios instance with base URL
 const apiClient: AxiosInstance = axios.create({
   baseURL: "/api",
@@ -270,13 +291,25 @@ export const api = {
   },
 
   // flights endpoints
-  flights: {
-    create: (data: { userEmail: string; userName?: string; userNumber?: number; from: string; to: string }) =>
-      apiClient.post("/flights", data),
-    getAll: () => apiClient.get("/flights"),
-    delete: (id: string) => apiClient.delete(`/flights/${id}`),
-    changeStatus: (id: string, status: string) => apiClient.put(`/flights/${id}/status`, { status })
-  },
+  // flights: {
+  //   create: (data: { userEmail: string; userName?: string; userNumber?: number; from: string; to: string }) =>
+  //     apiClient.post("/flights", data),
+  //   getAll: () => apiClient.get("/flights"),
+  //   delete: (id: string) => apiClient.delete(`/flights/${id}`),
+  //   changeStatus: (id: string, status: string) => apiClient.put(`/flights/${id}/status`, { status })
+  // },
+
+
+
+// ... in your api object:
+flights: {
+  create: (data: FlightCreateData) => apiClient.post("/flights", data),
+  getAll: () => apiClient.get("/flights"),
+  delete: (id: string) => apiClient.delete(`/flights/${id}`),
+  changeStatus: (id: string, status: string, reviewedBy?: string) => 
+    apiClient.put(`/flights/${id}/status`, { status, reviewedBy })
+},
+
 
   // booked programs endpoints
   bookings: {
