@@ -204,9 +204,9 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ error: "Type is required" });
     }
 
-    if (Media.findOne({ section })) {
-      return res.status(400).json({ error: "Section already exists" });
-    }
+    // if (Media.findOne({ section })) {
+    //   return res.status(400).json({ error: "Section already exists" });
+    // }
 
 
     const media = new Media({

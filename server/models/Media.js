@@ -30,6 +30,7 @@ const mediaSchema = new mongoose.Schema(
     section: {
       type: String,
       required: true,
+      unique: true,
       enum: [
         "home_video",
         "about1",

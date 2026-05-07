@@ -99,8 +99,8 @@
 //                                         )}
 //                                     </div>
 //                                     <div className="flex gap-2">
-                              
-                                        
+
+
 //                                             <button type='submit' onClick={() => changeStatusMutation.mutate({
 //                                                 id: f._id,
 //                                                 status: f.status === "pending" ? "reviewed" : "pending",
@@ -148,6 +148,8 @@ interface Flight {
     from?: string
     to?: string
     status: 'pending' | 'reviewed'
+    date?: string
+    returnDate?: string
     createdAt?: string
     reviewedBy?: Reviewer | string | null
 }
@@ -176,14 +178,14 @@ const FlightsPageContent = () => {
     })
 
     const changeStatusMutation = useMutation({
-        mutationFn: ({ id, status }: { id: string; status: string}) => api.flights.changeStatus(id, status),
+        mutationFn: ({ id, status }: { id: string; status: string }) => api.flights.changeStatus(id, status),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ['flights'] })
     })
 
     // Status badge colors
     const getStatusColor = (status: string) => {
-        return status === 'reviewed' 
-            ? 'bg-green-100 text-green-800 border-green-200' 
+        return status === 'reviewed'
+            ? 'bg-green-100 text-green-800 border-green-200'
             : 'bg-amber-100 text-amber-800 border-amber-200'
     }
 
@@ -208,7 +210,7 @@ const FlightsPageContent = () => {
                             <p className="text-sm text-gray-500">Manage and review submitted flight requests</p>
                         </div>
                     </div>
-                    
+
                     <div className="flex items-center gap-3">
                         <span className="text-sm text-gray-500">
                             Total: <span className="font-semibold text-gray-900">{flights.length}</span>
@@ -232,7 +234,7 @@ const FlightsPageContent = () => {
                                     <p className="text-2xl font-bold text-gray-900">{flights.length}</p>
                                 </div>
                             </div>
-                            
+
                             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 flex items-center gap-4">
                                 <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center">
                                     <svg className="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -246,7 +248,7 @@ const FlightsPageContent = () => {
                                     </p>
                                 </div>
                             </div>
-                            
+
                             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 flex items-center gap-4">
                                 <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
                                     <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -308,12 +310,13 @@ const FlightsPageContent = () => {
                                                             <h3 className="text-lg font-semibold text-gray-900">
                                                                 {f.userName || f.userEmail}
                                                             </h3>
+
                                                             <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(f.status)}`}>
                                                                 <span className={`w-1.5 h-1.5 rounded-full mr-1.5 ${f.status === 'reviewed' ? 'bg-green-500' : 'bg-amber-500'}`}></span>
                                                                 {f.status === 'reviewed' ? 'Reviewed' : 'Pending'}
                                                             </span>
                                                         </div>
-                                                        
+
                                                         <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-2">
                                                             <span className="flex items-center gap-1.5">
                                                                 <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -331,9 +334,26 @@ const FlightsPageContent = () => {
                                                                 <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                                                 </svg>
-                                                                {f.createdAt ? new Date(f.createdAt).toLocaleDateString('en-US', { 
-                                                                    year: 'numeric', 
-                                                                    month: 'short', 
+                                                                {f.date ? new Date(f.date).toLocaleDateString('en-US', {
+                                                                    year: 'numeric',
+                                                                    month: 'short',
+                                                                    day: 'numeric',
+
+                                                                }) : '—'} <span className="mx-1 text-gray-400">to</span>
+                                                                {f.returnDate ? new Date(f.returnDate).toLocaleDateString('en-US', {
+                                                                    year: 'numeric',
+                                                                    month: 'short',
+                                                                    day: 'numeric',
+
+                                                                }) : '—'}
+                                                            </span>
+                                                            <span className="flex items-center gap-1.5">
+                                                                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                                </svg>
+                                                                {f.createdAt ? new Date(f.createdAt).toLocaleDateString('en-US', {
+                                                                    year: 'numeric',
+                                                                    month: 'short',
                                                                     day: 'numeric',
                                                                     hour: '2-digit',
                                                                     minute: '2-digit'
@@ -359,7 +379,7 @@ const FlightsPageContent = () => {
                                                             <div className="text-sm">
                                                                 <span className="text-gray-500">Reviewed by: </span>
                                                                 {typeof f.reviewedBy === 'object' && '_id' in f.reviewedBy ? (
-                                                                    <Link 
+                                                                    <Link
                                                                         href={`/Admindashbord/users/${(f.reviewedBy as Reviewer)._id}`}
                                                                         className="text-blue-600 hover:text-blue-700 font-medium hover:underline"
                                                                     >
@@ -376,17 +396,16 @@ const FlightsPageContent = () => {
 
                                                     {/* Right: Actions */}
                                                     <div className="flex items-center gap-2">
-                                                        <button 
+                                                        <button
                                                             onClick={() => changeStatusMutation.mutate({
                                                                 id: f._id,
                                                                 status: f.status === "pending" ? "reviewed" : "pending",
                                                             })}
                                                             disabled={changeStatusMutation.isPending}
-                                                            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
-                                                                f.status === 'reviewed' 
-                                                                    ? 'bg-amber-100 text-amber-700 hover:bg-amber-200' 
+                                                            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${f.status === 'reviewed'
+                                                                    ? 'bg-amber-100 text-amber-700 hover:bg-amber-200'
                                                                     : 'bg-green-100 text-green-700 hover:bg-green-200'
-                                                            } disabled:opacity-50 disabled:cursor-not-allowed`}
+                                                                } disabled:opacity-50 disabled:cursor-not-allowed`}
                                                         >
                                                             {changeStatusMutation.isPending ? (
                                                                 <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -401,7 +420,7 @@ const FlightsPageContent = () => {
                                                             {f.status === 'reviewed' ? 'Mark Pending' : 'Mark Reviewed'}
                                                         </button>
 
-                                                        <button 
+                                                        <button
                                                             onClick={() => {
                                                                 if (confirm('Are you sure you want to delete this flight booking?')) {
                                                                     deleteMutation.mutate(f._id)

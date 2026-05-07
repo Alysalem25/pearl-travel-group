@@ -138,7 +138,7 @@ router.get("/", authMiddleware, async (req, res, next) => {
     try {
         // populate country references for admin-friendly output
         const flights = await Flights.find().populate('from', 'nameEn').populate('to', 'nameEn').populate('reviewedBy', 'name');
-        
+        console.log('Retrieved flights:', flights);
         // 🔹 Log search action
         if (req.user) {
             await logSuccess(req.user._id, "SEARCH_FLIGHT", "Flight", null, req, {
@@ -153,6 +153,9 @@ router.get("/", authMiddleware, async (req, res, next) => {
             userNumber: f.userNumber,
             from: f.from ? (f.from.nameEn || f.from) : null,
             to: f.to ? (f.to.nameEn || f.to) : null,
+            date: f.date,
+            returnDate: f.returnDate,
+            tripType: f.tripType,
             status: f.status,
             createdAt: f.createdAt,
             reviewedBy: f.reviewedBy ? { _id: f.reviewedBy._id, name: f.reviewedBy.name } : null
