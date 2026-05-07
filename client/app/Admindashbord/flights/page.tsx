@@ -791,7 +791,7 @@ const FlightsPageContent = () => {
 
                                                         {/* Reviewed By */}
                                                         {f.status === "reviewed" && f.reviewedBy && (
-                                                            <div className="text-sm mt-2">
+                                                            <div className="text-sm text-black mt-2">
                                                                 <span className="text-black">Reviewed by: </span>
                                                                 {/* <Link
                                                                     href={`/Admindashbord/users/${f.reviewedBy._id}`}
