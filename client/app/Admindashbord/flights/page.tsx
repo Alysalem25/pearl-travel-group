@@ -793,12 +793,12 @@ const FlightsPageContent = () => {
                                                         {f.status === "reviewed" && f.reviewedBy && (
                                                             <div className="text-sm mt-2">
                                                                 <span className="text-gray-500">Reviewed by: </span>
-                                                                <Link
+                                                                {/* <Link
                                                                     href={`/Admindashbord/users/${f.reviewedBy._id}`}
                                                                     className="text-blue-600 hover:text-blue-700 font-medium hover:underline"
-                                                                >
+                                                                > */}
                                                                     {f.reviewedBy.name}
-                                                                </Link>
+                                                                {/* </Link> */}
                                                             </div>
                                                         )}
                                                     </div>
