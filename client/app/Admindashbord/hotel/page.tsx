@@ -11,7 +11,8 @@ interface Hotel {
     _id: string
     userEmail: string
     userName?: string
-    userNumber?: number
+    userPhone?: string
+    remarks?: string
     country?: string
     city?: string
     hotelName?: string
@@ -81,31 +82,83 @@ const HotelsPageContent = () => {
                     ) : (
                         <div className="space-y-4">
                             {hotels.map((h: Hotel) => (
-                                <div key={h._id} className={`p-4 border rounded flex justify-between items-center ${h.status === 'reviewed' ? 'bg-green-500' : 'bg-yellow-50'}`}>
-                                    <div>
-                                        <div className="font-semibold">{h.userName || h.userEmail}</div>
-                                        <div className="text-sm text-gray-600">{h.userEmail} • {h.userNumber}</div>
-                                        <div className="text-sm text-gray-700 mt-2">From: <span className="font-medium">{h.fromDate ? new Date(h.fromDate).toLocaleDateString() : '—'}</span> — To: <span className="font-medium">{h.toDate ? new Date(h.toDate).toLocaleDateString() : '—'}</span></div>
-                                        <div className="text-xs text-gray-500">{h.createdAt ? new Date(h.createdAt).toLocaleString() : ''}</div>
-                                        {h.status === "reviewed" && (
-                                            <div className="text-xs text-green-600">
-                                                Reviewed by: {h.reviewedBy?.name}
+                                <div key={h._id} className={`p-4 border rounded ${h.status === 'reviewed' ? 'bg-green-100' : 'bg-yellow-50'}`}>
+                                    <div className="flex justify-between items-start mb-3">
+                                        <div className="flex-1">
+                                            <div className="font-semibold text-lg">{h.userName || h.userEmail}</div>
+                                            <div className="text-sm text-gray-600 mt-1">
+                                                <span>Email: {h.userEmail}</span>
+                                                {h.userPhone && <span> • Phone: {h.userPhone}</span>}
                                             </div>
-                                        )}
+                                        </div>
+                                        <div className="text-xs text-gray-500 text-right">
+                                            {h.createdAt ? new Date(h.createdAt).toLocaleString() : ''}
+                                        </div>
                                     </div>
-                                    <div className="flex gap-2">
 
+                                    <div className="grid grid-cols-2 gap-3 mb-3 text-sm">
+                                        <div>
+                                            <span className="text-gray-600 font-medium">Hotel Location:</span>
+                                            <div className="text-gray-800">
+                                                {h.hotelName && <div>{h.hotelName}</div>}
+                                                {(h.city || h.country) && (
+                                                    <div className="text-gray-700">
+                                                        {h.city}{h.city && h.country ? ', ' : ''}{h.country}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <span className="text-gray-600 font-medium">Dates:</span>
+                                            <div className="text-gray-800">
+                                                {h.fromDate && h.toDate ? (
+                                                    <>
+                                                        <div>{new Date(h.fromDate).toLocaleDateString()} to {new Date(h.toDate).toLocaleDateString()}</div>
+                                                    </>
+                                                ) : '—'}
+                                            </div>
+                                        </div>
+                                    </div>
 
+                                    <div className="grid grid-cols-3 gap-3 mb-3 text-sm border-t pt-2">
+                                        <div>
+                                            <span className="text-gray-600 font-medium">Adults:</span>
+                                            <div className="text-gray-800">{h.adults || 0}</div>
+                                        </div>
+                                        <div>
+                                            <span className="text-gray-600 font-medium">Children:</span>
+                                            <div className="text-gray-800">{h.children || 0}</div>
+                                        </div>
+                                        <div>
+                                            <span className="text-gray-600 font-medium">Infants:</span>
+                                            <div className="text-gray-800">{h.infants || 0}</div>
+                                        </div>
+                                    </div>
+
+                                    {h.remarks && (
+                                        <div className="mb-3 text-sm border-t pt-2">
+                                            <span className="text-gray-600 font-medium">Remarks:</span>
+                                            <div className="text-gray-800">{h.remarks}</div>
+                                        </div>
+                                    )}
+
+                                    {h.status === "reviewed" && (
+                                        <div className="text-xs text-green-700 mb-2 border-t pt-2">
+                                            <span className="font-medium">Reviewed by:</span> {h.reviewedBy?.name}
+                                        </div>
+                                    )}
+                                    
+                                    <div className="flex gap-2 border-t pt-3">
                                         <button onClick={() => {
                                             changeStatusMutation.mutate({
                                                 id: h._id,
                                                 status: h.status === "pending" ? "reviewed" : "pending",
-                                            }
-                                            ), alert("Status changed successfully")
-                                        }
-
-                                        }
-                                            className={` text-white px-3 py-1 rounded ${h.status === 'reviewed' ? 'bg-red-600' : 'bg-green-600'}`}>{h.status === 'reviewed' ? 'Pending' : 'Review'}</button>
+                                            });
+                                            alert("Status changed successfully");
+                                        }}
+                                            className={`text-white px-3 py-1 rounded ${h.status === 'reviewed' ? 'bg-red-600' : 'bg-green-600'}`}>
+                                            {h.status === 'reviewed' ? 'Mark Pending' : 'Mark Reviewed'}
+                                        </button>
 
                                         <button onClick={() => deleteMutation.mutate(h._id)} className="bg-red-600 text-white px-3 py-1 rounded">Delete</button>
                                     </div>
