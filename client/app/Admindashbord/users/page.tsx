@@ -1149,6 +1149,7 @@ const UsersPageContent = () => {
                                                 { label: 'Manage Visa', value: 'manage_visa' },
                                                 { label: 'Manage Booked Flights', value: 'manage_booked_flights' },
                                                 { label: 'Manage Booked Programs', value: 'manage_booked_programs' },
+                                                { label: 'Manage Booked Mice', value: 'manage_booked_mice' },
                                                 { label: 'Manage Booked Transportation', value: 'manage_booked_transportation' },
                                                 { label: 'Manage Booked Hotels', value: 'manage_booked_hotels' },
                                                 { label: 'Manage Booked Cruises', value: 'manage_booked_cruises' }
