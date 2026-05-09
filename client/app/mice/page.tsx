@@ -814,7 +814,7 @@ function MiceContent() {
                                             value={formData.firstName}
                                             onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                                             required
-                                            className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all"
+                                            className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all text-black"
                                         />
                                     </div>
                                     <div>
@@ -826,7 +826,7 @@ function MiceContent() {
                                             value={formData.lastName}
                                             onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                                             required
-                                            className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all"
+                                            className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all text-black"
                                         />
                                     </div>
                                 </div>
@@ -842,7 +842,7 @@ function MiceContent() {
                                             value={formData.email}
                                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                             required
-                                            className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all"
+                                            className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all text-black"
                                         />
                                     </div>
                                 </div>
@@ -859,7 +859,7 @@ function MiceContent() {
                                                 value={formData.organization}
                                                 onChange={(e) => setFormData({ ...formData, organization: e.target.value })}
                                                 required
-                                                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all"
+                                                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all text-black"
                                             />
                                         </div>
                                     </div>
@@ -872,7 +872,7 @@ function MiceContent() {
                                             value={formData.jobFunction}
                                             onChange={(e) => setFormData({ ...formData, jobFunction: e.target.value })}
                                             required
-                                            className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all"
+                                            className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all text-black"
                                         />
                                     </div>
                                 </div>
@@ -888,7 +888,7 @@ function MiceContent() {
                                                 type="text"
                                                 value={formData.nationality}
                                                 onChange={(e) => setFormData({ ...formData, nationality: e.target.value })}
-                                                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all"
+                                                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all text-black"
                                             />
                                         </div>
                                     </div>
@@ -904,7 +904,7 @@ function MiceContent() {
                                                 onChange={(e) => setFormData({ ...formData, numOfGuests: parseInt(e.target.value) })}
                                                 required
                                                 min="1"
-                                                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all"
+                                                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all text-black"
                                             />
                                         </div>
                                     </div>
@@ -922,7 +922,7 @@ function MiceContent() {
                                                 value={formData.dateFrom}
                                                 onChange={(e) => setFormData({ ...formData, dateFrom: e.target.value })}
                                                 required
-                                                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all"
+                                                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all text-black"
                                             />
                                         </div>
                                     </div>
@@ -937,7 +937,7 @@ function MiceContent() {
                                                 value={formData.dateTo}
                                                 onChange={(e) => setFormData({ ...formData, dateTo: e.target.value })}
                                                 required
-                                                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all"
+                                                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all text-black"
                                             />
                                         </div>
                                     </div>
@@ -954,7 +954,7 @@ function MiceContent() {
                                             value={formData.destination}
                                             onChange={(e) => setFormData({ ...formData, destination: e.target.value })}
                                             required
-                                            className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all"
+                                            className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all text-black"
                                         />
                                     </div>
                                 </div>

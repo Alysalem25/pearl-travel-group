@@ -86,6 +86,11 @@ const admin_sidebar = ({ sidebarOpen, setSidebarOpen, active }: AdminSidebarProp
       permission: PERMISSIONS.MANAGE_BOOKED_CRUISES
     },
     {
+      name: "Booked Mice",
+      path: "/Admindashbord/mice",
+      permission: PERMISSIONS.MANAGE_BOOKED_MICE
+    },
+    {
       name: "Media",
       path: "/Admindashbord/media",
       permission: null

@@ -48,7 +48,7 @@ interface Mice {
 
 export default function BookedMicesPage() {
     return (
-        <ProtectedRoute >
+        <ProtectedRoute requiredPermission={PERMISSIONS.MANAGE_BOOKED_MICE}>
             <MicePageContent />
         </ProtectedRoute>
     );
@@ -105,7 +105,7 @@ const MicePageContent = () => {
 
     return (
         <div className="flex h-screen bg-slate-50">
-            <AdminSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} active="Booked Programs" />
+            <AdminSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} active="Booked Mice" />
 
             <div className="flex-1 overflow-auto">
                 {/* Header */}
