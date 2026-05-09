@@ -32,6 +32,7 @@ const PERMISSIONS = {
   MANAGE_BOOKED_TRANSPORTATION: 'manage_booked_transportation',
   MANAGE_BOOKED_HOTELS: 'manage_booked_hotels',
   MANAGE_BOOKED_CRUISES: 'manage_booked_cruises',
+  MANAGE_BOOKED_MICE: 'manage_booked_mice',
 
   FULL_ACCESS: '*'
 };

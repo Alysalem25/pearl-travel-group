@@ -15,6 +15,7 @@ async function updateUserPermissions() {
       'manage_users', 'manage_visa',
       'manage_booked_flights', 'manage_booked_programs',
       'manage_booked_transportation', 'manage_booked_hotels', 'manage_booked_cruises',
+      'manage_booked_mice',
       '*'
     ];
 
@@ -26,6 +27,7 @@ async function updateUserPermissions() {
       'manage_visa',
       'manage_booked_flights', 'manage_booked_programs',
       'manage_booked_transportation', 'manage_booked_hotels', 'manage_booked_cruises',
+      'manage_booked_mice',
     ];
 
     await User.updateMany({ role: 'admin' }, { permissions: adminPermissions });
