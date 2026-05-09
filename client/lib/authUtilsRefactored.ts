@@ -61,6 +61,7 @@ export const useAuthChecks = () => {
 
     // Booking management
     canManageBookedFlights: () => auth.hasPermission(PERMISSIONS.MANAGE_BOOKED_FLIGHTS),
+    canManageBookedMice: () => auth.hasPermission(PERMISSIONS.MANAGE_BOOKED_MICE),
     canManageBookedPrograms: () => auth.hasPermission(PERMISSIONS.MANAGE_BOOKED_PROGRAMS),
     canManageBookedTransportation: () => auth.hasPermission(PERMISSIONS.MANAGE_BOOKED_TRANSPORTATION),
     canManageBookedHotels: () => auth.hasPermission(PERMISSIONS.MANAGE_BOOKED_HOTELS),

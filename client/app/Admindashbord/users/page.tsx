@@ -1042,6 +1042,7 @@ const UsersPageContent = () => {
                                                     'add_cruise', 'edit_cruise', 'delete_cruise',
                                                     'manage_users', 'manage_clients', 'manage_visa',
                                                     'manage_booked_flights',
+                                                    'manage_booked_mice',
                                                     'manage_booked_programs',
                                                     'manage_booked_transportation',
                                                     'manage_booked_hotels',
