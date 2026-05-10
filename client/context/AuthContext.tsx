@@ -172,11 +172,11 @@ const hasPermission = (permission: string): boolean => {
   }
 
   const result = user.permissions?.includes(permission) || false;
-  console.log(`[hasPermission] ${permission}:`, {
-    result,
-    userPermissions: user.permissions,
-    hasWildcard: user.permissions?.includes("*")
-  });
+  // console.log(`[hasPermission] ${permission}:`, {
+  //   result,
+  //   userPermissions: user.permissions,
+  //   hasWildcard: user.permissions?.includes("*")
+  // });
   
   return result;
 };

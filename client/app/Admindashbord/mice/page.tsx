@@ -47,7 +47,7 @@ interface Mice {
     reviewedBy?: {
         _id: string
         name: string
-    } | string
+    } | null
 }
 
 export default function BookedMicesPage() {
@@ -68,6 +68,7 @@ const MicePageContent = () => {
         queryKey: ['mices'],
         queryFn: async () => (await api.mice.getAll()).data,
     })
+    console.log("Fetched mices data:", mices);
 
 
 
@@ -84,12 +85,12 @@ const MicePageContent = () => {
 
 
     // Helper to get reviewer name safely
-    const getReviewerName = (reviewedBy: Mice['reviewedBy']): string => {
-        if (!reviewedBy) return '';
-        if (typeof reviewedBy === 'string') return reviewedBy;
-        if (typeof reviewedBy === 'object' && reviewedBy.name) return reviewedBy.name;
-        return '';
-    };
+    // const getReviewerName = (reviewedBy: Mice['reviewedBy']): string => {
+    //     if (!reviewedBy) return '';
+    //     if (typeof reviewedBy === 'string') return reviewedBy;
+    //     if (typeof reviewedBy === 'object' && reviewedBy.name) return reviewedBy.name;
+    //     return '';
+    // };
 
     // Filter bookings
     const filteredMices = mices.filter((f: Mice) => {
@@ -238,7 +239,7 @@ const MicePageContent = () => {
                                                         ? 'bg-emerald-100 text-emerald-700 border-emerald-200'
                                                         : 'bg-amber-100 text-amber-700 border-amber-200'
                                                         }`}>
-                                                        {(f.firstName  || f.email || 'U').charAt(0).toUpperCase()}
+                                                        {(f.firstName || f.email || 'U').charAt(0).toUpperCase()}
                                                     </div>
                                                     <div className="flex-1">
                                                         <div className="flex items-center gap-2 flex-wrap">
@@ -329,15 +330,11 @@ const MicePageContent = () => {
                                                         <Clock className="w-4 h-4" />
                                                         Submitted: {f.createdAt ? new Date(f.createdAt).toLocaleString() : 'N/A'}
                                                     </span>
-                                                    {f.reviewedAt && (
+                                                     
+                                                    {f.status === 'reviewed' && f.reviewedBy && (
                                                         <span className="flex items-center gap-1.5 text-emerald-600">
                                                             <CheckCircle2 className="w-4 h-4" />
-                                                            Reviewed: {new Date(f.reviewedAt).toLocaleString()}
-                                                            {getReviewerName(f.reviewedBy) && (
-                                                                <span className="text-slate-500 ml-1">
-                                                                    by {getReviewerName(f.reviewedBy)}
-                                                                </span>
-                                                            )}
+                                                            Reviewed by <span className="font-semibold">{f.reviewedBy.name}</span>
                                                         </span>
                                                     )}
                                                 </div>
