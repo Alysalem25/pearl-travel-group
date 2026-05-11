@@ -1,7 +1,7 @@
 'use client'
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from 'next/link'
-import { LogOut } from "lucide-react";
+import { LogOut, ChevronDown } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { PERMISSIONS } from "@/lib/permissionConstants";
 import { useRouter } from "next/navigation";
@@ -19,8 +19,22 @@ const admin_sidebar = ({ sidebarOpen, setSidebarOpen, active }: AdminSidebarProp
   const { hasPermission, logout } = useAuth();
   const router = useRouter();
   
+  // Restore expanded dropdown from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('expandedDropdown');
+    if (saved) {
+      setExpandedDropdown(saved);
+    }
+  }, []);
+  
   const toggleDropdown = (name: string) => {
-    setExpandedDropdown(expandedDropdown === name ? null : name);
+    const newState = expandedDropdown === name ? null : name;
+    setExpandedDropdown(newState);
+    if (newState) {
+      localStorage.setItem('expandedDropdown', newState);
+    } else {
+      localStorage.removeItem('expandedDropdown');
+    }
   };
 
   const insertWebDataItems = [
@@ -185,23 +199,18 @@ const admin_sidebar = ({ sidebarOpen, setSidebarOpen, active }: AdminSidebarProp
                 );
               })}
 
-              {/* Insert Web Data Dropdown */}
+              {/* Modify Web Data Dropdown */}
               <li className="mt-4">
                 <button
                   onClick={() => toggleDropdown("insertWebData")}
                   className="w-full flex items-center justify-between px-4 py-3 text-black rounded-lg hover:bg-gray-100 transition-colors font-semibold"
                 >
-                  Insert Web Data
-                  <svg
+                  Modify Web Data
+                  <ChevronDown
                     className={`w-4 h-4 transition-transform ${
                       expandedDropdown === "insertWebData" ? "rotate-180" : ""
                     }`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                  </svg>
+                  />
                 </button>
                 {expandedDropdown === "insertWebData" && (
                   <ul className="pl-4 space-y-1 mt-2">
@@ -236,16 +245,11 @@ const admin_sidebar = ({ sidebarOpen, setSidebarOpen, active }: AdminSidebarProp
                   className="w-full flex items-center justify-between px-4 py-3 text-black rounded-lg hover:bg-gray-100 transition-colors font-semibold"
                 >
                   Inquiries
-                  <svg
+                  <ChevronDown
                     className={`w-4 h-4 transition-transform ${
                       expandedDropdown === "inquiries" ? "rotate-180" : ""
                     }`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                  </svg>
+                  />
                 </button>
                 {expandedDropdown === "inquiries" && (
                   <ul className="pl-4 space-y-1 mt-2">

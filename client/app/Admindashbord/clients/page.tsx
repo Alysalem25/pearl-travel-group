@@ -556,7 +556,9 @@ const UsersPageContent = () => {
         queryFn: async () => {
             const response = await apiClient.get('/users/clients')
             console.log('Fetched users:', response.data)
-            return response.data.users || response.data
+            const allUsers = response.data.users || response.data
+            // Filter to show only users (clients) in "Clients" section
+            return allUsers.filter((user: User) => user.role === 'user' || !user.role)
         }
     })
 

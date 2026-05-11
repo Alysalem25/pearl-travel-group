@@ -597,7 +597,9 @@ const UsersPageContent = () => {
         queryFn: async () => {
             const response = await apiClient.get('/auth/users')
             console.log('Fetched users:', response.data)
-            return response.data.users || response.data
+            const allUsers = response.data.users || response.data
+            // Filter to show only admins and heads in "Our Team"
+            return allUsers.filter((user: User) => user.role === 'admin' || user.role === 'head')
         }
     })
 
