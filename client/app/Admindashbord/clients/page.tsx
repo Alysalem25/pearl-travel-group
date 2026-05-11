@@ -5,7 +5,7 @@
 // import AdminSidebar from '@/components/adminSidebar'
 // import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 // import apiClient, { api } from '@/lib/api'
-// import { User, ChevronRight } from 'lucide-react'
+// import { UserIcon, ChevronRight } from 'lucide-react'
 // import { useAuth } from '@/context/AuthContext'
 // import { img, s } from 'framer-motion/client'
 // import { ProtectedRoute } from '@/components/ProtectedRoute';
@@ -633,6 +633,9 @@ const UsersPageContent = () => {
     // Advanced Filtering Logic - filters by EVERY field in user data
     const filteredUsers = useMemo(() => {
         return clients.filter((user: UserData) => {
+            // Filter to show only users (clients) in "Clients" section
+            const roleFilter = user.role === 'user' || !user.role
+            
             // Quick search (searches all fields)
             const quickMatch = searchTerm === '' || 
                 user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -659,7 +662,7 @@ const UsersPageContent = () => {
             const addressMatch = !filters.address || user.clientInfo?.address?.toLowerCase().includes(filters.address.toLowerCase())
             const noteMatch = !filters.note || user.clientInfo?.note?.toLowerCase().includes(filters.note.toLowerCase())
 
-            return quickMatch && nameMatch && emailMatch && numberMatch && roleMatch && 
+            return roleFilter && quickMatch && nameMatch && emailMatch && numberMatch && roleMatch && 
                    workStatusMatch && inTeamMatch && roleInTeamMatch && nationalIdMatch && 
                    passportMatch && addressMatch && noteMatch
         })
