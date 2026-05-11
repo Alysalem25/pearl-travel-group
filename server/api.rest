@@ -14,12 +14,12 @@
 
 ### 
 
-POST http://147.93.126.15/api/auth/register
+POST http://localhost:5000/api/auth/register
 Content-Type: application/json
 
 {
-  "name": "headFromPostman8",
-  "email": "headFromPostman8@gmail.com",
+  "name": "hazem",
+  "email": "hazem1@gmail.com",
   "password": "hH123456",
   "number": "432235234",
   "role":"head",

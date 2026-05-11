@@ -483,6 +483,10 @@ interface UserData {
         passportNumber?: string
         address?: string
         note?: string
+        dateOfBirth?: string
+        passportIssueDate?: string
+        passportExpiryDate?: string
+        destination?: string
     }
 }
 
@@ -535,7 +539,11 @@ const UsersPageContent = () => {
         nationalId: '',
         passportNumber: '',
         address: '',
-        note: ''
+        note: '',
+        dateOfBirth: '',
+        passportIssueDate: '',
+        passportExpiryDate: '',
+        destination: ''
     })
     const [permissions, setPermissions] = React.useState<string[]>([])
 
@@ -602,7 +610,7 @@ const UsersPageContent = () => {
             roleInTeam: '',
             workStatus: 'active',
         })
-        setClientInfo({ nationalId: '', passportNumber: '', address: '', note: '' })
+        setClientInfo({ nationalId: '', passportNumber: '', address: '', note: '', dateOfBirth: '', passportIssueDate: '', passportExpiryDate: '', destination: '' })
         setPermissions([])
         setPreviewImages([])
         setEditingUser(null)
@@ -1053,6 +1061,43 @@ const UsersPageContent = () => {
                                                 placeholder="Enter Address" 
                                                 value={clientInfo.address} 
                                                 onChange={e => setClientInfo({ ...clientInfo, address: e.target.value })} 
+                                                className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" 
+                                            />
+                                        </div>
+                                        <div className="space-y-1.5">
+                                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Date of Birth</label>
+                                            <input 
+                                                type="date" 
+                                                value={clientInfo.dateOfBirth} 
+                                                onChange={e => setClientInfo({ ...clientInfo, dateOfBirth: e.target.value })} 
+                                                className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" 
+                                            />
+                                        </div>
+                                        <div className="space-y-1.5">
+                                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Passport Issue Date</label>
+                                            <input 
+                                                type="date" 
+                                                value={clientInfo.passportIssueDate} 
+                                                onChange={e => setClientInfo({ ...clientInfo, passportIssueDate: e.target.value })} 
+                                                className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" 
+                                            />
+                                        </div>
+                                        <div className="space-y-1.5">
+                                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Passport Expiry Date</label>
+                                            <input 
+                                                type="date" 
+                                                value={clientInfo.passportExpiryDate} 
+                                                onChange={e => setClientInfo({ ...clientInfo, passportExpiryDate: e.target.value })} 
+                                                className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" 
+                                            />
+                                        </div>
+                                        <div className="space-y-1.5">
+                                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Destination</label>
+                                            <input 
+                                                type="text" 
+                                                placeholder="Enter Destination" 
+                                                value={clientInfo.destination} 
+                                                onChange={e => setClientInfo({ ...clientInfo, destination: e.target.value })} 
                                                 className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" 
                                             />
                                         </div>

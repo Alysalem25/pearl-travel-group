@@ -295,7 +295,7 @@ const ProgramPage = () => {
                                                         <div className="flex justify-between items-center gap-4">
                                                             <div className='flex flex-row items-center gap-3'>
                                                                 <h3 className="flex items-center justify-center min-w-10 h-10 rounded-full bg-blue-900 text-white font-semibold text-lg">
-                                                                    {day.dayNumber}
+                                                                    •
                                                                 </h3>
                                                                 <p className="text-gray-900 text-base font-medium">
                                                                     {lang === "en" ? day.titleEn : day.titleAr}
