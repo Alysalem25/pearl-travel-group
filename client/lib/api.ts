@@ -402,54 +402,105 @@ flights: {
   getStats: () => apiClient.get("/stats"),
 
 
+  // users: {
+  //   // Existing methods...
+  //   getSummary: (id: string, start?: string, end?: string) =>
+  //     apiClient.get(`/users/${id}/summary`, {
+  //       params: { ...(start ? { start } : {}), ...(end ? { end } : {}) }
+  //     }),
+  //   getOne: (id: string) => apiClient.get(`/users/${id}`),
+
+  //   // Get reviewed bookings for a user
+  //   getReviewedFlights: (userId: string, start?: string, end?: string) =>
+  //     apiClient.get(`/users/reviewed/flights`, {
+  //       params: { userId, ...(start ? { start } : {}), ...(end ? { end } : {}) }
+  //     }),
+  //   getReviewedHotels: (userId: string, start?: string, end?: string) =>
+  //     apiClient.get(`/users/reviewed/hotels`, {
+  //       params: { userId, ...(start ? { start } : {}), ...(end ? { end } : {}) }
+  //     }),
+  //   getReviewedCarTrips: (userId: string, start?: string, end?: string) =>
+  //     apiClient.get(`/users/reviewed/cartrips`, {
+  //       params: { userId, ...(start ? { start } : {}), ...(end ? { end } : {}) }
+  //     }),
+  //   getReviewedVisa: (userId: string, start?: string, end?: string) =>
+  //     apiClient.get(`/users/reviewed/visa`, {
+  //       params: { userId, ...(start ? { start } : {}), ...(end ? { end } : {}) }
+  //     }),
+  //   getReviewedPrograms: (userId: string, start?: string, end?: string) =>
+  //     apiClient.get(`/users/reviewed/programs`, {
+  //       params: { userId, ...(start ? { start } : {}), ...(end ? { end } : {}) }
+  //     }),
+  //   getReviewedCruises: (userId: string, start?: string, end?: string) =>
+  //     apiClient.get(`/users/reviewed/cruises`, {
+  //       params: { userId, ...(start ? { start } : {}), ...(end ? { end } : {}) }
+  //     }),
+
+  //   // New Profile methods
+  //   getProfile: (id: string) => apiClient.get(`/auth/profile/${id}`),
+
+  //   updateProfile: (id: string, data: FormData) =>
+  //     apiClient.put(`/auth/profile/${id}`, data, {
+  //       headers: { "Content-Type": "multipart/form-data" }
+  //     }),
+
+  //   deleteImage: (id: string, imageName: string) =>
+  //     apiClient.delete(`/auth/profile/${id}/images/${imageName}`),
+
+  //   changePassword: (id: string, data: { currentPassword: string; newPassword: string }) =>
+  //     apiClient.put(`/auth/profile/${id}/password`, data)
+  // },
+
+
   users: {
-    // Existing methods...
-    getSummary: (id: string, start?: string, end?: string) =>
-      apiClient.get(`/users/${id}/summary`, {
-        params: { ...(start ? { start } : {}), ...(end ? { end } : {}) }
-      }),
-    getOne: (id: string) => apiClient.get(`/users/${id}`),
+  // Existing methods...
+  getSummary: (id: string, start?: string, end?: string) =>
+    apiClient.get(`/users/${id}/summary`, {
+      params: { ...(start ? { start } : {}), ...(end ? { end } : {}) }
+    }),
+  getOne: (id: string) => apiClient.get(`/users/${id}`),
 
-    // Get reviewed bookings for a user
-    getReviewedFlights: (userId: string, start?: string, end?: string) =>
-      apiClient.get(`/users/reviewed/flights`, {
-        params: { userId, ...(start ? { start } : {}), ...(end ? { end } : {}) }
-      }),
-    getReviewedHotels: (userId: string, start?: string, end?: string) =>
-      apiClient.get(`/users/reviewed/hotels`, {
-        params: { userId, ...(start ? { start } : {}), ...(end ? { end } : {}) }
-      }),
-    getReviewedCarTrips: (userId: string, start?: string, end?: string) =>
-      apiClient.get(`/users/reviewed/cartrips`, {
-        params: { userId, ...(start ? { start } : {}), ...(end ? { end } : {}) }
-      }),
-    getReviewedVisa: (userId: string, start?: string, end?: string) =>
-      apiClient.get(`/users/reviewed/visa`, {
-        params: { userId, ...(start ? { start } : {}), ...(end ? { end } : {}) }
-      }),
-    getReviewedPrograms: (userId: string, start?: string, end?: string) =>
-      apiClient.get(`/users/reviewed/programs`, {
-        params: { userId, ...(start ? { start } : {}), ...(end ? { end } : {}) }
-      }),
-    getReviewedCruises: (userId: string, start?: string, end?: string) =>
-      apiClient.get(`/users/reviewed/cruises`, {
-        params: { userId, ...(start ? { start } : {}), ...(end ? { end } : {}) }
-      }),
+  // Admin update - can edit everything
+  adminUpdate: (id: string, data: Partial<UserData>) =>
+    apiClient.put(`/users/${id}/admin`, data),
 
-    // New Profile methods
-    getProfile: (id: string) => apiClient.get(`/auth/profile/${id}`),
+  // Get reviewed bookings for a user
+  getReviewedFlights: (userId: string, start?: string, end?: string) =>
+    apiClient.get(`/users/reviewed/flights`, {
+      params: { userId, ...(start ? { start } : {}), ...(end ? { end } : {}) }
+    }),
+  getReviewedHotels: (userId: string, start?: string, end?: string) =>
+    apiClient.get(`/users/reviewed/hotels`, {
+      params: { userId, ...(start ? { start } : {}), ...(end ? { end } : {}) }
+    }),
+  getReviewedCarTrips: (userId: string, start?: string, end?: string) =>
+    apiClient.get(`/users/reviewed/cartrips`, {
+      params: { userId, ...(start ? { start } : {}), ...(end ? { end } : {}) }
+    }),
+  getReviewedVisa: (userId: string, start?: string, end?: string) =>
+    apiClient.get(`/users/reviewed/visa`, {
+      params: { userId, ...(start ? { start } : {}), ...(end ? { end } : {}) }
+    }),
+  getReviewedPrograms: (userId: string, start?: string, end?: string) =>
+    apiClient.get(`/users/reviewed/programs`, {
+      params: { userId, ...(start ? { start } : {}), ...(end ? { end } : {}) }
+    }),
+  getReviewedCruises: (userId: string, start?: string, end?: string) =>
+    apiClient.get(`/users/reviewed/cruises`, {
+      params: { userId, ...(start ? { start } : {}), ...(end ? { end } : {}) }
+    }),
 
-    updateProfile: (id: string, data: FormData) =>
-      apiClient.put(`/auth/profile/${id}`, data, {
-        headers: { "Content-Type": "multipart/form-data" }
-      }),
-
-    deleteImage: (id: string, imageName: string) =>
-      apiClient.delete(`/auth/profile/${id}/images/${imageName}`),
-
-    changePassword: (id: string, data: { currentPassword: string; newPassword: string }) =>
-      apiClient.put(`/auth/profile/${id}/password`, data)
-  },
+  // Profile methods
+  getProfile: (id: string) => apiClient.get(`/auth/profile/${id}`),
+  updateProfile: (id: string, data: FormData) =>
+    apiClient.put(`/auth/profile/${id}`, data, {
+      headers: { "Content-Type": "multipart/form-data" }
+    }),
+  deleteImage: (id: string, imageName: string) =>
+    apiClient.delete(`/auth/profile/${id}/images/${imageName}`),
+  changePassword: (id: string, data: { currentPassword: string; newPassword: string }) =>
+    apiClient.put(`/auth/profile/${id}/password`, data)
+},
 
   mice: {
     create: (data: any) => apiClient.post("/mice", data),

@@ -257,6 +257,53 @@ router.post(
   },
 );
 
+
+/**
+ * PUT /users/:id/admin
+ * Admin full update - can edit everything including role, permissions, etc.
+ */
+router.put(
+  "/:id/admin",
+  authorize(PERMISSIONS.MANAGE_USERS),
+  async (req, res, next) => {
+    try {
+      const {
+        name,
+        email,
+        number,
+        role,
+        permissions,
+        clientInfo,
+        workStatus,
+        inTeam,
+        roleInTeam,
+      } = req.body;
+
+      const user = await User.findById(req.params.id);
+      if (!user) return res.status(404).json({ error: "User not found" });
+
+      // Update all fields
+      if (name !== undefined) user.name = name;
+      if (email !== undefined) user.email = email;
+      if (number !== undefined) user.number = number;
+      if (role !== undefined) user.role = role;
+      if (permissions !== undefined) user.permissions = permissions;
+      if (clientInfo !== undefined) user.clientInfo = clientInfo;
+      if (workStatus !== undefined) user.workStatus = workStatus;
+      if (inTeam !== undefined) user.inTeam = inTeam;
+      if (roleInTeam !== undefined) user.roleInTeam = roleInTeam;
+
+      await user.save();
+
+      const userObj = user.toObject();
+      delete userObj.password;
+
+      res.json({ user: userObj, message: "User updated successfully" });
+    } catch (err) {
+      next(err);
+    }
+  },
+);
 /**
  * PUT /users/:id
  * Update an existing user. Requires MANAGE_USERS permission.
