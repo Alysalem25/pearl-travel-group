@@ -45,6 +45,19 @@ type FlightCreateData = {
   cabinClass?: "economy" | "business" | "first";
 };
 
+type UserData = {
+  _id?: string;
+  name?: string;
+  email?: string;
+  password?: string;
+  number?: string;
+  role?: string;
+  images?: string[];
+  inTeam?: boolean;
+  roleInTeam?: string;
+  workStatus?: string;
+};
+
 // Create axios instance with base URL
 const apiClient: AxiosInstance = axios.create({
   baseURL: "/api",

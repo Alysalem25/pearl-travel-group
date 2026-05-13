@@ -2090,7 +2090,6 @@ const UsersPageContent = () => {
                                             <option value="" disabled>Select Role</option>
                                             <option value="admin">Admin</option>
                                             <option value="head">Head</option>
-                                            <option value="user">User</option>
                                         </select>
                                     </div>
                                     
