@@ -369,6 +369,16 @@ function NavbarContent() {
                             <span className="font-medium text-sm">{t.navbar.msc}</span>
                           </p>
 
+                          <p
+                            onClick={() => setAffiliateDropdown(false)}
+                            className="group flex items-center gap-3 px-4 py-3 mx-2 rounded-xl text-slate-700 hover:text-red-700 hover:bg-red-50 transition-all duration-200"
+                          >
+                            <span className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 group-hover:bg-red-100 text-slate-500 group-hover:text-red-600 transition-colors duration-200">
+                              <img src="https://res.cloudinary.com/dyissekq4/image/upload/q_auto/f_auto/v1778857950/Rail_Europe_g9igof.webp" alt="Rail Europe" className="w-12 object-contain" />
+                            </span>
+                            <span className="font-medium text-sm">Rail Europe</span>
+                          </p>
+
                           <div className="mx-3 my-2 h-px bg-slate-100" />
                         </div>
                       </div>
@@ -637,6 +647,18 @@ function NavbarContent() {
                       onClick={() => setAffiliateDropdown(false)}
                     >
                       {t.navbar.buckswood}
+                    </p>
+                    <p
+                      className="block px-4 py-3 text-white  hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+                      onClick={() => setAffiliateDropdown(false)}
+                    >
+                      {t.navbar.msc}
+                    </p>
+                    <p
+                      className="block px-4 py-3 text-white  hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+                      onClick={() => setAffiliateDropdown(false)}
+                    >
+                      Rail Europe
                     </p>
                   </div>
                 </details>
