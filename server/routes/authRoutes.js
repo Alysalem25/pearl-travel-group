@@ -195,10 +195,18 @@ router.post("/login", validateLogin, handleValidationErrors, async (req, res, ne
       });
     }
 
-    // Check if password field exists (should exist for admin/head roles, but check anyway)
+    if(user.role === "user"){
+       // 🔹 Log unauthorized role access
+       await logError(user._id, "LOGIN_FAILED", "User", req, "Unauthorized role", { role: user.role });
+       return res.status(500).json({
+        error: "Account configuration error"
+      });
+    }
+
+
+    // Check if password field exists
     if (!user.password) {
-      console.error("User password field is missing for user:", user._id);
-      await logError(user._id, "LOGIN_FAILED", "User", req, "Password field missing", { email });
+      console.error("User password field is missing");
       return res.status(500).json({
         error: "Account configuration error"
       });
