@@ -62,6 +62,7 @@ type UserData = {
 const apiClient: AxiosInstance = axios.create({
   baseURL: "/api",
   timeout: 10000,
+  withCredentials: true, // 🔐 Send credentials (cookies) with all requests
   headers: {
     "Content-Type": "application/json"
   }

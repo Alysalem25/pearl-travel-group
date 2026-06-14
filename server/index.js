@@ -37,6 +37,8 @@ app.use(express.json({ limit: "10mb" }));
 
 const allowedOrigins = ["http://localhost:3000", "http://147.93.126.15", "http://147.93.126.15/login", "https://pearltravelgroup.com","http://pearltravelgroup.com"];
 
+// 🔐 Enhanced CORS Configuration for Credentials
+// This configuration properly handles credentials (cookies, auth headers)
 app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)
@@ -46,10 +48,22 @@ app.use(cors({
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"]
+  credentials: true, // Allow credentials (cookies, auth headers)
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Include OPTIONS for preflight
+  allowedHeaders: ["Content-Type", "Authorization", "Accept", "Accept-Language"],
+  exposedHeaders: ["Content-Length", "X-JSON-Response"],
+  maxAge: 86400 // Cache preflight for 24 hours
 }));
+
+// 🔐 Additional header middleware to ensure credentials header is set
+app.use((req, res, next) => {
+  // If origin is in allowed list, explicitly set credentials header
+  const origin = req.headers.origin;
+  if (origin && allowedOrigins.indexOf(origin) !== -1) {
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+  }
+  next();
+});
 
 // Serve uploaded images statically
 // Images are public resources
