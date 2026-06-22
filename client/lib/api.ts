@@ -553,7 +553,13 @@ flights: {
       apiClient.get(`/media/${section}/${type}`),
     deleteMedia: (id: string) =>
       apiClient.delete(`/media/${id}`),
-  }
+  },
+
+  destination: {
+  getAll: () => axios.get('/api/destinationRoutes'),
+  create: (data) => axios.post('/api/destinationRoutes', data),
+  update: (id, data) => axios.put(`/api/destinationRoutes/${id}`, data),
+}
 
 };
 

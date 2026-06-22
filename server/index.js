@@ -95,6 +95,7 @@ const eventRouter = require('./routes/eventRouter');
 const logsRoutes = require('./routes/logsRoutes');
 const miceRouter = require('./routes/miceRouter');
 const mediaRouter = require("./routes/mediaRouter");
+const destinationRoutes = require('./routes/Destinationroutes');
 
 
 // ============================================
@@ -177,7 +178,6 @@ app.use("/api/categories", categoryRoutes);
 */
 app.use("/api/programs", programRoutes);
 
-app.use("/api/countries", countryRoutes);
 
 /**
  * Visa Routes
@@ -199,6 +199,7 @@ app.use('/api/events', eventRouter);
 app.use('/api/logs', logsRoutes);
 app.use("/api/mice", miceRouter);
 app.use("/api/media", mediaRouter);
+app.use('/api/Destinationroutes', destinationRoutes);
 // ============================================
 // 📊 STATS ENDPOINT (PUBLIC)
 // ============================================

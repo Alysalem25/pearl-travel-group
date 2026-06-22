@@ -123,6 +123,11 @@ const admin_sidebar = ({ sidebarOpen, setSidebarOpen, active }: AdminSidebarProp
       permission: PERMISSIONS.MANAGE_CLIENTS
     },
     {
+      name: "Destination",
+      path: "/Admindashbord/destinations",
+      permission: null
+    },
+    {
       name: "Search",
       path: "/Admindashbord/allInOne",
       permission: null
