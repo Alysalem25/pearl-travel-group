@@ -59,6 +59,13 @@ type UserData = {
   workStatus?: string;
 };
 
+type DestinationData = {
+  contry: string;
+  city: string;
+  hotelName: string;
+  note?: string;
+};
+
 // Create axios instance with base URL
 const apiClient: AxiosInstance = axios.create({
   baseURL: "/api",
@@ -567,10 +574,11 @@ flights: {
   },
 
   destination: {
-  getAll: () => axios.get('/api/destinationRoutes'),
-  create: (data) => axios.post('/api/destinationRoutes', data),
-  update: (id, data) => axios.put(`/api/destinationRoutes/${id}`, data),
-}
+    getAll: () => axios.get("/api/destinationRoutes"),
+    create: (data: DestinationData) => axios.post("/api/destinationRoutes", data),
+    update: (id: string, data: DestinationData) =>
+      axios.put(`/api/destinationRoutes/${id}`, data)
+  }
 
 };
 
