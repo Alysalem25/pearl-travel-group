@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "build": "npm --prefix client run build"
+  },
   "dependencies": {
     "git-filter-repo": "^0.0.30"
   }
