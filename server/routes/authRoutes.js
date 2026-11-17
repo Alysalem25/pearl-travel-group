@@ -41,7 +41,7 @@ router.post(
   handleValidationErrors,
   async (req, res, next) => {
     try {
-      const { name, email, password, number, role, inTeam, roleInTeam, permissions, clientInfo, workStatus } = req.body;
+      const { name, email, password, number, clientInfo } = req.body;
 
       // Check if user already exists
       const existingUser = await User.findOne({ email });
@@ -55,55 +55,17 @@ router.post(
 
       const images = (req.files || []).map(f => "/uploads/users/" + f.filename);
       
-      // Assign default permissions based on role
-      let defaultPermissions = [];
-      if (role === 'admin') {
-        defaultPermissions = [
-          'add_program', 'edit_program', 'delete_program',
-          'add_country', 'edit_country', 'delete_country',
-          'add_category', 'edit_category', 'delete_category',
-          'add_cruise', 'edit_cruise', 'delete_cruise',
-          'manage_users', 'manage_visa',
-          'manage_booked_flights', 'manage_booked_programs',
-          'manage_booked_transportation', 'manage_booked_hotels', 'manage_booked_cruises',
-          '*'
-        ];
-      } else if (role === 'head') {
-        defaultPermissions = [
-          'add_program', 'edit_program', 'delete_program',
-          'add_country', 'edit_country', 'delete_country',
-          'add_category', 'edit_category', 'delete_category',
-          'add_cruise', 'edit_cruise', 'delete_cruise',
-          'manage_visa',
-          'manage_booked_flights', 'manage_booked_programs',
-          'manage_booked_transportation', 'manage_booked_hotels', 'manage_booked_cruises',
-        ];
-      }
-      
-      // Parse permissions if sent as a string (from FormData)
-      let parsedPermissions = defaultPermissions;
-      if (permissions) {
-        try {
-          parsedPermissions = typeof permissions === 'string' ? JSON.parse(permissions) : permissions;
-        } catch (e) {
-          parsedPermissions = permissions;
-        }
-      } else {
-        parsedPermissions = defaultPermissions;
-      }
-
       const user = new User({
         name,
         email,
         password,
         number,
-        role,
-        inTeam,
-        roleInTeam,
+        role: "user",
+        inTeam: false,
         images,
-        permissions: parsedPermissions,
+        permissions: [],
         clientInfo: clientInfo ? JSON.parse(clientInfo) : {},
-        workStatus: workStatus || 'active'
+        workStatus: "active"
       });
 
       await user.save();
@@ -124,18 +86,9 @@ router.post(
       //   image: user.image ? normalizeImagePath(user.image) : null
       // });
 
-      const response = {
-        ...user.toObject(),
-        images: user.images.map(normalizeImagePath)
-      };
-
-      console.log("[Register Response] User registered successfully:", {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        permissions: user.permissions
-      });
+      const response = user.toObject();
+      delete response.password;
+      response.images = user.images.map(normalizeImagePath);
 
       // 🔹 Log successful registration
       await logSuccess(user._id, "REGISTER_SUCCESS", "User", user._id, req, { email: user.email, role: user.role });
@@ -251,7 +204,7 @@ router.post("/login", validateLogin, handleValidationErrors, async (req, res, ne
         { expiresIn: process.env.JWT_EXPIRE || "7d" }
       );
     } catch (jwtErr) {
-      console.error("JWT signing error:", jwtErr);
+      console.error("JWT signing failed:", { errorName: jwtErr?.name || "Error" });
       return res.status(500).json({
         error: "Token generation failed"
       });
@@ -281,7 +234,7 @@ router.post("/login", validateLogin, handleValidationErrors, async (req, res, ne
   } catch (err) {
     // 🔹 Log server error
     await logError(null, "LOGIN_FAILED", "User", req, `Server error: ${err.message}`);
-    console.error("Login error:", err);
+    console.error("Login request failed:", { errorName: err?.name || "Error" });
     next(err);
   }
 });

@@ -68,10 +68,6 @@ const MicePageContent = () => {
         queryKey: ['mices'],
         queryFn: async () => (await api.mice.getAll()).data,
     })
-    console.log("Fetched mices data:", mices);
-
-
-
     const deleteMutation = useMutation({
         mutationFn: (id: string) => api.mice.delete(id),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ['mices'] })

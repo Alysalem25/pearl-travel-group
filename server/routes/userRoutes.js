@@ -9,6 +9,7 @@ const authMiddleware = require("../middlewares/authMiddleware");
 const authorize = require("../middlewares/authorize");
 const { isOwnerOrAdmin } = require("../utils/permission");
 const PERMISSIONS = require("../config/permissions");
+const uploadUser = require("../middlewares/uploadUser");
 
 const router = express.Router();
 
@@ -31,7 +32,6 @@ router.get("/", authorize(PERMISSIONS.MANAGE_USERS), async (req, res, next) => {
 router.get("/clients", authorize(PERMISSIONS.MANAGE_CLIENTS), async (req, res, next) => {
   try {
     const users = await User.find({ role: "user" }).select("-password");
-    console.log("Fetched clients:", users);
     res.json(users);
   } catch (err) {
     next(err);
@@ -224,9 +224,10 @@ router.get("/:id", async (req, res, next) => {
 router.post(
   "/",
   authorize(PERMISSIONS.MANAGE_USERS),
+  uploadUser.array("images", 1),
   async (req, res, next) => {
     try {
-      const { name, email, password, number, role, permissions, clientInfo } =
+      const { name, email, password, number, role, permissions, clientInfo, inTeam, roleInTeam, workStatus } =
         req.body;
 
       // Check if user exists
@@ -234,14 +235,36 @@ router.post(
       if (existingUser)
         return res.status(400).json({ error: "Email already in use" });
 
+      let parsedPermissions = permissions || [];
+      if (typeof permissions === "string") {
+        try {
+          parsedPermissions = JSON.parse(permissions);
+        } catch {
+          return res.status(400).json({ error: "Permissions must be valid JSON" });
+        }
+      }
+
+      let parsedClientInfo = clientInfo || {};
+      if (typeof clientInfo === "string") {
+        try {
+          parsedClientInfo = JSON.parse(clientInfo);
+        } catch {
+          return res.status(400).json({ error: "Client information must be valid JSON" });
+        }
+      }
+
       const newUser = new User({
         name,
         email,
         password,
         number,
         role: role || "user",
-        permissions: permissions || [],
-        clientInfo,
+        permissions: parsedPermissions,
+        clientInfo: parsedClientInfo,
+        inTeam: inTeam === true || inTeam === "true",
+        roleInTeam,
+        workStatus: workStatus || "active",
+        images: (req.files || []).map((file) => `/uploads/users/${file.filename}`),
       });
 
       await newUser.save();

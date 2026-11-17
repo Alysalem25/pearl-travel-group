@@ -45,8 +45,8 @@ export default function MediaPage() {
         try {
             const res = await api.media.getAllMedia();
             setMedia(res.data || []);
-        } catch (err) {
-            console.error("Failed to fetch media:", err);
+        } catch {
+            console.error("Failed to fetch media.");
             setMedia([]);
         }
     };

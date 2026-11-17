@@ -104,7 +104,7 @@
      * GET /visa/:id
      * Get single visa application - ADMIN ONLY OR OWN APPLICATION
      */
-    router.get("/:id", async (req, res, next) => {
+    router.get("/:id", authMiddleware, authorize("manage_visa"), async (req, res, next) => {
         try {
             const visa = await Visa.findById(req.params.id);
 

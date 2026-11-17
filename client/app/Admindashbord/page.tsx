@@ -39,8 +39,8 @@ function AdminDashboardContent() {
                 // Ensure the URL matches your backend endpoint precisely
                 const response = await apiClient.get('/stats');
                 setStats(response.data.stats);
-            } catch (error) {
-                console.error('Error fetching admin stats:', error);
+            } catch {
+                console.error('Failed to fetch admin stats.');
             }
         };
 

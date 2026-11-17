@@ -64,7 +64,7 @@
 //                                         <img
 //                                             src={member.images
 //                                                 ? `${member.images[0]}`
-//                                                 : '/default-profile.png'} alt={member.name}
+//                                                 : '/default-profile.svg'} alt={member.name}
 //                                             className="w-full h-full object-cover m-2 rounded-full"
 //                                         />
 //                                         <div className="absolute inset-0 rounded-full bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
@@ -266,9 +266,15 @@ const OurTeam = () => {
 
                                         <div className="relative w-full h-full overflow-hidden rounded-full">
                                             <motion.img
-                                                src={member.images ? `${member.images[0]}` : '/default-profile.png'}
+                                                src={member.images?.[0] || '/default-profile.svg'}
                                                 alt={member.name}
                                                 className="w-full h-full object-cover"
+                                                onError={(event) => {
+                                                    const image = event.currentTarget
+                                                    if (!image.src.endsWith('/default-profile.svg')) {
+                                                        image.src = '/default-profile.svg'
+                                                    }
+                                                }}
                                                 animate={{
                                                     scale: isHovered ? 1.08 : 1
                                                 }}

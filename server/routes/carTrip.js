@@ -47,7 +47,7 @@ router.post("/", async (req, res, next) => {
 
 
 // admin get all car trips
-router.get("/", async (req, res, next) => {
+router.get("/", authMiddleware, authorize("manage_booked_transportation"), async (req, res, next) => {
   try {
     const carTrips = await CarTrip.find().populate("reviewedBy", "name");
     

@@ -9,7 +9,6 @@ const { body, validationResult } = require("express-validator");
 
 router.post("/", async (req, res, next) => {
     try {
-        console.log("Received MICE request:", req.body);
         const {
             firstName,
             lastName,
@@ -55,8 +54,8 @@ router.post("/", async (req, res, next) => {
 
 router.get(
     "/",
-    // authMiddleware,
-    // authorize("manage_booked_mice"),
+    authMiddleware,
+    authorize("manage_booked_mice"),
     async (req, res, next) => {
         try {
 
@@ -76,7 +75,7 @@ router.get(
 router.delete(
     "/:id",
     authMiddleware,
-    // authorize("manage_booked_mice"),
+    authorize("manage_booked_mice"),
     async (req, res, next) => {
         try {
             const mice = await Mice.findByIdAndDelete(req.params.id);
@@ -98,7 +97,7 @@ router.delete(
 router.put(
     "/:id/status",
     authMiddleware,
-    // authorize("manage_booked_mice"),
+    authorize("manage_booked_mice"),
     async (req, res, next) => {
         try {
             const { status } = req.body;

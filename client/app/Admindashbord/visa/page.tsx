@@ -586,10 +586,8 @@ const VisaPageContent = () => {
             const response = await apiClient.get('/visa')
             setVisas(response.data.data || [])
             calculateStats(response.data.data || [])
-            console.log('Fetched visas:', response.data.data)
         } catch (err: any) {
             setError(err.response?.data?.error || 'Failed to fetch visa applications')
-            console.error(err)
         } finally {
             setLoading(false)
         }
@@ -636,7 +634,6 @@ const VisaPageContent = () => {
             setShowDetails(false)
             setShowStatusForm(false)
         } catch (err: any) {
-            console.error('Update error:', err)
             alert(err.response?.data?.error || 'Failed to update application')
         } finally {
             setUpdating(false)
@@ -650,7 +647,6 @@ const VisaPageContent = () => {
             await apiClient.delete(`/visa/${id}`)
             fetchVisas()
         } catch (err: any) {
-            console.error('Delete error:', err)
             alert(err.response?.data?.error || 'Failed to delete application')
         }
     }

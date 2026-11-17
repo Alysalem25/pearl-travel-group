@@ -9,13 +9,10 @@
  */
 
 const errorHandler = (err, req, res, next) => {
-  // Log error with full details for debugging (server-side only)
-  console.error("Error:", {
-    message: err.message,
-    stack: err.stack,
+  console.error("Request failed:", {
+    errorName: err.name || "Error",
     method: req.method,
-    url: req.originalUrl,
-    body: req.body
+    path: req.path
   });
 
   // Default error response

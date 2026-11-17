@@ -451,7 +451,7 @@
 //                                             <img
 //                                                 src={user.images
 //                                                     ? `${user.images[0]}`
-//                                                     : '/default-profile.png'}
+//                                                     : '/default-profile.svg'}
 
 //                                                 alt={user.name}
 //                                                 className="h-16 w-16 rounded-full object-cover mr-4"
@@ -1297,11 +1297,11 @@
 //                                             <div className="flex items-start gap-4 mb-4">
 //                                                 <div className="relative flex-shrink-0">
 //                                                     <img
-//                                                         src={user.images && user.images.length > 0 ? user.images[0] : '/default-profile.png'}
+//                                                         src={user.images && user.images.length > 0 ? user.images[0] : '/default-profile.svg'}
 //                                                         alt={user.name}
 //                                                         className="w-16 h-16 rounded-2xl object-cover border-2 border-slate-100 shadow-sm"
 //                                                         onError={(e) => {
-//                                                             (e.target as HTMLImageElement).src = '/default-profile.png'
+//                                                             (e.target as HTMLImageElement).src = '/default-profile.svg'
 //                                                         }}
 //                                                     />
 //                                                     <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${getStatusDot(user.workStatus)}`} />
@@ -1536,7 +1536,6 @@ const UsersPageContent = () => {
         queryKey: ['users'],
         queryFn: async () => {
             const response = await apiClient.get('/auth/users')
-            console.log('Fetched users:', response.data)
             return response.data.users || response.data
         }
     })
@@ -1544,7 +1543,7 @@ const UsersPageContent = () => {
     // Mutations
     const addUserMutation = useMutation({
         mutationFn: async (newUser: FormData) => {
-            return api.auth.register(newUser)
+            return api.users.create(newUser)
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['users'] })
@@ -1552,7 +1551,6 @@ const UsersPageContent = () => {
             alert('User added successfully!')
         },
         onError: (err: any) => {
-            console.error(err)
             alert(err.response?.data?.error || 'Error adding user.')
         }
     })
@@ -1569,7 +1567,6 @@ const UsersPageContent = () => {
             alert('User updated successfully!')
         },
         onError: (err: any) => {
-            console.error(err)
             alert(err.response?.data?.error || 'Error updating user.')
         }
     })
@@ -1620,7 +1617,6 @@ const UsersPageContent = () => {
             if (images.length > 0) newUser.append('images', images[0]);
             await addUserMutation.mutateAsync(newUser)
         } catch (err: any) {
-            console.error(err)
             alert(err.response?.data?.message || 'Error adding user.')
         }
     }
@@ -1745,8 +1741,7 @@ const UsersPageContent = () => {
             await apiClient.delete(`/auth/deleteUser/${user_id}`);
             queryClient.invalidateQueries({ queryKey: ['users'] as const });
             alert('User deleted successfully!');
-        } catch (error) {
-            console.error('Error deleting user:', error);
+        } catch {
             alert('Failed to delete user.');
         }
     };
@@ -2336,11 +2331,14 @@ const UsersPageContent = () => {
                                             <div className="flex items-start gap-4 mb-4">
                                                 <div className="relative flex-shrink-0">
                                                     <img
-                                                        src={user.images && user.images.length > 0 ? user.images[0] : '/default-profile.png'}
+                                                        src={user.images && user.images.length > 0 ? user.images[0] : '/default-profile.svg'}
                                                         alt={user.name}
                                                         className="w-16 h-16 rounded-2xl object-cover border-2 border-slate-100 shadow-sm"
                                                         onError={(e) => {
-                                                            (e.target as HTMLImageElement).src = '/default-profile.png'
+                                                            const image = e.currentTarget
+                                                            if (!image.src.endsWith('/default-profile.svg')) {
+                                                                image.src = '/default-profile.svg'
+                                                            }
                                                         }}
                                                     />
                                                     <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${getStatusDot(user.workStatus)}`} />

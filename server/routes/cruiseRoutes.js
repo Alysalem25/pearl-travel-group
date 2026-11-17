@@ -311,8 +311,8 @@ router.get("/type/:type", async (req, res) => {
     res.json(normalized);
 
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: err.message });
+    console.error("Cruise lookup failed:", { errorName: err?.name || "Error" });
+    res.status(500).json({ message: "Failed to fetch cruises" });
   }
 });
 // book a cruise
@@ -345,7 +345,7 @@ router.post("/book", async (req, res) => {
     });
 
   } catch (err) {
-    console.error(err);
+    console.error("Cruise booking failed:", { errorName: err?.name || "Error" });
     
     // 🔹 Log error
     await logError(null, "CREATE_BOOKED_CRUISE", "BookedCruise", req, err.message, {
@@ -355,19 +355,19 @@ router.post("/book", async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: err.message
+      message: "Failed to create cruise booking"
     });
   }
 });
 
 // get all booked cruises
-router.get("/book", async (req, res) => {
+router.get("/book", authMiddleware, authorize("manage_booked_cruises"), async (req, res) => {
   try {
     const bookedCruisies = await BookedCruisies.find().populate("cruisies").populate("reviewedBy", "name");
     res.json(bookedCruisies); // must be an array
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: err.message });
+    console.error("Booked cruise lookup failed:", { errorName: err?.name || "Error" });
+    res.status(500).json({ message: "Failed to fetch booked cruises" });
   }
 });
 

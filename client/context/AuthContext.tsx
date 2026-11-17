@@ -63,12 +63,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const token = getAuthToken();
       const storedUser = getAuthUser();
       
-      console.log("[AuthContext] Initializing auth:", { 
-        hasToken: !!token, 
-        hasStoredUser: !!storedUser,
-        storedUser 
-      });
-      
       if (token && storedUser) {
         // Check if token has expired
         if (isTokenExpired()) {

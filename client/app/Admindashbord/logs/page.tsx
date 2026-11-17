@@ -866,7 +866,6 @@ export default function LogsPage() {
       const response = await apiClient.get('/logs/stats?days=7');
       setStats(response.data.stats || []);
     } catch (err: any) {
-      console.error('Error fetching stats:', err);
       setError(err.message || 'Failed to load statistics');
     } finally {
       setLoading(false);
@@ -880,7 +879,6 @@ export default function LogsPage() {
       const response = await apiClient.get('/logs/suspicious?withinMinutes=30&threshold=5');
       setSuspicious(response.data || {});
     } catch (err: any) {
-      console.error('Error fetching suspicious:', err);
       setError(err.message || 'Failed to load suspicious activity');
     } finally {
       setLoading(false);
@@ -931,7 +929,6 @@ export default function LogsPage() {
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (err: any) {
-      console.error('Export error:', err);
       setError(err.message || 'Failed to export logs');
     }
   };
