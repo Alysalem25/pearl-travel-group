@@ -44,4 +44,6 @@ const BookedCruseiesSchema = new mongoose.Schema({
     timestamps: true,
 });
 
+BookedCruseiesSchema.index({ createdAt: 1 });
+
 module.exports = mongoose.models.BookedCruseies || mongoose.model("BookedCruseies", BookedCruseiesSchema);

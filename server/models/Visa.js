@@ -93,6 +93,7 @@ const VisaSchema = new mongoose.Schema({
 VisaSchema.index({ email: 1 });
 VisaSchema.index({ status: 1 });
 VisaSchema.index({ submittedAt: -1 });
+VisaSchema.index({ createdAt: 1 });
 
 module.exports = mongoose.models.Visa || mongoose.model("Visa", VisaSchema);
 

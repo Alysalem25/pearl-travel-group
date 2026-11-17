@@ -45,4 +45,6 @@ const BookedProgramsSchema = new mongoose.Schema({
     timestamps: true,
 });
 
+BookedProgramsSchema.index({ createdAt: 1 });
+
 module.exports = mongoose.models.BookedPrograms || mongoose.model("BookedPrograms", BookedProgramsSchema);

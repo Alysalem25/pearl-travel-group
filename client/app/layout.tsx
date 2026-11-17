@@ -4,6 +4,7 @@ import "./globals.css";
 import { LanguageProvider } from "@/components/LanguageProvider";
 import { AuthProvider } from "@/context/AuthContext";
 import Providers from "@/components/Providers";
+import AdminInquiryNotifications from "@/components/AdminInquiryNotifications";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,6 +40,7 @@ export default function RootLayout({
             <LanguageProvider>
               {children}
             </LanguageProvider>
+            <AdminInquiryNotifications />
           </AuthProvider>
         </Providers>
       </body>

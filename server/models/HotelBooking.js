@@ -23,4 +23,6 @@ const hotelBookingSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
+hotelBookingSchema.index({ createdAt: 1 });
+
 module.exports = mongoose.model("HotelBooking", hotelBookingSchema);

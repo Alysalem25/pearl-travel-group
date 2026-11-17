@@ -203,5 +203,7 @@ const FlightSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+FlightSchema.index({ createdAt: 1 });
+
 module.exports =
   mongoose.models.Flight || mongoose.model("Flight", FlightSchema);

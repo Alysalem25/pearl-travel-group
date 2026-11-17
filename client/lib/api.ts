@@ -13,6 +13,7 @@
 import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from "axios";
 import { getAuthToken, clearAuthData } from "./auth";
 import { get } from "http";
+import type { Permission } from "./permissionConstants";
 
 
 type CategoryPayload = {
@@ -415,6 +416,12 @@ flights: {
    */
   getStats: () => apiClient.get("/stats"),
 
+  notifications: {
+    getPendingCounts: () =>
+      apiClient.get<{ counts: Partial<Record<Permission, number>> }>("/notifications/inquiries/pending-counts"),
+    getNewInquiries: (since?: string) =>
+      apiClient.get("/notifications/inquiries", { params: since ? { since } : {} })
+  },
 
   // users: {
   //   // Existing methods...
@@ -468,6 +475,10 @@ flights: {
 
   users: {
   // Existing methods...
+  create: (data: FormData) =>
+    apiClient.post("/users", data, {
+      headers: { "Content-Type": "multipart/form-data" }
+    }),
   getSummary: (id: string, start?: string, end?: string) =>
     apiClient.get(`/users/${id}/summary`, {
       params: { ...(start ? { start } : {}), ...(end ? { end } : {}) }

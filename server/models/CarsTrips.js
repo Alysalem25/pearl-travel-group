@@ -28,4 +28,6 @@ const CarsTripsSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+CarsTripsSchema.index({ createdAt: 1 });
+
 module.exports = mongoose.models.CarTrips || mongoose.model("CarTrips", CarsTripsSchema);

@@ -96,6 +96,7 @@ const logsRoutes = require('./routes/logsRoutes');
 const miceRouter = require('./routes/miceRouter');
 const mediaRouter = require("./routes/mediaRouter");
 const destinationRoutes = require('./routes/Destinationroutes');
+const inquiryNotificationRoutes = require("./routes/inquiryNotificationRoutes");
 
 
 // ============================================
@@ -200,6 +201,7 @@ app.use('/api/logs', logsRoutes);
 app.use("/api/mice", miceRouter);
 app.use("/api/media", mediaRouter);
 app.use('/api/Destinationroutes', destinationRoutes);
+app.use("/api/notifications", inquiryNotificationRoutes);
 // ============================================
 // 📊 STATS ENDPOINT (PUBLIC)
 // ============================================

@@ -84,6 +84,8 @@ const MiceSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
+MiceSchema.index({ createdAt: 1 });
+
 module.exports = mongoose.model("Mice", MiceSchema);
 
 
