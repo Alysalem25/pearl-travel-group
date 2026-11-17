@@ -69,7 +69,7 @@
 //     const fetchFromCountries = async () => {
 //         try {
 //             setLoading(true);
-//             const res = await axios.get(`https://www.airportroutes.com/api/all-airports/`);
+//             // Airport options are loaded from the bundled /airports.json snapshot.
 //             setFromCountriess(res.data);
 //             console.log("From Countries:", res.data);
 //         } catch (err) {
@@ -509,7 +509,7 @@ import Footer from "@/components/footer";
 import Navbar from "@/components/Navbar";
 import axios from "axios";
 import { useState, useEffect, Suspense } from "react";
-import AirportDropdown from "@/components/SearchableDropdown"
+import AirportDropdown, { type Airport } from "@/components/SearchableDropdown"
 import apiClient, { api } from "@/lib/api";
 import SuccessPopup from "@/components/SuccessPopup";
 import { Language, getDirection, getLanguageFromSearchParams } from "@/lib/language";
@@ -561,7 +561,7 @@ function FlightSearch() {
     const [error, setError] = useState("");
     const [showPopup, setShowPopup] = useState(false);
 
-    const [fromCountries, setFromCountriess] = useState<any[]>([]);
+    const [fromCountries, setFromCountriess] = useState<Airport[]>([]);
     const [lang, setLang] = useState<Language>("en");
     const searchParams = useSearchParams();
     const [formData, setFormData] = useState({
@@ -584,7 +584,7 @@ function FlightSearch() {
 
 
 
-    const [flightImage, setFlightImage] = useState<any>(null);
+    const [flightImage, setFlightImage] = useState<{ url?: string } | null>(null);
 
 
     useEffect(() => {
@@ -606,21 +606,32 @@ function FlightSearch() {
     }, [searchParams]);
 
     useEffect(() => {
-        fetchFromCountries();
-    }, []);
+        let cancelled = false;
 
-    const fetchFromCountries = async () => {
-        try {
-            setLoading(true);
-            const res = await axios.get(`https://www.airportroutes.com/api/all-airports/`);
-            setFromCountriess(res.data);
-            // console.log("From Countries:", res.data);
-        } catch (err) {
-            console.error("Error fetching from countries:", err);
-        } finally {
-            setLoading(false);
-        }
-    }
+        const fetchAirports = async () => {
+            try {
+                const response = await fetch("/airports.json");
+                if (!response.ok) {
+                    throw new Error(`Airport data request failed with status ${response.status}`);
+                }
+
+                const airports: Airport[] = await response.json();
+                if (!cancelled) {
+                    setFromCountriess(airports);
+                }
+            } catch (err) {
+                console.error("Error loading OurAirports data:", err);
+                if (!cancelled) {
+                    setError("Airport data could not be loaded. Please refresh the page and try again.");
+                }
+            }
+        };
+
+        fetchAirports();
+        return () => {
+            cancelled = true;
+        };
+    }, []);
 
     const handelValidation = () => {
         if (tripType === "round") {
@@ -1092,7 +1103,7 @@ function FlightSearch() {
                     </div>
 
                     {/* Main Form Card */}
-                    <div className="relative bg-white border-2 border-gray-200 rounded-3xl p-8 shadow-xl shadow-gray-200 overflow-hidden">
+                    <div className="relative bg-white border-2 border-gray-200 rounded-3xl p-8 shadow-xl shadow-gray-200">
                         {/* Trip Type Tabs */}
                         <div className="relative flex flex-wrap gap-2 mb-8 p-1 bg-gray-100 rounded-2xl">
                             {tripTypes[lang].map((type) => {

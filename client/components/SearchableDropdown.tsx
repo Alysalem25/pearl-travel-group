@@ -2,13 +2,15 @@
 import { useState, useEffect, useRef } from "react";
 import { MapPin, X } from "lucide-react";
 
-type Airport = {
+export type Airport = {
   icao: string;
   iata: string;
   name: string;
   city: string;
   country: string;
 };
+
+const MAX_VISIBLE_AIRPORTS = 50;
 
 export default function AirportDropdown({
   airports,
@@ -29,10 +31,10 @@ export default function AirportDropdown({
   const selectedAirport = airports.find(a => a.iata === value);
 
   const filtered = airports.filter(a =>
-    `${a.name} ${a.city} ${a.iata}`
+    `${a.name} ${a.city} ${a.iata} ${a.country}`
       .toLowerCase()
       .includes(query.toLowerCase())
-  );
+  ).slice(0, MAX_VISIBLE_AIRPORTS);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -131,7 +133,7 @@ export default function AirportDropdown({
             ) : (
               filtered.map((airport, index) => (
                 <div
-                  key={airport.iata}
+                  key={`${airport.iata}-${airport.icao}`}
                   onMouseEnter={() => setHighlight(index)}
                   onClick={() => selectAirport(airport)}
                   className={`p-4 cursor-pointer border-b border-gray-50 last:border-b-0 transition-colors ${
