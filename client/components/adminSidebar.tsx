@@ -300,6 +300,10 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen, active }: AdminSidebarProps
                         return null;
                       }
 
+                      const pendingCount = item.permission
+                        ? pendingCounts?.[item.permission]
+                        : undefined;
+
                       return (
                         <li
                           key={item.path}
@@ -311,9 +315,9 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen, active }: AdminSidebarProps
                             className="flex items-center justify-between gap-2 px-4 py-3 text-black rounded-lg hover:bg-gray-100 transition-colors text-sm"
                           >
                             <span>{item.name}</span>
-                            {item.permission && pendingCounts?.[item.permission] !== undefined && (
+                            {pendingCount !== undefined && pendingCount > 0 && (
                               <span className="min-w-5 rounded-full bg-amber-100 px-1.5 py-0.5 text-center text-xs font-semibold text-amber-800">
-                                {pendingCounts[item.permission]}
+                                {pendingCount}
                               </span>
                             )}
                           </Link>

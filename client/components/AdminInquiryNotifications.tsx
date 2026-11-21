@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Bell, X } from "lucide-react";
 import { api } from "@/lib/api";
@@ -31,6 +31,64 @@ const inquiryPermissions = [
 
 const POLL_INTERVAL_MS = 30_000;
 
+function playInquiryNotificationSound(audioContext: AudioContext, onStarted: () => void) {
+  const play = () => {
+    try {
+      [880, 1174].forEach((frequency, index) => {
+        const startTime = audioContext.currentTime + index * 0.16;
+        const oscillator = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+
+        oscillator.type = "sine";
+        oscillator.frequency.value = frequency;
+        gain.gain.setValueAtTime(0.0001, startTime);
+        gain.gain.exponentialRampToValueAtTime(0.3, startTime + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.14);
+        oscillator.connect(gain);
+        gain.connect(audioContext.destination);
+        oscillator.start(startTime);
+        oscillator.stop(startTime + 0.15);
+      });
+      onStarted();
+    } catch (error) {
+      console.error("Unable to play inquiry notification sound", error);
+    }
+  };
+
+  if (audioContext.state === "running") {
+    play();
+    return;
+  }
+
+  void audioContext.resume().then(() => {
+    if (audioContext.state === "running") play();
+  }).catch((error: unknown) => {
+    console.error("Unable to resume inquiry notification sound", error);
+  });
+}
+
+function showInquiryBrowserNotification(body: string) {
+  if (
+    typeof window === "undefined" ||
+    !("Notification" in window) ||
+    Notification.permission !== "granted"
+  ) {
+    return null;
+  }
+
+  try {
+    return new Notification("New inquiry received", {
+      body,
+      icon: "/Logo.png",
+      tag: `new-inquiry-${Date.now()}`,
+      silent: false
+    });
+  } catch (error) {
+    console.error("Unable to show inquiry browser notification", error);
+    return null;
+  }
+}
+
 export default function AdminInquiryNotifications() {
   const { isAuthenticated, user } = useAuth();
   const pathname = usePathname();
@@ -41,12 +99,78 @@ export default function AdminInquiryNotifications() {
   >(null);
   const [panelOpen, setPanelOpen] = useState(false);
   const [pollingError, setPollingError] = useState(false);
+  const [notificationPermission, setNotificationPermission] = useState<
+    NotificationPermission | "unsupported"
+  >("default");
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const pendingSoundRef = useRef(false);
+  const notificationPermissionRequestedRef = useRef(false);
 
   const isAdminArea = pathname.startsWith("/Admindashbord");
   const canViewInquiries = user?.role === "admin" ||
     Boolean(user?.permissions?.some((permission) => inquiryPermissions.includes(permission)));
   const notifications = user?.id ? notificationsByUser[user.id] || [] : [];
   const unreadCount = notifications.filter((notification) => !notification.read).length;
+
+  useEffect(() => {
+    setNotificationPermission(
+      "Notification" in window ? Notification.permission : "unsupported"
+    );
+  }, []);
+
+  useEffect(() => {
+    if (!isAuthenticated || !isAdminArea || !canViewInquiries) return;
+
+    const unlockAudio = () => {
+      if ("Notification" in window) {
+        setNotificationPermission(Notification.permission);
+        if (
+          Notification.permission === "default" &&
+          !notificationPermissionRequestedRef.current
+        ) {
+          notificationPermissionRequestedRef.current = true;
+          void Notification.requestPermission()
+            .then(setNotificationPermission)
+            .catch((error: unknown) => {
+              console.error("Unable to request inquiry notification permission", error);
+            });
+        }
+      } else {
+        setNotificationPermission("unsupported");
+      }
+
+      if (typeof window.AudioContext === "undefined") return;
+
+      try {
+        const audioContext = audioContextRef.current ?? new window.AudioContext();
+        audioContextRef.current = audioContext;
+
+        const playPendingSound = () => {
+          if (!pendingSoundRef.current) return;
+          playInquiryNotificationSound(audioContext, () => {
+            pendingSoundRef.current = false;
+          });
+        };
+
+        if (audioContext.state === "running") {
+          playPendingSound();
+        } else {
+          void audioContext.resume().then(playPendingSound).catch((error: unknown) => {
+            console.error("Unable to enable inquiry notification sound", error);
+          });
+        }
+      } catch (error) {
+        console.error("Unable to enable inquiry notification sound", error);
+      }
+    };
+
+    document.addEventListener("pointerdown", unlockAudio);
+    document.addEventListener("keydown", unlockAudio);
+    return () => {
+      document.removeEventListener("pointerdown", unlockAudio);
+      document.removeEventListener("keydown", unlockAudio);
+    };
+  }, [canViewInquiries, isAdminArea, isAuthenticated]);
 
   useEffect(() => {
     if (!isAuthenticated || !user?.id || !isAdminArea || !canViewInquiries) return;
@@ -63,7 +187,7 @@ export default function AdminInquiryNotifications() {
     }
 
     const checkForInquiries = async () => {
-      if (!active || requestInProgress || document.visibilityState === "hidden") return;
+      if (!active || requestInProgress) return;
       requestInProgress = true;
 
       try {
@@ -85,6 +209,33 @@ export default function AdminInquiryNotifications() {
         }));
 
         if (newNotifications.length > 0) {
+          pendingSoundRef.current = true;
+          const newest = [...newNotifications].sort(
+            (left, right) => Date.parse(right.createdAt) - Date.parse(left.createdAt)
+          )[0];
+          const browserNotification = document.visibilityState === "hidden"
+            ? showInquiryBrowserNotification(
+                newNotifications.length === 1
+                  ? `New ${newest.category} inquiry`
+                  : `${newNotifications.length} new inquiries received`
+              )
+            : null;
+
+          if (browserNotification) {
+            browserNotification.onclick = () => {
+              window.focus();
+              router.push(newest.path);
+              browserNotification.close();
+            };
+            pendingSoundRef.current = false;
+          } else {
+            const audioContext = audioContextRef.current;
+            if (audioContext) {
+              playInquiryNotificationSound(audioContext, () => {
+                pendingSoundRef.current = false;
+              });
+            }
+          }
           setNotificationsByUser((currentByUser) => {
             const current = currentByUser[user.id] || [];
             const existingIds = new Set(current.map((notification) => notification.id));
@@ -95,9 +246,6 @@ export default function AdminInquiryNotifications() {
             return { ...currentByUser, [user.id]: updated };
           });
 
-          const newest = [...newNotifications].sort(
-            (left, right) => Date.parse(right.createdAt) - Date.parse(left.createdAt)
-          )[0];
           setLatestNotification({ ...newest, userId: user.id });
         }
       } catch {
@@ -119,7 +267,7 @@ export default function AdminInquiryNotifications() {
       clearInterval(interval);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [canViewInquiries, isAdminArea, isAuthenticated, user?.id]);
+  }, [canViewInquiries, isAdminArea, isAuthenticated, router, user?.id]);
 
   useEffect(() => {
     if (!latestNotification) return;
@@ -221,6 +369,11 @@ export default function AdminInquiryNotifications() {
           {pollingError && (
             <p className="border-b border-amber-100 bg-amber-50 px-4 py-2 text-sm text-amber-800" role="status">
               Notifications are temporarily unavailable. Retrying automatically.
+            </p>
+          )}
+          {notificationPermission === "denied" && (
+            <p className="border-b border-amber-100 bg-amber-50 px-4 py-2 text-sm text-amber-800" role="status">
+              Browser notifications are blocked. Allow them in this site&apos;s browser settings to receive background alerts.
             </p>
           )}
           <ul className="max-h-80 overflow-y-auto">
